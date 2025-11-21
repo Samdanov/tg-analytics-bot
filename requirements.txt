@@ -1,0 +1,12 @@
+aiogram==3.4.1
+asyncpg
+telethon
+pydantic
+openai
+selectolax
+beautifulsoup4
+openpyxl
+scikit-learn
+numpy
+pandas
+python-dotenv
