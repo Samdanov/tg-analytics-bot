@@ -9,6 +9,7 @@ from services.telegram_parser import init_telegram
 
 # 👉 импортируем router
 from bot.handlers.fetch import router as fetch_router
+from bot.handlers.add_channel import router as add_channel_router
 
 
 async def main():
@@ -17,6 +18,8 @@ async def main():
 
     # 👉 подключаем router
     dp.include_router(fetch_router)
+    dp.include_router(add_channel_router)
+
 
     @dp.message(Command("start"))
     async def start_handler(message: Message):
