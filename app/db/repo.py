@@ -3,6 +3,8 @@ from typing import Optional, List, Dict, Any
 
 from core.config import config
 
+from datetime import datetime
+
 _pool: Optional[asyncpg.Pool] = None
 
 
@@ -33,10 +35,7 @@ async def save_channel(pool: asyncpg.Pool, data: Dict[str, Any]) -> int:
     return channel_id
 
 
-async def save_posts(pool: asyncpg.Pool, channel_id: int, posts: List[Dict[str, Any]]) -> None:
-    """
-    Сохраняем посты в таблицу posts.
-    """
+async def save_posts(pool, channel_id: int, posts):
     if not posts:
         return
 
@@ -48,11 +47,16 @@ async def save_posts(pool: asyncpg.Pool, channel_id: int, posts: List[Dict[str, 
     async with pool.acquire() as conn:
         async with conn.transaction():
             for p in posts:
+                # 🩹 FIX: делаем datetime "naive" → без tzinfo
+                dt = p["date"]
+                if dt.tzinfo is not None:
+                    dt = dt.replace(tzinfo=None)
+
                 await conn.execute(
                     query,
                     channel_id,
-                    p.get("date"),
-                    p.get("views"),
-                    p.get("forwards"),
-                    p.get("text"),
+                    dt,
+                    p.get("views", 0),
+                    p.get("forwards", 0),
+                    p.get("text", ""),
                 )
