@@ -53,5 +53,5 @@ async def save_analysis(channel_id: int, result: dict):
         query,
         channel_id,
         result.get("audience", ""),
-        result.get("keywords", []),
+        json.dumps(result.get("keywords", [])),  # ← FIX
     )
