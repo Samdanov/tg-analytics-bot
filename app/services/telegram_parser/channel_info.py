@@ -54,18 +54,26 @@ async def get_channel_with_posts(
         messages = await client.get_messages(entity, limit=limit)
         posts: List[Dict[str, Any]] = []
 
+        
+        
         for m in messages:
             if not m.message:
                 continue
+
+            fwd_channel_id = None
+            if m.fwd_from and getattr(m.fwd_from.from_id, "channel_id", None):
+                fwd_channel_id = m.fwd_from.from_id.channel_id
+            
             posts.append(
                 {
                     "date": m.date,
                     "views": m.views or 0,
                     "forwards": m.forwards or 0,
                     "text": m.message,
+                    "forwarded_from_id": fwd_channel_id,
                 }
-            )
-
+            )   
+        
         return channel_data, posts, None
 
     except UsernameNotOccupiedError:

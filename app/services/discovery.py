@@ -1,4 +1,5 @@
 import asyncio
+from telethon import functions
 from telethon.tl.types import Channel
 from telethon.errors import FloodWaitError, RPCError
 
@@ -8,7 +9,7 @@ from app.db.repo import get_pool
 
 class ChannelDiscovery:
     """
-    Ищет каналы по словам через search_global.
+    Ищет каналы по словам через contacts.SearchRequest.
     Возвращает список username каналов.
     """
 
@@ -16,11 +17,17 @@ class ChannelDiscovery:
         usernames: set[str] = set()
 
         try:
-            results = await client.search_global(topic)
+            result = await client(
+                functions.contacts.SearchRequest(
+                    q=topic,
+                    limit=limit
+                )
+            )
 
-            for item in results:
-                if isinstance(item, Channel) and getattr(item, "username", None):
-                    usernames.add(item.username.lower())
+            # result.chats — это каналы/чаты/группы
+            for chat in result.chats:
+                if isinstance(chat, Channel) and getattr(chat, "username", None):
+                    usernames.add(chat.username.lower())
                     if len(usernames) >= limit:
                         break
 

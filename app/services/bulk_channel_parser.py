@@ -55,8 +55,8 @@ class BulkChannelParser:
 
                 # добавляем новые посты
                 insert_q = """
-                    INSERT INTO posts (channel_id, date, views, forwards, text)
-                    VALUES ($1, $2, $3, $4, $5)
+                    INSERT INTO posts (channel_id, date, views, forwards, text, forwarded_from_id)
+                    VALUES ($1, $2, $3, $4, $5, $6)
                 """
 
                 for p in posts:
@@ -72,7 +72,9 @@ class BulkChannelParser:
                         p.get("views", 0),
                         p.get("forwards", 0),
                         p.get("text", ""),
+                        p.get("forwarded_from_id"),
                     )
+
 
         print(f"[OK] @{username}")
         return True
