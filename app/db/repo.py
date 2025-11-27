@@ -1,7 +1,8 @@
 import asyncpg
 from typing import Optional, List, Dict, Any
 
-from core.config import config
+from app.core.config import config
+
 
 from datetime import datetime
 

@@ -3,7 +3,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.types import Message
 from aiogram.filters import Command
-from core.config import config
+from app.core.config import config
 from services.telegram_parser import init_telegram
 
 # 👉 импортируем router

@@ -1,6 +1,8 @@
 from telethon import TelegramClient
 from app.core.config import config
 
+
+
 session_name = "tg_parser"
 
 client = TelegramClient(

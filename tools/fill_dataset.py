@@ -1,6 +1,7 @@
 import asyncio
-from app.services.discovery import ChannelDiscovery
-from app.services.import_channels_service import ImportChannelsService
+
+from app.services.discovery import ChannelDiscovery, save_usernames_to_db
+from app.services.telegram_parser import init_telegram
 
 TOPICS = [
     "финансы", "экономика", "крипта", "биткоин",
@@ -17,24 +18,22 @@ LIMIT_PER_TOPIC = 50
 
 
 async def main():
-    discovery = ChannelDiscovery()
+    print("[INIT] Запуск Telegram-клиента")
+    await init_telegram()
 
-    all_usernames = set()
+    discovery = ChannelDiscovery()
+    all_usernames: set[str] = set()
 
     for topic in TOPICS:
-        print(f"[DISCOVERY] {topic}")
+        print(f"[DISCOVERY] Тема: {topic}")
         usernames = await discovery.search_topic(topic, LIMIT_PER_TOPIC)
-        print(f"  найдено: {len(usernames)}")
-
+        print(f"  найдено username: {len(usernames)}")
         all_usernames.update(usernames)
-
         await asyncio.sleep(1.0)  # анти-флуд
 
     print(f"[TOTAL] всего уникальных username: {len(all_usernames)}")
-
-    await ImportChannelsService.import_usernames(list(all_usernames))
-
-    print("[DONE] Импорт завершён!")
+    await save_usernames_to_db(list(all_usernames))
+    print("[DONE] Импорт завершён")
 
 
 if __name__ == "__main__":
