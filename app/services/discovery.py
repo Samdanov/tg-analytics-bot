@@ -1,7 +1,8 @@
 import asyncio
 from telethon import TelegramClient
 from telethon.tl.types import Channel
-from telethon.errors import FloodWaitError, RpcError
+from telethon.errors import FloodWaitError, RPCError
+
 
 from app.services.telegram_parser.client import client
 
@@ -27,7 +28,7 @@ class ChannelDiscovery:
         except FloodWaitError as e:
             await asyncio.sleep(e.seconds)
             return await self.search_topic(topic, limit)
-        except RpcError:
+        except RPCError:
             pass
 
         return list(usernames)

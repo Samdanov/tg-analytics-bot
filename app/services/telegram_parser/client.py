@@ -1,5 +1,5 @@
 from telethon import TelegramClient
-from core.config import config
+from app.core.config import config
 
 session_name = "tg_parser"
 
