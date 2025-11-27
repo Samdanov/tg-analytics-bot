@@ -1,7 +1,13 @@
 from typing import Tuple, Optional, Dict, Any, List
 
-from telethon import functions
-from telethon.errors import UsernameNotOccupiedError, UsernameInvalidError
+from telethon.errors import (
+    UsernameInvalidError,
+    UsernameNotOccupiedError,
+    ChannelInvalidError,
+    ChannelPrivateError,
+    FloodWaitError,
+    RPCError,
+)
 
 from .client import client
 
@@ -20,65 +26,80 @@ async def get_channel_with_posts(
     raw_username: str,
     limit: int = 50,
 ) -> Tuple[Optional[Dict[str, Any]], Optional[List[Dict[str, Any]]], Optional[str]]:
-    """
-    Возвращает (инфо_о_канале, список_постов, ошибка)
-    """
 
     username = _normalize_username(raw_username)
     if not username:
         return None, None, "Некорректный username"
 
+    # -------------------------
+    # 1) безопасный get_entity
+    # -------------------------
     try:
-        result = await client(functions.contacts.ResolveUsernameRequest(username))
-
-        if not result.chats:
-            return None, None, "Канал не найден"
-
-        entity = result.chats[0]
-
-        if not getattr(entity, "broadcast", False):
-            return None, None, "Это не канал (чат/группа/пользователь)"
-
-        # подробная инфа о канале
-        full = await client(functions.channels.GetFullChannelRequest(entity))
-
-        channel_data = {
-            "id": entity.id,
-            "title": entity.title,
-            "username": entity.username,
-            "about": getattr(full.full_chat, "about", "") or "",
-            "participants_count": getattr(full.full_chat, "participants_count", 0) or 0,
-        }
-
-        # последние посты
-        messages = await client.get_messages(entity, limit=limit)
-        posts: List[Dict[str, Any]] = []
-
-        
-        
-        for m in messages:
-            if not m.message:
-                continue
-
-            fwd_channel_id = None
-            if m.fwd_from and getattr(m.fwd_from.from_id, "channel_id", None):
-                fwd_channel_id = m.fwd_from.from_id.channel_id
-            
-            posts.append(
-                {
-                    "date": m.date,
-                    "views": m.views or 0,
-                    "forwards": m.forwards or 0,
-                    "text": m.message,
-                    "forwarded_from_id": fwd_channel_id,
-                }
-            )   
-        
-        return channel_data, posts, None
-
-    except UsernameNotOccupiedError:
+        entity = await client.get_entity(f"https://t.me/{username}")
+    except (UsernameInvalidError, UsernameNotOccupiedError):
         return None, None, "Такого username не существует"
-    except UsernameInvalidError:
-        return None, None, "Некорректный username"
+    except (ChannelInvalidError, ChannelPrivateError):
+        return None, None, "Канал приватный или невалидный"
+    except FloodWaitError as e:
+        return None, None, f"FloodWait: ждать {e.seconds} сек"
+    except RPCError as e:
+        return None, None, f"RPCError: {e}"
     except Exception as e:
-        return None, None, f"Ошибка Telegram API: {type(e).__name__}: {e}"
+        return None, None, f"Ошибка: {type(e).__name__}: {e}"
+
+    # Не канал?
+    if not getattr(entity, "broadcast", False):
+        return None, None, "Это не канал"
+
+    # -------------------------
+    # 2) получаем полную инфу
+    # -------------------------
+    try:
+        full = await client.get_entity(entity)
+    except Exception:
+        full = None
+
+    about = ""
+    subs = 0
+
+    if full and hasattr(full, "full_chat"):
+        about = getattr(full.full_chat, "about", "") or ""
+        subs = getattr(full.full_chat, "participants_count", 0) or 0
+
+    channel_data = {
+        "id": entity.id,
+        "title": getattr(entity, "title", None),
+        "username": entity.username,
+        "about": about,
+        "participants_count": subs,
+    }
+
+    # -------------------------
+    # 3) последние посты
+    # -------------------------
+    try:
+        messages = await client.get_messages(entity, limit=limit)
+    except Exception as e:
+        return channel_data, [], f"Ошибка получения постов: {e}"
+
+    posts: List[Dict[str, Any]] = []
+
+    for m in messages:
+        if not m.message:
+            continue
+
+        fwd_id = None
+        if m.fwd_from and getattr(m.fwd_from.from_id, "channel_id", None):
+            fwd_id = m.fwd_from.from_id.channel_id
+
+        posts.append(
+            {
+                "date": m.date,
+                "views": m.views or 0,
+                "forwards": m.forwards or 0,
+                "text": m.message,
+                "forwarded_from_id": fwd_id,
+            }
+        )
+
+    return channel_data, posts, None
