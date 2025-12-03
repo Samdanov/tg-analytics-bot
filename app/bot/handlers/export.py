@@ -4,7 +4,7 @@ from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message, FSInputFile
 
-from services.xlsx_generator import generate_similar_channels_xlsx
+from app.services.xlsx_generator import generate_similar_channels_xlsx
 
 router = Router()
 

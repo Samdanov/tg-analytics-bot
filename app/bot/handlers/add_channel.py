@@ -2,8 +2,8 @@ from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message
 
-from services.telegram_parser.channel_info import get_channel_with_posts
-from db.repo import get_pool, save_channel, save_posts
+from app.services.telegram_parser.channel_info import get_channel_with_posts
+from app.db.repo import get_pool, save_channel, save_posts
 
 router = Router()
 

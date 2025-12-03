@@ -8,7 +8,7 @@ from telethon.errors import (
     UsernameInvalidError,
 )
 
-from services.telegram_parser.client import client
+from app.services.telegram_parser.client import client
 
 router = Router()
 

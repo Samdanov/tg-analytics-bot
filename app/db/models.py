@@ -59,7 +59,7 @@ class AnalyticsResults(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     channel_id = Column(Integer, ForeignKey("channels.id", ondelete="CASCADE"))
-    similar_channels_json = Column(Text)  # jsonb → текст
+    similar_channels_json = Column(Text)
     created_at = Column(TIMESTAMP)
 
     channel = relationship("Channel", back_populates="analytics_results")

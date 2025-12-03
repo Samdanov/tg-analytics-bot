@@ -2,8 +2,6 @@ import asyncpg
 from typing import Optional, List, Dict, Any
 
 from app.core.config import config
-
-
 from datetime import datetime
 
 _pool: Optional[asyncpg.Pool] = None
@@ -12,28 +10,50 @@ _pool: Optional[asyncpg.Pool] = None
 async def get_pool() -> asyncpg.Pool:
     global _pool
     if _pool is None:
-        _pool = await asyncpg.create_pool(dsn=config.postgres_dsn)
+        dsn = config.postgres_dsn
+
+        # asyncpg не понимает "postgresql+asyncpg://", ему нужен "postgresql://"
+        if dsn.startswith("postgresql+asyncpg://"):
+            dsn = "postgresql://" + dsn.split("postgresql+asyncpg://", 1)[1]
+
+        # На всякий случай можно ещё postgres+asyncpg обработать
+        if dsn.startswith("postgres+asyncpg://"):
+            dsn = "postgres://" + dsn.split("postgres+asyncpg://", 1)[1]
+
+        _pool = await asyncpg.create_pool(dsn=dsn)
+
     return _pool
 
+async def save_channel(pool: asyncpg.Pool, channel_data: Dict[str, Any]) -> int:
+    """
+    Сохраняет канал в БД.
+    Если такой username уже есть — обновляет данные и возвращает существующий id.
+    """
 
-async def save_channel(pool: asyncpg.Pool, data: Dict[str, Any]) -> int:
-    """
-    Сохраняем канал в таблицу channels.
-    Пока без проверки дублей — для MVP ок.
-    """
-    query = """
-        INSERT INTO channels (username, title, description, subscribers)
-        VALUES ($1, $2, $3, $4)
-        RETURNING id
-    """
-    channel_id = await pool.fetchval(
-        query,
-        data.get("username"),
-        data.get("title"),
-        data.get("about"),
-        data.get("participants_count"),
-    )
-    return channel_id
+    username = channel_data.get("username")
+    title = channel_data.get("title")
+    description = channel_data.get("description")
+    subscribers = channel_data.get("subscribers", 0)
+
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow(
+            """
+            INSERT INTO channels (username, title, description, subscribers, last_update)
+            VALUES ($1, $2, $3, $4, NOW())
+            ON CONFLICT (username) DO UPDATE
+            SET title = EXCLUDED.title,
+                description = EXCLUDED.description,
+                subscribers = EXCLUDED.subscribers,
+                last_update = NOW()
+            RETURNING id
+            """,
+            username,
+            title,
+            description,
+            subscribers,
+        )
+
+    return row["id"]
 
 
 async def save_posts(pool, channel_id: int, posts):

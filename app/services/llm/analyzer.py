@@ -1,8 +1,8 @@
 import json
 
-from db.repo import get_pool
-from services.llm.client import ask_llm
-from services.llm.prompt import build_analysis_prompt
+from app.db.repo import get_pool
+from app.services.llm.client import ask_llm
+from app.services.llm.prompt import build_analysis_prompt
 
 
 async def analyze_channel(channel: dict, posts: list):

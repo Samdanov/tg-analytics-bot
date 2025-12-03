@@ -2,9 +2,9 @@ from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message
 
-from db.repo import get_pool
-from services.telegram_parser.channel_info import get_channel_with_posts
-from services.llm.analyzer import analyze_channel, save_analysis
+from app.db.repo import get_pool
+from app.services.telegram_parser.channel_info import get_channel_with_posts
+from app.services.llm.analyzer import analyze_channel, save_analysis
 
 router = Router()
 

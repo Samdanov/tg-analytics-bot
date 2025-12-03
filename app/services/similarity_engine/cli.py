@@ -1,5 +1,5 @@
 import asyncio
-from .engine import SimilarityEngine
+from app.services.similarity_engine.engine import SimilarityEngine
 
 async def main():
     engine = SimilarityEngine(top_n=10)
