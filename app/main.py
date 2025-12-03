@@ -10,6 +10,8 @@ from services.telegram_parser import init_telegram
 from bot.handlers.fetch import router as fetch_router
 from bot.handlers.add_channel import router as add_channel_router
 from bot.handlers.analyze import router as analyze_router
+from bot.handlers.export import router as export_router
+
 
 async def main():
     bot = Bot(token=config.bot_token, parse_mode=ParseMode.HTML)
@@ -21,6 +23,8 @@ async def main():
     dp.include_router(add_channel_router)
     # 👉 подключаем analyze_router
     dp.include_router(analyze_router)
+    # 👉 подключаем export_router
+    dp.include_router(export_router)
 
     @dp.message(Command("start"))
     async def start_handler(message: Message):
