@@ -56,9 +56,13 @@ async def detect_channel_handler(message: Message):
 
     username, title = _extract_channel_from_message(message)
     if not username:
-        # Ничего не нашли — молчим, чтобы не спамить
         return
 
+    # Приводим username к нормальной форме
+    username = username.strip().lstrip("@")
+    if not username:
+        return
+            
     text = f"Найден канал:\n<b>{title or username}</b>\n@{username}\n\nНажми кнопку, чтобы запустить анализ."
     kb = InlineKeyboardMarkup(
         inline_keyboard=[

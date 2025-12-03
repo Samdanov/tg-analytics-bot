@@ -24,14 +24,20 @@ async def run_full_analysis_pipeline(raw: str) -> Path:
     """
 
     # 1. Парсинг канала и постов
+    print("RUN WF RAW:", raw)
     channel_data, posts, error = await get_channel_with_posts(raw_username=raw, limit=100)
     if error:
         raise ValueError(error)
+
+    print("WF CHANNEL_DATA:", channel_data)
+
 
     # 2. Сохранение в БД
     pool = await get_pool()
     channel_id = await save_channel(pool, channel_data)
     await save_posts(pool, channel_id, posts)
+    print("WF ANALYSIS_SAVED FOR ID:", channel_id)
+
 
     # 3. LLM-анализ
     llm_result = await analyze_channel(channel_data, posts)

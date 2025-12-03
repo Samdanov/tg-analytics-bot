@@ -1,4 +1,5 @@
 import json
+import re
 
 from app.db.repo import get_pool
 from app.services.llm.client import ask_llm
@@ -29,7 +30,15 @@ async def analyze_channel(channel: dict, posts: list):
     raw = await ask_llm(prompt, max_tokens=600)
 
     try:
-        return json.loads(raw)
+        res = json.loads(raw)
+        # fallback — если LLM дал пустой список
+        if not res.get("keywords"):
+            description = channel.get("description", "") or ""
+            tokens = re.findall(r"[A-Za-zА-Яа-яёЁ0-9]{4,}", description.lower())
+            res["keywords"] = list(set(tokens[:15])) or ["ai", "tech", "news"]
+
+        return res
+
     except:
         return {
             "audience": "Не удалось распарсить JSON",
@@ -38,27 +47,34 @@ async def analyze_channel(channel: dict, posts: list):
         }
 
 
-async def save_analysis(channel_id, result):
+async def save_analysis(channel_id: int, result: dict):
     pool = await get_pool()
 
+    keywords = result.get("keywords") or []
     audience = result.get("audience", "")
 
-    keywords = result.get("keywords")
-    if not keywords:
-        # fallback — чтобы SimilarityEngine не падал
-        keywords = ["general", "telegram", "channel"]
+    await pool.execute(
+        """
+        UPDATE channels
+        SET keywords = $2, last_update = NOW()
+        WHERE id = $1
+        """,
+        channel_id,
+        keywords
+    )
 
-    query = """
+    await pool.execute(
+        """
         INSERT INTO keywords_cache (channel_id, audience, keywords_json)
         VALUES ($1, $2, $3)
         ON CONFLICT(channel_id) DO UPDATE
         SET audience = EXCLUDED.audience,
-            keywords_json = EXCLUDED.keywords_json;
-    """
-
-    await pool.execute(
-        query,
+            keywords_json = EXCLUDED.keywords_json,
+            created_at = NOW()
+        """,
         channel_id,
         audience,
-        json.dumps(keywords),
+        json.dumps(keywords)
     )
+
+    print("SAVE_ANALYSIS OK → channel_id:", channel_id, "keywords:", keywords)

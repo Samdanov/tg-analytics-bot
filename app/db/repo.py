@@ -24,33 +24,33 @@ async def get_pool() -> asyncpg.Pool:
 
     return _pool
 
-async def save_channel(pool: asyncpg.Pool, channel_data: Dict[str, Any]) -> int:
-    """
-    Сохраняет канал в БД.
-    Если такой username уже есть — обновляет данные и возвращает существующий id.
-    """
-
+async def save_channel(pool, channel_data):
     username = channel_data.get("username")
-    title = channel_data.get("title")
-    description = channel_data.get("description")
-    subscribers = channel_data.get("subscribers", 0)
+    if not username:
+        raise ValueError("Не удалось определить username канала — невозможен анализ.")
+
+    username = username.strip().lstrip("@")
+
+    title = channel_data.get("title") or ""
+    description = channel_data.get("description") or ""
+    subscribers = channel_data.get("subscribers") or 0
 
     async with pool.acquire() as conn:
         row = await conn.fetchrow(
             """
             INSERT INTO channels (username, title, description, subscribers, last_update)
-            VALUES ($1, $2, $3, $4, NOW())
+            VALUES ($1, $2, $3, $4, now())
             ON CONFLICT (username) DO UPDATE
             SET title = EXCLUDED.title,
                 description = EXCLUDED.description,
                 subscribers = EXCLUDED.subscribers,
-                last_update = NOW()
-            RETURNING id
+                last_update = now()
+            RETURNING id;
             """,
             username,
             title,
             description,
-            subscribers,
+            subscribers
         )
 
     return row["id"]
