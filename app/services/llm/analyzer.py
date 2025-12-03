@@ -38,8 +38,15 @@ async def analyze_channel(channel: dict, posts: list):
         }
 
 
-async def save_analysis(channel_id: int, result: dict):
+async def save_analysis(channel_id, result):
     pool = await get_pool()
+
+    audience = result.get("audience", "")
+
+    keywords = result.get("keywords")
+    if not keywords:
+        # fallback — чтобы SimilarityEngine не падал
+        keywords = ["general", "telegram", "channel"]
 
     query = """
         INSERT INTO keywords_cache (channel_id, audience, keywords_json)
@@ -52,6 +59,6 @@ async def save_analysis(channel_id: int, result: dict):
     await pool.execute(
         query,
         channel_id,
-        result.get("audience", ""),
-        json.dumps(result.get("keywords", [])),  # ← FIX
+        audience,
+        json.dumps(keywords),
     )
