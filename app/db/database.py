@@ -2,11 +2,11 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import declarative_base
 from app.core.config import config
 
-DATABASE_URL = config.database_url
+DATABASE_URL = config.postgres_dsn
 
 engine = create_async_engine(
     DATABASE_URL,
-    echo=config.debug,
+    echo=False,
 )
 
 async_session_maker = async_sessionmaker(

@@ -1,7 +1,7 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-from app.db.session import async_session_maker
+from app.db.database import async_session_maker
 from app.db.models import Channel, KeywordsCache, AnalyticsResults
 from sqlalchemy import select
 
