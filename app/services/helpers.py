@@ -5,6 +5,16 @@ import json
 
 
 async def build_channel_summary(username: str) -> str:
+    """
+    Возвращает красивый текстовый блок с данными о канале:
+    - название
+    - подписчики
+    - ЦА (из LLM)
+    - ключевые слова
+    """
+
+    username = username.strip().lstrip("@")
+
     async with async_session_maker() as session:
         result = await session.execute(
             select(Channel, KeywordsCache)
@@ -18,22 +28,31 @@ async def build_channel_summary(username: str) -> str:
 
         ch, kc = row
 
-        # keywords_json → list
-        keywords = []
+        # ---- Аудитория (LLM) ----
+        audience = kc.audience or "—"
+
+        # ---- Ключевые слова ----
+        keywords_list = []
         if kc.keywords_json:
             try:
-                keywords = json.loads(kc.keywords_json)
-            except:
+                parsed = json.loads(kc.keywords_json)
+                if isinstance(parsed, list):
+                    keywords_list = parsed
+            except Exception:
                 pass
 
-        keywords_str = ", ".join(keywords) if keywords else "—"
-        audience_str = kc.audience or "—"
+        keywords = ", ".join(keywords_list) if keywords_list else "—"
 
+        # ---- Подписчики ----
+        subscribers = ch.subscribers if ch.subscribers is not None else "—"
+
+        # ---- Финальный текст ----
         text = (
             f"📊 <b>Анализ канала @{ch.username}</b>\n\n"
             f"<b>Название:</b> {ch.title}\n"
-            f"<b>Подписчиков:</b> {ch.subscribers}\n"
-            f"<b>Целевая аудитория:</b> {audience_str}\n"
-            f"<b>Ключевые слова:</b> {keywords_str}\n"
+            f"<b>Подписчиков:</b> {subscribers}\n"
+            f"<b>Целевая аудитория:</b> {audience}\n"
+            f"<b>Ключевые слова:</b> {keywords}\n"
         )
+
         return text

@@ -1,65 +1,122 @@
-# app/services/workflow.py
-
+import re
 from pathlib import Path
 
-from app.db.repo import get_pool, save_channel, save_posts
-from app.services.telegram_parser.channel_info import get_channel_with_posts
-from app.services.llm.analyzer import analyze_channel, save_analysis
-from app.services.similarity_engine.engine import SimilarityEngine
-from app.services.xlsx_generator import generate_similar_channels_xlsx
-from app.services.similarity_engine.engine_single import calculate_similarity_for_channel
+from aiogram import Router, F
+from aiogram.types import (
+    Message,
+    CallbackQuery,
+    InlineKeyboardMarkup,
+    InlineKeyboardButton,
+    FSInputFile,
+)
+
+from app.services.workflow import run_full_analysis_pipeline
 from app.services.helpers import build_channel_summary
 
+router = Router()
 
-async def run_full_analysis_pipeline(raw: str) -> Path:
+USERNAME_RE = re.compile(r"(?:t\.me/|@)([A-Za-z0-9_]{3,})")
+
+
+def _extract_channel_from_message(message: Message):
     """
-    Полный пайплайн:
-    1) Парсим канал и посты через Telethon
-    2) Сохраняем в БД (channels + posts)
-    3) LLM-анализ → keywords_cache
-    4) Считаем похожие каналы (SimilarityEngine → analytics_results)
-    5) Генерируем XLSX по похожим каналам
-    6) Возвращаем путь к XLSX-файлу
+    Пытаемся достать username и title канала из:
+    - пересланного поста из канала
+    - текста с t.me/... или @username
+    """
+    username = None
+    title = None
 
-    raw — может быть @username, t.me/..., текст с ссылкой.
+    # 1) Пересланный пост из канала
+    if message.forward_from_chat and message.forward_from_chat.type == "channel":
+        ch = message.forward_from_chat
+        username = ch.username
+        title = ch.title
+
+    # 2) Текст с ссылкой/юзернеймом
+    if not username and message.text:
+        m = USERNAME_RE.search(message.text)
+        if m:
+            username = m.group(1)
+            title = username  # если названия нет, покажем хотя бы @username
+
+    if username:
+        username = username.lstrip("@")
+
+    return username, title
+
+
+@router.message(F.text | F.forward_from_chat)
+async def detect_channel_handler(message: Message):
+    """
+    Ловим произвольные сообщения и пытаемся найти в них канал.
+    Если нашли — предлагаем кнопку 'Начать анализ'.
     """
 
-    # 1. Парсинг канала и постов
-    print("RUN WF RAW:", raw)
-    channel_data, posts, error = await get_channel_with_posts(raw_username=raw, limit=100)
-    if error:
-        raise ValueError(error)
-
-    print("WF CHANNEL_DATA:", channel_data)
-
-
-    # 2. Сохранение в БД
-    pool = await get_pool()
-    channel_id = await save_channel(pool, channel_data)
-    await save_posts(pool, channel_id, posts)
-    print("WF ANALYSIS_SAVED FOR ID:", channel_id)
-
-
-    # 3. LLM-анализ
-    llm_result = await analyze_channel(channel_data, posts)
-    await save_analysis(channel_id, llm_result)
-
-    # 4. SimilarityEngine по всей базе (MVP-вариант)
-    await calculate_similarity_for_channel(channel_id)
-
-
-
-    # .... внутри run_full_analysis_pipeline перед отправкой документа:
-
-    summary = await build_channel_summary(raw_username)
-    await message.answer(summary)
-
-    # 5. XLSX-отчёт по этому каналу
-    # username у нас есть в channel_data
-    username = channel_data.get("username")
+    username, title = _extract_channel_from_message(message)
     if not username:
-        # на всякий случай
-        username = raw.lstrip("@")
+        return
 
-    report_path: Path = await generate_similar_channels_xlsx(username)
-    return report_path
+    username = username.strip().lstrip("@")
+    if not username:
+        return
+
+    text = (
+        f"Найден канал:\n"
+        f"<b>{title or username}</b>\n"
+        f"@{username}\n\n"
+        f"Нажми кнопку, чтобы запустить анализ."
+    )
+    kb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="🚀 Начать анализ",
+                    callback_data=f"start_analysis:{username}",
+                )
+            ]
+        ]
+    )
+
+    await message.answer(text, reply_markup=kb)
+
+
+@router.callback_query(F.data.startswith("start_analysis:"))
+async def start_analysis_callback(callback: CallbackQuery):
+    """
+    Обрабатываем нажатие на кнопку 'Начать анализ'.
+    Запускаем полный пайплайн и шлём XLSX или ошибку.
+    """
+    await callback.answer()
+
+    data = callback.data.split(":", 1)
+    if len(data) != 2:
+        return await callback.message.answer("Некорректные данные для анализа.")
+
+    username = data[1]
+
+    msg = await callback.message.answer(
+        f"Запускаю анализ для @{username}...\n"
+        f"Это может занять немного времени."
+    )
+
+    try:
+        report_path: Path = await run_full_analysis_pipeline(username)
+    except ValueError as e:
+        await msg.edit_text(f"⚠️ Не удалось выполнить анализ: {e}")
+        return
+    except Exception as e:
+        await msg.edit_text(f"🔥 Ошибка: <code>{e}</code>")
+        raise
+
+    # 📌 Показываем резюме канала перед XLSX
+    summary = await build_channel_summary(username)
+    await callback.message.answer(summary)
+
+    # Отправляем XLSX
+    doc = FSInputFile(report_path)
+    await msg.edit_text("✅ Анализ завершён, отправляю отчёт...")
+    await callback.message.answer_document(
+        document=doc,
+        caption=f"📊 Отчёт по похожим каналам для @{username}",
+    )

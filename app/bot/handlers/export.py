@@ -1,5 +1,3 @@
-# app/bot/handlers/export.py
-
 from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message, FSInputFile
@@ -20,22 +18,23 @@ async def export_handler(message: Message):
     if len(args) < 2:
         return await message.answer("Использование: <code>/export @username</code>")
 
-    raw_username = args[1].strip()
-    summary = await build_channel_summary(raw_username)
+    username = args[1].strip().lstrip("@")
+
+    # 📌 Сначала показываем информацию о канале
+    summary = await build_channel_summary(username)
     await message.answer(summary)
-    
+
     await message.answer("Генерирую XLSX-отчёт, подожди пару секунд...")
 
     try:
-        path = await generate_similar_channels_xlsx(raw_username)
+        path = await generate_similar_channels_xlsx(username)
     except ValueError as e:
         return await message.answer(f"⚠️ {e}")
-    except Exception as e:
-        # Логировать имеет смысл, но тут просто честно
+    except Exception:
         return await message.answer("Произошла внутренняя ошибка при генерации отчёта.")
 
     doc = FSInputFile(path)
     await message.answer_document(
         document=doc,
-        caption=f"📊 Отчёт по похожим каналам для {raw_username}",
+        caption=f"📊 Отчёт по похожим каналам для @{username}",
     )
