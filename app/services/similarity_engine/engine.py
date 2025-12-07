@@ -1,80 +1,133 @@
+# app/services/similarity_engine/engine.py
+
+import json
+import re
+import unicodedata
+from datetime import datetime
+from typing import List, Tuple
+
+from sqlalchemy import select, delete
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 from app.db.database import async_session_maker
 from app.db.models import Channel, KeywordsCache, AnalyticsResults
-from sqlalchemy import select
 
-import json
-from datetime import datetime
+
+def normalize_text(text: str) -> str:
+    """
+    Мягкая нормализация:
+    - убираем удвоенные пробелы
+    - оставляем цифры, буквы, бренды, короткие токены
+    - режем только явный мусор
+    """
+    if not text:
+        return ""
+    text = text.lower()
+    text = re.sub(r"[^0-9a-zа-яё\-]+", " ", text)  # оставляем дефис для брендов: chat-gpt, mid-journey
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
 
 
 class SimilarityEngine:
-
     def __init__(self, top_n: int = 10):
         self.top_n = top_n
 
-    async def load_data(self):
+    async def load_docs(self) -> Tuple[List[int], List[str]]:
+        """
+        Загружаем ВСЕ каналы, у которых есть keywords_cache.
+        Нормализуем ключи так же, как в engine_single.
+        """
         async with async_session_maker() as session:
             q = (
-                select(Channel, KeywordsCache)
+                select(Channel.id, KeywordsCache.keywords_json)
                 .join(KeywordsCache, KeywordsCache.channel_id == Channel.id)
             )
             rows = (await session.execute(q)).all()
 
-        channels = []
+        ids = []
         docs = []
 
-        for ch, kw in rows:
-            text = (ch.description or "").strip()
-            try:
-                keywords = json.loads(kw.keywords_json) if kw.keywords_json else []
-            except:
-                keywords = []
-
-            if not text and not keywords:
+        for cid, kw_json in rows:
+            if not kw_json:
                 continue
 
-            doc = text + " " + " ".join(keywords)
-            channels.append(ch)
-            docs.append(doc)
+            try:
+                kws = json.loads(kw_json)
+            except:
+                continue
 
-        return channels, docs
+            if not isinstance(kws, list):
+                continue
+
+            tokens: List[str] = []
+            for kw in kws:
+                norm = normalize_text(str(kw))
+                if not norm:
+                    continue
+                tokens.extend(norm.split())
+
+            # если keywords полностью пустые — пропускаем
+            if len(tokens) == 0:
+                continue
+
+            ids.append(cid)
+            docs.append(" ".join(tokens))
+
+        return ids, docs
 
     async def calculate_similarity(self):
-        channels, docs = await self.load_data()
+        print("[ENGINE] Загружаю данные…")
 
-        vectorizer = TfidfVectorizer(max_features=5000)
-        matrix = vectorizer.fit_transform(docs)
+        ids, docs = await self.load_docs()
 
-        sim = cosine_similarity(matrix)
+        if len(ids) < 2:
+            print("[ENGINE] Недостаточно каналов для similarity.")
+            return
 
+        print(f"[ENGINE] Каналов для анализа: {len(ids)}")
+
+        vectorizer = TfidfVectorizer()
+        X = vectorizer.fit_transform(docs)
+
+        sim = cosine_similarity(X)
+
+        print("[ENGINE] Считаю похожесть…")
         results = []
 
-        for idx, ch in enumerate(channels):
+        for idx, cid in enumerate(ids):
             scores = sim[idx]
-            top_idx = scores.argsort()[::-1][1:self.top_n + 1]
 
-            similar_list = [
-                {
-                    "channel_id": channels[j].id,
-                    "score": float(scores[j])
-                }
-                for j in top_idx
+            pairs = [
+                (ids[j], float(scores[j]))
+                for j in range(len(ids))
+                if j != idx
             ]
 
-            results.append((ch.id, similar_list))
+            pairs.sort(key=lambda x: x[1], reverse=True)
+            pairs = pairs[: self.top_n]
 
-        await self.save_results(results)
+            results.append((cid, pairs))
 
-    async def save_results(self, data):
+        print("[ENGINE] Сохраняю результаты…")
+
         async with async_session_maker() as session:
-            for ch_id, similar in data:
-                entry = AnalyticsResults(
-                    channel_id=ch_id,
-                    similar_channels_json=json.dumps(similar, ensure_ascii=False),
-                    created_at=datetime.utcnow()
+            # Очищаем старые результаты
+            await session.execute(delete(AnalyticsResults))
+
+            for cid, similar in results:
+                payload = json.dumps(
+                    [{"channel_id": ch, "score": sc} for ch, sc in similar],
+                    ensure_ascii=False
                 )
-                session.add(entry)
+                session.add(
+                    AnalyticsResults(
+                        channel_id=cid,
+                        similar_channels_json=payload,
+                        created_at=datetime.utcnow()
+                    )
+                )
 
             await session.commit()
+
+        print("[ENGINE] Готово!")
