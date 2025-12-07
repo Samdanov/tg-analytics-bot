@@ -5,6 +5,7 @@ from aiogram.filters import Command
 from aiogram.types import Message, FSInputFile
 
 from app.services.xlsx_generator import generate_similar_channels_xlsx
+from app.services.helpers import build_channel_summary
 
 router = Router()
 
@@ -20,7 +21,9 @@ async def export_handler(message: Message):
         return await message.answer("Использование: <code>/export @username</code>")
 
     raw_username = args[1].strip()
-
+    summary = await build_channel_summary(raw_username)
+    await message.answer(summary)
+    
     await message.answer("Генерирую XLSX-отчёт, подожди пару секунд...")
 
     try:

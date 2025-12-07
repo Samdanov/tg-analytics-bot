@@ -8,6 +8,7 @@ from app.services.llm.analyzer import analyze_channel, save_analysis
 from app.services.similarity_engine.engine import SimilarityEngine
 from app.services.xlsx_generator import generate_similar_channels_xlsx
 from app.services.similarity_engine.engine_single import calculate_similarity_for_channel
+from app.services.helpers import build_channel_summary
 
 
 async def run_full_analysis_pipeline(raw: str) -> Path:
@@ -46,6 +47,12 @@ async def run_full_analysis_pipeline(raw: str) -> Path:
     # 4. SimilarityEngine по всей базе (MVP-вариант)
     await calculate_similarity_for_channel(channel_id)
 
+
+
+    # .... внутри run_full_analysis_pipeline перед отправкой документа:
+
+    summary = await build_channel_summary(raw_username)
+    await message.answer(summary)
 
     # 5. XLSX-отчёт по этому каналу
     # username у нас есть в channel_data
