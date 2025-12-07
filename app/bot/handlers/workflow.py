@@ -12,7 +12,11 @@ from aiogram.types import (
     FSInputFile,
 )
 
-from app.services.workflow import run_full_analysis_pipeline
+# 👉 ВАЖНО: импортируем ПРАВИЛЬНЫЙ pipeline
+from app.services.workflow_pipeline import run_full_analysis_pipeline
+
+# 👉 Импортируем сводку канала
+from app.services.helpers import build_channel_summary
 
 router = Router()
 
@@ -22,24 +26,24 @@ USERNAME_RE = re.compile(r"(?:t\.me/|@)([A-Za-z0-9_]{3,})")
 def _extract_channel_from_message(message: Message):
     """
     Пытаемся достать username и title канала из:
-    - пересланного поста из канала
-    - текста с t.me/... или @username
+    - пересланного поста
+    - текста с ссылкой t.me/... или @username
     """
     username = None
     title = None
 
-    # 1) Пересланный пост из канала
+    # 1. Пересланный пост от канала
     if message.forward_from_chat and message.forward_from_chat.type == "channel":
         ch = message.forward_from_chat
         username = ch.username
         title = ch.title
 
-    # 2) Текст с ссылкой/юзернеймом
+    # 2. Текст сообщения
     if not username and message.text:
         m = USERNAME_RE.search(message.text)
         if m:
             username = m.group(1)
-            title = username  # если названия нет, покажем хотя бы @username
+            title = username
 
     if username:
         username = username.lstrip("@")
@@ -50,20 +54,22 @@ def _extract_channel_from_message(message: Message):
 @router.message(F.text | F.forward_from_chat)
 async def detect_channel_handler(message: Message):
     """
-    Ловим произвольные сообщения и пытаемся найти в них канал.
-    Если нашли — предлагаем кнопку 'Начать анализ'.
+    Автоматически ищем канал в любом сообщении.
+    Если нашли — показываем кнопку 'Начать анализ'.
     """
-
     username, title = _extract_channel_from_message(message)
     if not username:
         return
 
-    # Приводим username к нормальной форме
-    username = username.strip().lstrip("@")
-    if not username:
-        return
-            
-    text = f"Найден канал:\n<b>{title or username}</b>\n@{username}\n\nНажми кнопку, чтобы запустить анализ."
+    username = username.strip()
+
+    text = (
+        f"Найден канал:\n"
+        f"<b>{title or username}</b>\n"
+        f"@{username}\n\n"
+        f"Нажми кнопку, чтобы запустить анализ."
+    )
+
     kb = InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -81,19 +87,16 @@ async def detect_channel_handler(message: Message):
 @router.callback_query(F.data.startswith("start_analysis:"))
 async def start_analysis_callback(callback: CallbackQuery):
     """
-    Обрабатываем нажатие на кнопку 'Начать анализ'.
-    Запускаем полный пайплайн и шлём XLSX или ошибку.
+    Запускает полный анализ:
+    Telethon → LLM → Similarity → XLSX
     """
-    await callback.answer()  # убираем "часики" у кнопки
+    await callback.answer()
 
-    data = callback.data.split(":", 1)
-    if len(data) != 2:
-        return await callback.message.answer("Некорректные данные для анализа.")
+    username = callback.data.split(":", 1)[1]
 
-    username = data[1]
-
-    msg = await callback.message.answer(f"Запускаю анализ для @{username}...\n"
-                                        f"Это может занять немного времени.")
+    msg = await callback.message.answer(
+        f"Запускаю анализ для @{username}...\nЭто может занять немного времени..."
+    )
 
     try:
         report_path: Path = await run_full_analysis_pipeline(username)
@@ -104,10 +107,14 @@ async def start_analysis_callback(callback: CallbackQuery):
         await msg.edit_text(f"🔥 Ошибка: <code>{e}</code>")
         raise
 
+    # 💬 Отправляем сводку канала (ЦА, keywords, подписчики)
+    summary = await build_channel_summary(username)
+    await callback.message.answer(summary)
 
-    # Отправляем XLSX
+    # 📄 Отправляем XLSX
     doc = FSInputFile(report_path)
     await msg.edit_text("✅ Анализ завершён, отправляю отчёт...")
+
     await callback.message.answer_document(
         document=doc,
         caption=f"📊 Отчёт по похожим каналам для @{username}",
