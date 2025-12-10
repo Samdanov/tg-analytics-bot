@@ -32,8 +32,10 @@ async def save_channel(pool, channel_data):
     username = username.strip().lstrip("@")
 
     title = channel_data.get("title") or ""
-    description = channel_data.get("description") or ""
-    subscribers = channel_data.get("subscribers") or 0
+    # channel_info.py возвращает "about", а не "description"
+    description = channel_data.get("about") or channel_data.get("description") or ""
+    # channel_info.py возвращает "participants_count", а не "subscribers"
+    subscribers = channel_data.get("participants_count") or channel_data.get("subscribers") or 0
 
     async with pool.acquire() as conn:
         row = await conn.fetchrow(
@@ -67,6 +69,9 @@ async def save_posts(pool, channel_id: int, posts):
 
     async with pool.acquire() as conn:
         async with conn.transaction():
+            # Удаляем старые посты перед вставкой новых, чтобы избежать дубликатов
+            await conn.execute("DELETE FROM posts WHERE channel_id = $1", channel_id)
+            
             for p in posts:
                 # 🩹 FIX: делаем datetime "naive" → без tzinfo
                 dt = p["date"]

@@ -25,15 +25,16 @@ async def analyze_handler(message: Message):
         return await message.answer(f"❌ {error}")
 
     # Ищем ID в таблице channels
-    row = await pool.fetchrow(
-        "SELECT id FROM channels WHERE username = $1",
-        channel["username"]
-    )
-
-    if not row:
-        return await message.answer("Сначала добавьте канал командой /add_channel")
-
-    channel_id = row["id"]
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow(
+            "SELECT id FROM channels WHERE username = $1",
+            channel["username"]
+        )
+        
+        if not row:
+            return await message.answer("Сначала добавьте канал командой /add_channel")
+        
+        channel_id = row["id"]
 
     # Аналитика
     result = await analyze_channel(channel, posts)

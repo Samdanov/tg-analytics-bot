@@ -99,24 +99,25 @@ async def analyze_channel(channel: dict, posts: list):
 async def save_analysis(channel_id: int, result: dict):
     pool = await get_pool()
 
-    await pool.execute(
-        """UPDATE channels SET keywords = $2, last_update = NOW() WHERE id = $1""",
-        channel_id,
-        result.get("keywords") or []
-    )
+    async with pool.acquire() as conn:
+        await conn.execute(
+            """UPDATE channels SET keywords = $2, last_update = NOW() WHERE id = $1""",
+            channel_id,
+            result.get("keywords") or []
+        )
 
-    await pool.execute(
-        """
-        INSERT INTO keywords_cache (channel_id, audience, keywords_json)
-        VALUES ($1, $2, $3)
-        ON CONFLICT(channel_id) DO UPDATE
-        SET audience = EXCLUDED.audience,
-            keywords_json = EXCLUDED.keywords_json,
-            created_at = NOW()
-        """,
-        channel_id,
-        result.get("audience", ""),
-        json.dumps(result.get("keywords") or [])
-    )
+        await conn.execute(
+            """
+            INSERT INTO keywords_cache (channel_id, audience, keywords_json)
+            VALUES ($1, $2, $3)
+            ON CONFLICT(channel_id) DO UPDATE
+            SET audience = EXCLUDED.audience,
+                keywords_json = EXCLUDED.keywords_json,
+                created_at = NOW()
+            """,
+            channel_id,
+            result.get("audience", ""),
+            json.dumps(result.get("keywords") or [])
+        )
 
     print("SAVE_ANALYSIS OK → channel_id:", channel_id, "keywords:", result.get("keywords"))
