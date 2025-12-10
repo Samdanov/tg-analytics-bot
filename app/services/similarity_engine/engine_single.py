@@ -3,9 +3,10 @@
 import json
 import re
 import unicodedata
-from typing import List
+from typing import List, Dict, Set
 
 from sqlalchemy import select, delete
+
 from app.db.database import async_session_maker
 from app.db.models import Channel, KeywordsCache, AnalyticsResults
 
@@ -13,9 +14,9 @@ from app.db.models import Channel, KeywordsCache, AnalyticsResults
 def normalize_text(text: str) -> str:
     """
     Нормализуем текст:
-    - приводим к NFC (unicode)
-    - в нижний регистр
-    - оставляем только буквы и цифры, остальное → пробел
+    - Unicode NFC
+    - нижний регистр
+    - только буквы и цифры, остальное → пробел
     """
     if not text:
         return ""
@@ -25,23 +26,68 @@ def normalize_text(text: str) -> str:
     return text.strip()
 
 
-async def calculate_similarity_for_channel(target_channel_id: int, top_n: int = 10) -> bool:
+def is_noise_channel(username: str | None, title: str | None, tokens: List[str]) -> bool:
+    """
+    Выявляем шумовые/мусорные каналы:
+    - стикеры, эмодзи, гифки, мемо-свалки и т.п.
+    - очень мало осмысленных токенов
+    """
+    name = f"{username or ''} {title or ''}".lower()
+
+    # По имени канала
+    noise_markers = [
+        "sticker", "stickers", "стикер", "стикеры",
+        "emoji", "эмодзи",
+        "gif", "гиф",
+        "memes", "мемы", "meme",
+        "аниме", "anime",
+    ]
+    if any(m in name for m in noise_markers):
+        return True
+
+    # По ключам
+    noise_keys = {
+        "стикер", "стикеры", "emoji", "эмодзи",
+        "gif", "гиф", "мем", "мемы",
+        "стикерпак", "stickers", "смайл", "смайлики",
+    }
+
+    if tokens:
+        noise_count = sum(1 for t in tokens if t in noise_keys)
+        if noise_count / max(1, len(tokens)) >= 0.5:
+            return True
+
+    # Совсем мало токенов → слабый сигнал, считаем шумом
+    if len(tokens) < 3:
+        return True
+
+    return False
+
+
+async def calculate_similarity_for_channel(
+    target_channel_id: int,
+    top_n: int = 10,
+    max_df_ratio: float = 0.3,   # отсечение слишком частых слов
+    min_keywords_per_channel: int = 4,  # минимум токенов после фильтрации
+) -> bool:
     """
     Считает похожие каналы для ОДНОГО channel_id на основе keywords_cache.
 
-    ВАЖНО:
-    - НИКОГДА не выбрасывает исключение из-за TF-IDF.
-    - В худшем случае пишет в analytics_results пустой список похожих каналов.
-    - Работает на русских/английских ключах, даже если это фразы.
+    ENGINE v2.0:
+    - используем только keywords_cache
+    - режем слишком частые токены (IDF-cutoff)
+    - выкидываем мусорные каналы (стикеры/эмодзи/гифки/мемосвалки)
+    - игнорируем каналы с маленьким числом ключей
+    - никогда не кидаем исключения «в лицо пользователю» — максимум пишем пустой результат
     """
-    print("ENGINE_SINGLE >>> RUN target =", target_channel_id)
+    print("ENGINE_SINGLE v2.0 >>> RUN target =", target_channel_id)
 
-    # 1. Забираем все каналы, у которых есть keywords_cache
     async with async_session_maker() as session:
         q = (
             select(
                 Channel.id,
                 Channel.username,
+                Channel.title,
                 KeywordsCache.keywords_json,
             )
             .join(KeywordsCache, KeywordsCache.channel_id == Channel.id)
@@ -49,13 +95,13 @@ async def calculate_similarity_for_channel(target_channel_id: int, top_n: int = 
         rows = (await session.execute(q)).all()
 
     if not rows:
-        # Вообще нет каналов с кэшем — это реальная ошибка конфигурации
         raise ValueError("Нет ни одного канала с keywords_cache.")
 
-    ids: List[int] = []
-    docs: List[str] = []
+    # ---- 1. Собираем сырые токены по каналам ----
+    raw_tokens_by_channel: Dict[int, List[str]] = {}
+    meta_by_channel: Dict[int, Dict[str, str | None]] = {}
 
-    for cid, username, kw_json in rows:
+    for cid, username, title, kw_json in rows:
         if not kw_json:
             continue
 
@@ -67,57 +113,123 @@ async def calculate_similarity_for_channel(target_channel_id: int, top_n: int = 
         if not isinstance(kws, list) or not kws:
             continue
 
-        # Нормализуем ключи в список токенов
-        tokens: List[str] = []
+        # нормализуем ключевые слова → набор токенов
+        token_set: Set[str] = set()
         for kw in kws:
             norm = normalize_text(str(kw))
             if not norm:
                 continue
-            tokens.extend(norm.split())
+            for t in norm.split():
+                # отсечём совсем короткие и числовые
+                if len(t) < 3:
+                    continue
+                if re.fullmatch(r"\d+", t):
+                    continue
+                token_set.add(t)
 
-        # Если после нормализации вообще нет токенов — пропускаем канал
+        tokens = sorted(token_set)
         if not tokens:
-            # Но если это целевой канал — мы просто не сможем по нему считать,
-            # ниже отдадим пустой результат, без ошибки для пользователя.
             continue
 
+        raw_tokens_by_channel[cid] = tokens
+        meta_by_channel[cid] = {"username": username, "title": title}
+
+    if target_channel_id not in raw_tokens_by_channel:
+        # Для целевого канала нет токенов → просто сохраняем пустой результат
+        async with async_session_maker() as session:
+            await session.execute(
+                delete(AnalyticsResults).where(AnalyticsResults.channel_id == target_channel_id)
+            )
+            session.add(
+                AnalyticsResults(
+                    channel_id=target_channel_id,
+                    similar_channels_json=json.dumps([]),
+                )
+            )
+            await session.commit()
+        return False
+
+    # ---- 2. Отбрасываем шумовые каналы (стикеры/мемы и т.п.) ----
+    filtered_tokens_by_channel: Dict[int, List[str]] = {}
+    for cid, tokens in raw_tokens_by_channel.items():
+        meta = meta_by_channel.get(cid, {})
+        if cid != target_channel_id and is_noise_channel(meta.get("username"), meta.get("title"), tokens):
+            continue
+        filtered_tokens_by_channel[cid] = tokens
+
+    if target_channel_id not in filtered_tokens_by_channel:
+        # наш канал сам оказался шумовым → нет смысла считать similarity
+        async with async_session_maker() as session:
+            await session.execute(
+                delete(AnalyticsResults).where(AnalyticsResults.channel_id == target_channel_id)
+            )
+            session.add(
+                AnalyticsResults(
+                    channel_id=target_channel_id,
+                    similar_channels_json=json.dumps([]),
+                )
+            )
+            await session.commit()
+        return False
+
+    # ---- 3. Считаем document frequency (DF) по токенам ----
+    df: Dict[str, int] = {}
+    for tokens in filtered_tokens_by_channel.values():
+        unique = set(tokens)
+        for t in unique:
+            df[t] = df.get(t, 0) + 1
+
+    num_docs = len(filtered_tokens_by_channel)
+    if num_docs < 2:
+        # слишком мало каналов для сравнения
+        async with async_session_maker() as session:
+            await session.execute(
+                delete(AnalyticsResults).where(AnalyticsResults.channel_id == target_channel_id)
+            )
+            session.add(
+                AnalyticsResults(
+                    channel_id=target_channel_id,
+                    similar_channels_json=json.dumps([]),
+                )
+            )
+            await session.commit()
+        return False
+
+    # ---- 4. Отсекаем слишком частые токены (IDF-cutoff) ----
+    # Токен, встречающийся > max_df_ratio * каналов, считаем шумом ("новости", "экономика", "Россия", ...).
+    frequent_tokens: Set[str] = set()
+    for t, count in df.items():
+        if count / num_docs > max_df_ratio:
+            frequent_tokens.add(t)
+
+    # Формируем окончательный корпус: выкидываем мусорные токены
+    ids: List[int] = []
+    docs: List[str] = []
+
+    for cid, tokens in filtered_tokens_by_channel.items():
+        cleaned = [t for t in tokens if t not in frequent_tokens]
+        if len(cleaned) < min_keywords_per_channel:
+            # канал слишком "пустой" после фильтров
+            continue
         ids.append(cid)
-        docs.append(" ".join(tokens))
+        docs.append(" ".join(cleaned))
 
-    # Если целевой канал вообще не попал в выборку (нет токенов, пустой текст и т.п.)
-    if target_channel_id not in ids:
-        # Записываем пустой analytics_results и считаем, что всё ОК, просто похожих нет.
+    # Если после всех фильтров наш канал выпал → нет похожих
+    if target_channel_id not in ids or len(ids) < 2:
         async with async_session_maker() as session:
             await session.execute(
                 delete(AnalyticsResults).where(AnalyticsResults.channel_id == target_channel_id)
             )
-            empty_payload = json.dumps([])
             session.add(
                 AnalyticsResults(
                     channel_id=target_channel_id,
-                    similar_channels_json=empty_payload,
+                    similar_channels_json=json.dumps([]),
                 )
             )
             await session.commit()
         return False
 
-    # Если в выборке вообще только один канал (наш) — считаем, что похожих нет.
-    if len(ids) == 1:
-        async with async_session_maker() as session:
-            await session.execute(
-                delete(AnalyticsResults).where(AnalyticsResults.channel_id == target_channel_id)
-            )
-            empty_payload = json.dumps([])
-            session.add(
-                AnalyticsResults(
-                    channel_id=target_channel_id,
-                    similar_channels_json=empty_payload,
-                )
-            )
-            await session.commit()
-        return False
-
-    # 3. Строим TF-IDF только по тем документам, которые прошли фильтрацию
+    # ---- 5. Строим TF-IDF и косинусное сходство ----
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.metrics.pairwise import cosine_similarity
 
@@ -128,7 +240,6 @@ async def calculate_similarity_for_channel(target_channel_id: int, top_n: int = 
     target_index = ids.index(target_channel_id)
     sim_row = sim_matrix[target_index]
 
-    # 4. Формируем список (channel_id, score), исключая сам канал
     pairs = [
         (cid, float(score))
         for cid, score in zip(ids, sim_row)
@@ -139,7 +250,7 @@ async def calculate_similarity_for_channel(target_channel_id: int, top_n: int = 
     if top_n is not None and top_n > 0:
         pairs = pairs[:top_n]
 
-    # 5. Сохраняем результат в analytics_results (перезаписываем старый)
+    # ---- 6. Сохраняем результат ----
     async with async_session_maker() as session:
         await session.execute(
             delete(AnalyticsResults).where(AnalyticsResults.channel_id == target_channel_id)
