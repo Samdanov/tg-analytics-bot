@@ -1,10 +1,15 @@
 import json
 import re
+from datetime import datetime
 
 from pymorphy2 import MorphAnalyzer
-from app.db.repo import get_pool
+from app.db.database import async_session_maker
+from app.db.models import Channel, KeywordsCache
 from app.services.llm.client import ask_llm
 from app.services.llm.prompt import build_analysis_prompt
+from app.core.logging import get_logger
+
+logger = get_logger(__name__)
 
 morph = MorphAnalyzer()
 
@@ -37,7 +42,7 @@ def normalize_russian_keywords(words: list) -> list:
 
         try:
             norm = morph.parse(w)[0].normal_form
-        except:
+        except Exception:
             norm = w
 
         if norm not in normalized:
@@ -47,11 +52,10 @@ def normalize_russian_keywords(words: list) -> list:
 
 
 async def analyze_channel(channel: dict, posts: list):
-    print("=== LLM ANALYSIS START ===")
-    print("POST COUNT:", len(posts))
+    logger.info("LLM analysis started: posts=%s", len(posts))
 
     for p in posts[:5]:
-        print("POST TEXT SAMPLE:", repr(p.get("text")))
+        logger.debug("POST TEXT SAMPLE: %r", p.get("text"))
 
     description = clean_text(channel.get("description", "") or "")
 
@@ -83,7 +87,7 @@ async def analyze_channel(channel: dict, posts: list):
         return res
 
     except Exception as e:
-        print("LLM ERROR:", e)
+        logger.error("LLM response parse error: %s", e)
 
         fallback_source = (description + " " + posts_text).strip()
         kws = extract_keywords_from_text(fallback_source)
@@ -97,27 +101,32 @@ async def analyze_channel(channel: dict, posts: list):
 
 
 async def save_analysis(channel_id: int, result: dict):
-    pool = await get_pool()
+    """
+    Сохраняет результат LLM в channels/keywords_cache через SQLAlchemy.
+    """
+    keywords = result.get("keywords") or []
+    audience = result.get("audience", "")
 
-    async with pool.acquire() as conn:
-        await conn.execute(
-            """UPDATE channels SET keywords = $2, last_update = NOW() WHERE id = $1""",
-            channel_id,
-            result.get("keywords") or []
-        )
+    async with async_session_maker() as session:
+        channel = await session.get(Channel, channel_id)
+        if channel:
+            channel.keywords = keywords
+            channel.last_update = datetime.utcnow()
 
-        await conn.execute(
-            """
-            INSERT INTO keywords_cache (channel_id, audience, keywords_json)
-            VALUES ($1, $2, $3)
-            ON CONFLICT(channel_id) DO UPDATE
-            SET audience = EXCLUDED.audience,
-                keywords_json = EXCLUDED.keywords_json,
-                created_at = NOW()
-            """,
-            channel_id,
-            result.get("audience", ""),
-            json.dumps(result.get("keywords") or [])
-        )
+        kc = await session.get(KeywordsCache, channel_id)
+        if not kc:
+            kc = KeywordsCache(
+                channel_id=channel_id,
+                audience=audience,
+                keywords_json=json.dumps(keywords),
+                created_at=datetime.utcnow(),
+            )
+            session.add(kc)
+        else:
+            kc.audience = audience
+            kc.keywords_json = json.dumps(keywords)
+            kc.created_at = datetime.utcnow()
 
-    print("SAVE_ANALYSIS OK → channel_id:", channel_id, "keywords:", result.get("keywords"))
+        await session.commit()
+
+    logger.info("SAVE_ANALYSIS OK → channel_id=%s keywords=%s", channel_id, keywords)

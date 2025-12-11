@@ -1,4 +1,5 @@
 from typing import Tuple, Optional, Dict, Any, List
+import asyncio
 
 from telethon.errors import (
     UsernameInvalidError,
@@ -9,7 +10,7 @@ from telethon.errors import (
     RPCError,
 )
 
-from .client import client
+from .client import client, start_client
 
 
 def _normalize_username(raw: str) -> str:
@@ -22,20 +23,33 @@ def _normalize_username(raw: str) -> str:
     )
 
 
+async def _with_retries(coro_factory, attempts: int = 3, base_delay: float = 1.0, timeout: float = 20.0):
+    last_exc = None
+    for attempt in range(attempts):
+        try:
+            return await asyncio.wait_for(coro_factory(), timeout=timeout)
+        except Exception as exc:
+            last_exc = exc
+            if attempt == attempts - 1:
+                break
+            await asyncio.sleep(base_delay * (2 ** attempt))
+    if last_exc:
+        raise last_exc
+
+
 async def get_channel_with_posts(
     raw_username: str,
     limit: int = 50,
 ) -> Tuple[Optional[Dict[str, Any]], Optional[List[Dict[str, Any]]], Optional[str]]:
 
+    await start_client()
+
     username = _normalize_username(raw_username)
     if not username:
         return None, None, "Некорректный username"
 
-    # -------------------------
-    # 1) безопасный get_entity
-    # -------------------------
     try:
-        entity = await client.get_entity(f"https://t.me/{username}")
+        entity = await _with_retries(lambda: client.get_entity(f"https://t.me/{username}"))
     except (UsernameInvalidError, UsernameNotOccupiedError):
         return None, None, "Такого username не существует"
     except (ChannelInvalidError, ChannelPrivateError):
@@ -47,15 +61,11 @@ async def get_channel_with_posts(
     except Exception as e:
         return None, None, f"Ошибка: {type(e).__name__}: {e}"
 
-    # Не канал?
     if not getattr(entity, "broadcast", False):
         return None, None, "Это не канал"
 
-    # -------------------------
-    # 2) получаем полную инфу
-    # -------------------------
     try:
-        full = await client.get_entity(entity)
+        full = await _with_retries(lambda: client.get_entity(entity))
     except Exception:
         full = None
 
@@ -74,11 +84,8 @@ async def get_channel_with_posts(
         "participants_count": subs,
     }
 
-    # -------------------------
-    # 3) последние посты
-    # -------------------------
     try:
-        messages = await client.get_messages(entity, limit=limit)
+        messages = await _with_retries(lambda: client.get_messages(entity, limit=limit))
     except Exception as e:
         return channel_data, [], f"Ошибка получения постов: {e}"
 

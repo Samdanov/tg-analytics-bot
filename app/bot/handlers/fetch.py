@@ -8,7 +8,7 @@ from telethon.errors import (
     UsernameInvalidError,
 )
 
-from app.services.telegram_parser.client import client
+from app.services.telegram_parser.client import client, start_client
 
 router = Router()
 
@@ -19,7 +19,6 @@ async def resolve_channel(username: str):
     Работает только с настоящими каналами.
     """
 
-    # Нормализуем ввод
     username = (
         username.strip()
         .replace("https://t.me/", "")
@@ -39,7 +38,6 @@ async def resolve_channel(username: str):
 
         entity = result.chats[0]
 
-        # Проверка: это канал?
         if not getattr(entity, "broadcast", False):
             return None, "Это не канал (чат/группа/пользователь)"
 
@@ -57,16 +55,13 @@ async def resolve_channel(username: str):
 
 @router.message(Command("fetch"))
 async def fetch_handler(message: Message):
-    """
-    Команда: /fetch @username
-    """
-
     args = message.text.split()
     if len(args) < 2:
         return await message.answer("Использование: /fetch @username")
 
     username = args[1]
 
+    await start_client()
     entity, error = await resolve_channel(username)
 
     if error:

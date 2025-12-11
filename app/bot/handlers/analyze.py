@@ -2,9 +2,7 @@ from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message
 
-from app.db.repo import get_pool
-from app.services.telegram_parser.channel_info import get_channel_with_posts
-from app.services.llm.analyzer import analyze_channel, save_analysis
+from app.services.usecases.channel_service import analyze_usecase
 
 router = Router()
 
@@ -17,30 +15,9 @@ async def analyze_handler(message: Message):
 
     username = args[1]
 
-    pool = await get_pool()
-
-    # Из БД берём канал и его посты
-    channel, posts, error = await get_channel_with_posts(username, limit=50)
+    result, error = await analyze_usecase(username, post_limit=50)
     if error:
         return await message.answer(f"❌ {error}")
-
-    # Ищем ID в таблице channels
-    async with pool.acquire() as conn:
-        row = await conn.fetchrow(
-            "SELECT id FROM channels WHERE username = $1",
-            channel["username"]
-        )
-        
-        if not row:
-            return await message.answer("Сначала добавьте канал командой /add_channel")
-        
-        channel_id = row["id"]
-
-    # Аналитика
-    result = await analyze_channel(channel, posts)
-
-    # Сохраняем
-    await save_analysis(channel_id, result)
 
     await message.answer(
         f"📊 Анализ готов!\n\n"

@@ -1,98 +1,87 @@
 # app/services/similarity_engine/engine.py
 
 import json
-import re
-import unicodedata
 from datetime import datetime
-from typing import List, Tuple
+from typing import List, Tuple, Dict, Set
 
-from sqlalchemy import select, delete
+from sqlalchemy import delete
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 from app.db.database import async_session_maker
-from app.db.models import Channel, KeywordsCache, AnalyticsResults
+from app.db.models import AnalyticsResults
+from app.services.similarity_engine.shared import (
+    load_keywords_corpus,
+    is_noise_channel,
+)
+from app.core.logging import get_logger
 
-
-def normalize_text(text: str) -> str:
-    """
-    Мягкая нормализация:
-    - убираем удвоенные пробелы
-    - оставляем цифры, буквы, бренды, короткие токены
-    - режем только явный мусор
-    """
-    if not text:
-        return ""
-    text = text.lower()
-    text = re.sub(r"[^0-9a-zа-яё\-]+", " ", text)  # оставляем дефис для брендов: chat-gpt, mid-journey
-    text = re.sub(r"\s+", " ", text).strip()
-    return text
+logger = get_logger(__name__)
 
 
 class SimilarityEngine:
-    def __init__(self, top_n: int = 10):
+    def __init__(self, top_n: int = 10, max_df_ratio: float = 0.3, min_keywords_per_channel: int = 4):
         self.top_n = top_n
+        self.max_df_ratio = max_df_ratio
+        self.min_keywords_per_channel = min_keywords_per_channel
 
-    async def load_docs(self) -> Tuple[List[int], List[str]]:
-        """
-        Загружаем ВСЕ каналы, у которых есть keywords_cache.
-        Нормализуем ключи так же, как в engine_single.
-        """
-        async with async_session_maker() as session:
-            q = (
-                select(Channel.id, KeywordsCache.keywords_json)
-                .join(KeywordsCache, KeywordsCache.channel_id == Channel.id)
-            )
-            rows = (await session.execute(q)).all()
+    async def _prepare_corpus(self) -> Tuple[List[int], List[str]]:
+        raw_tokens_by_channel, meta_by_channel = await load_keywords_corpus()
 
-        ids = []
-        docs = []
-
-        for cid, kw_json in rows:
-            if not kw_json:
+        # Отбрасываем шумовые каналы (для всех, не только таргета)
+        filtered: Dict[int, List[str]] = {}
+        for cid, tokens in raw_tokens_by_channel.items():
+            meta = meta_by_channel.get(cid, {})
+            if is_noise_channel(meta.get("username"), meta.get("title"), tokens):
                 continue
+            filtered[cid] = tokens
 
-            try:
-                kws = json.loads(kw_json)
-            except:
+        if len(filtered) < 2:
+            return [], []
+
+        # DF фильтр
+        df: Dict[str, int] = {}
+        for tokens in filtered.values():
+            unique = set(tokens)
+            for t in unique:
+                df[t] = df.get(t, 0) + 1
+
+        num_docs = len(filtered)
+        frequent_tokens: Set[str] = {
+            t for t, count in df.items() if count / num_docs > self.max_df_ratio
+        }
+
+        ids: List[int] = []
+        docs: List[str] = []
+        for cid, tokens in filtered.items():
+            cleaned = [t for t in tokens if t not in frequent_tokens]
+            if len(cleaned) < self.min_keywords_per_channel:
                 continue
-
-            if not isinstance(kws, list):
-                continue
-
-            tokens: List[str] = []
-            for kw in kws:
-                norm = normalize_text(str(kw))
-                if not norm:
-                    continue
-                tokens.extend(norm.split())
-
-            # если keywords полностью пустые — пропускаем
-            if len(tokens) == 0:
-                continue
-
             ids.append(cid)
-            docs.append(" ".join(tokens))
+            docs.append(" ".join(cleaned))
+
+        if len(ids) < 2:
+            return [], []
 
         return ids, docs
 
     async def calculate_similarity(self):
-        print("[ENGINE] Загружаю данные…")
+        logger.info("[ENGINE] загрузка данных…")
 
-        ids, docs = await self.load_docs()
+        ids, docs = await self._prepare_corpus()
 
         if len(ids) < 2:
-            print("[ENGINE] Недостаточно каналов для similarity.")
+            logger.warning("[ENGINE] недостаточно каналов для similarity")
             return
 
-        print(f"[ENGINE] Каналов для анализа: {len(ids)}")
+        logger.info("[ENGINE] каналов для анализа: %s", len(ids))
 
         vectorizer = TfidfVectorizer()
         X = vectorizer.fit_transform(docs)
 
         sim = cosine_similarity(X)
 
-        print("[ENGINE] Считаю похожесть…")
+        logger.info("[ENGINE] считаю похожесть…")
         results = []
 
         for idx, cid in enumerate(ids):
@@ -109,11 +98,13 @@ class SimilarityEngine:
 
             results.append((cid, pairs))
 
-        print("[ENGINE] Сохраняю результаты…")
+        logger.info("[ENGINE] сохраняю результаты…")
 
         async with async_session_maker() as session:
-            # Очищаем старые результаты
-            await session.execute(delete(AnalyticsResults))
+            # удаляем только для присутствующих каналов, не весь AnalyticsResults
+            await session.execute(
+                delete(AnalyticsResults).where(AnalyticsResults.channel_id.in_(ids))
+            )
 
             for cid, similar in results:
                 payload = json.dumps(
@@ -130,4 +121,4 @@ class SimilarityEngine:
 
             await session.commit()
 
-        print("[ENGINE] Готово!")
+        logger.info("[ENGINE] готово")

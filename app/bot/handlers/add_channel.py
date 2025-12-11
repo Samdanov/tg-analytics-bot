@@ -2,8 +2,7 @@ from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message
 
-from app.services.telegram_parser.channel_info import get_channel_with_posts
-from app.db.repo import get_pool, save_channel, save_posts
+from app.services.usecases.channel_service import add_channel_usecase
 
 router = Router()
 
@@ -20,19 +19,15 @@ async def add_channel_handler(message: Message):
 
     raw = args[1]
 
-    channel_data, posts, error = await get_channel_with_posts(raw_username=raw, limit=50)
+    channel_data, channel_id, posts_count, error = await add_channel_usecase(raw_username=raw, post_limit=50)
 
     if error:
         return await message.answer(f"❌ {error}")
-
-    pool = await get_pool()
-    channel_id = await save_channel(pool, channel_data)
-    await save_posts(pool, channel_id, posts)
 
     await message.answer(
         f"✅ Канал сохранён в БД\n"
         f"<b>{channel_data['title']}</b>\n"
         f"username: @{channel_data['username']}\n"
         f"ID в БД: {channel_id}\n"
-        f"Сохранено постов: {len(posts)}"
+        f"Сохранено постов: {posts_count}"
     )

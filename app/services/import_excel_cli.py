@@ -1,13 +1,15 @@
-# app/services/import_excel_cli.py
-
 import asyncio
 import sys
 from pathlib import Path
 
+from app.core.config import config
+from app.core.logging import setup_logging
 from app.services.excel_importer import import_channels_from_excel
 
 
 async def main():
+    setup_logging()
+
     if len(sys.argv) < 2:
         print("Использование: python -m app.services.import_excel_cli /путь/к/файлу.xlsx [max_rows]")
         return

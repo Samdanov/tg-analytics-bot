@@ -4,8 +4,11 @@ import re
 import pandas as pd
 from typing import List, Optional
 
-from app.db.repo import get_pool, save_channel
+from app.db.repo import save_channel
 from app.services.llm.analyzer import save_analysis
+from app.core.logging import get_logger
+
+logger = get_logger(__name__)
 
 
 STOPWORDS = {
@@ -33,29 +36,25 @@ def extract_keywords(text: str, limit: int = 20) -> List[str]:
 
 
 async def import_channels_from_excel(path: str, max_rows: Optional[int] = None):
-    print(f"[IMPORT] Читаю Excel: {path}")
+    logger.info("[IMPORT] читаю Excel: %s", path)
 
-    # ВАЖНО: header=1 → берем вторую строку как названия колонок
     df = pd.read_excel(path, header=1)
 
     if max_rows:
         df = df.iloc[:max_rows]
 
-    print("[IMPORT] Строк к обработке:", len(df))
+    logger.info("[IMPORT] строк к обработке: %s", len(df))
 
-    pool = await get_pool()
     imported = 0
 
     for _, row in df.iterrows():
 
-        # username
         username = str(row.get("username") or "").strip()
         username = username.replace("@", "").replace("https://t.me/", "").replace("http://t.me/", "")
 
         if not username:
             continue
 
-        # title / description
         title = str(row.get("title") or "").strip()
         description = str(row.get("description") or "").strip()
 
@@ -64,46 +63,41 @@ async def import_channels_from_excel(path: str, max_rows: Optional[int] = None):
         if not description:
             description = title
 
-        # subscribers
         try:
             subscribers = int(row.get("subscribers") or 0)
-        except:
+        except Exception:
             subscribers = 0
 
-        # category
         category = str(row.get("category") or "").strip()
 
-        # build keywords
         full_text = f"{title} {description} {category} {username}"
         keywords = extract_keywords(full_text, limit=20)
 
         if not keywords:
             keywords = [username]
 
-        # save channel
         try:
-            channel_id = await save_channel(pool, {
+            channel_id = await save_channel({
                 "username": username,
                 "title": title,
                 "description": description,
                 "subscribers": subscribers
             })
         except Exception as e:
-            print(f"[IMPORT] Ошибка сохранения @{username}: {e}")
+            logger.error("[IMPORT] ошибка сохранения @%s: %s", username, e)
             continue
 
-        # save keywords_cache
         try:
             await save_analysis(channel_id, {
                 "audience": "",
                 "keywords": keywords
             })
         except Exception as e:
-            print(f"[IMPORT] Ошибка keywords_cache @{username}: {e}")
+            logger.error("[IMPORT] ошибка keywords_cache @%s: %s", username, e)
 
         imported += 1
         if imported % 1000 == 0:
-            print(f"[IMPORT] Импортировано каналов: {imported}")
+            logger.info("[IMPORT] импортировано каналов: %s", imported)
 
-    print(f"[IMPORT] Готово. Импортировано: {imported}")
+    logger.info("[IMPORT] готово. Импортировано: %s", imported)
     return imported

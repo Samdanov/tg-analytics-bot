@@ -12,10 +12,7 @@ from aiogram.types import (
     FSInputFile,
 )
 
-# 👉 ВАЖНО: импортируем ПРАВИЛЬНЫЙ pipeline
-from app.services.workflow_pipeline import run_full_analysis_pipeline
-
-# 👉 Импортируем сводку канала
+from app.services.usecases.channel_service import run_full_pipeline_usecase
 from app.services.helpers import build_channel_summary
 
 router = Router()
@@ -32,13 +29,11 @@ def _extract_channel_from_message(message: Message):
     username = None
     title = None
 
-    # 1. Пересланный пост от канала
     if message.forward_from_chat and message.forward_from_chat.type == "channel":
         ch = message.forward_from_chat
         username = ch.username
         title = ch.title
 
-    # 2. Текст сообщения
     if not username and message.text:
         m = USERNAME_RE.search(message.text)
         if m:
@@ -53,10 +48,6 @@ def _extract_channel_from_message(message: Message):
 
 @router.message(F.text | F.forward_from_chat)
 async def detect_channel_handler(message: Message):
-    """
-    Автоматически ищем канал в любом сообщении.
-    Если нашли — показываем кнопку 'Начать анализ'.
-    """
     username, title = _extract_channel_from_message(message)
     if not username:
         return
@@ -86,10 +77,6 @@ async def detect_channel_handler(message: Message):
 
 @router.callback_query(F.data.startswith("start_analysis:"))
 async def start_analysis_callback(callback: CallbackQuery):
-    """
-    Запускает полный анализ:
-    Telethon → LLM → Similarity → XLSX
-    """
     await callback.answer()
 
     username = callback.data.split(":", 1)[1]
@@ -99,7 +86,7 @@ async def start_analysis_callback(callback: CallbackQuery):
     )
 
     try:
-        report_path: Path = await run_full_analysis_pipeline(username)
+        report_path: Path = await run_full_pipeline_usecase(username)
     except ValueError as e:
         await msg.edit_text(f"⚠️ Не удалось выполнить анализ: {e}")
         return
@@ -107,11 +94,9 @@ async def start_analysis_callback(callback: CallbackQuery):
         await msg.edit_text(f"🔥 Ошибка: <code>{e}</code>")
         raise
 
-    # 💬 Отправляем сводку канала (ЦА, keywords, подписчики)
     summary = await build_channel_summary(username)
     await callback.message.answer(summary)
 
-    # 📄 Отправляем XLSX
     doc = FSInputFile(report_path)
     await msg.edit_text("✅ Анализ завершён, отправляю отчёт...")
 
