@@ -35,7 +35,7 @@ def extract_keywords(text: str, limit: int = 20) -> List[str]:
     return [w for w, _ in sorted(freq.items(), key=lambda x: -x[1])[:limit]]
 
 
-async def import_channels_from_excel(path: str, max_rows: Optional[int] = None):
+async def import_channels_from_excel(path: str, max_rows: Optional[int] = None, min_subscribers: int = 0):
     logger.info("[IMPORT] читаю Excel: %s", path)
 
     df = pd.read_excel(path, header=1)
@@ -67,6 +67,9 @@ async def import_channels_from_excel(path: str, max_rows: Optional[int] = None):
             subscribers = int(row.get("subscribers") or 0)
         except Exception:
             subscribers = 0
+
+        if subscribers < min_subscribers:
+            continue
 
         category = str(row.get("category") or "").strip()
 
