@@ -33,17 +33,30 @@ def extract_keywords_from_text(text: str, limit=20) -> list:
 def normalize_russian_keywords(words: list) -> list:
     normalized = []
     for w in words:
-        w = w.lower().strip()
+        w = w.strip()
 
         if len(w) < 3:
             continue
         if re.fullmatch(r"\d+", w):
             continue
 
-        try:
-            norm = morph.parse(w)[0].normal_form
-        except Exception:
-            norm = w
+        # Проверяем, содержит ли латиницу или цифры (технические термины, бренды)
+        has_latin = bool(re.search(r"[a-zA-Z]", w))
+        has_mixed = bool(re.search(r"[a-zA-Z]", w)) and bool(re.search(r"[а-яёА-ЯЁ]", w))
+        
+        # Не нормализуем:
+        # - латинские слова и бренды (Discord, Windows, SSD)
+        # - смешанные слова (Wi-Fi, iPhone)
+        # - слова с цифрами (Windows 11, Python3)
+        # - аббревиатуры в верхнем регистре (AI, ML, SSD)
+        if has_latin or has_mixed or re.search(r"\d", w) or w.isupper():
+            norm = w.lower()
+        else:
+            # Только чисто русские слова нормализуем через pymorphy2
+            try:
+                norm = morph.parse(w.lower())[0].normal_form
+            except Exception:
+                norm = w.lower()
 
         if norm not in normalized:
             normalized.append(norm)

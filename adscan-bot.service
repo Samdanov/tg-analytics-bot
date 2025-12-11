@@ -1,0 +1,18 @@
+[Unit]
+Description=ADSCAN AI Telegram Bot
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=alex
+WorkingDirectory=/home/alex/apps/tg-analytics-bot
+Environment="PATH=/home/alex/apps/tg-analytics-bot/venv/bin:/usr/local/bin:/usr/bin:/bin"
+Environment="PYTHONPATH=/home/alex/apps/tg-analytics-bot"
+ExecStart=/home/alex/apps/tg-analytics-bot/venv/bin/python -m app.main
+Restart=always
+RestartSec=10
+StandardOutput=append:/home/alex/apps/tg-analytics-bot/logs/bot.log
+StandardError=append:/home/alex/apps/tg-analytics-bot/logs/bot-error.log
+
+[Install]
+WantedBy=multi-user.target
