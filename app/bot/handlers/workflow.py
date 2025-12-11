@@ -98,15 +98,15 @@ async def detect_channel_handler(message: Message):
     kb = InlineKeyboardMarkup(
         inline_keyboard=[
             [
-                InlineKeyboardButton(text="🔟 10 каналов", callback_data=f"analyze:{username}:10"),
-                InlineKeyboardButton(text="2️⃣5️⃣ 25 каналов", callback_data=f"analyze:{username}:25"),
+                InlineKeyboardButton(text="📊 10 каналов", callback_data=f"analyze:{username}:10"),
+                InlineKeyboardButton(text="📊 25 каналов", callback_data=f"analyze:{username}:25"),
             ],
             [
-                InlineKeyboardButton(text="5️⃣0️⃣ 50 каналов", callback_data=f"analyze:{username}:50"),
-                InlineKeyboardButton(text="💯 100 каналов", callback_data=f"analyze:{username}:100"),
+                InlineKeyboardButton(text="📊 50 каналов", callback_data=f"analyze:{username}:50"),
+                InlineKeyboardButton(text="📊 100 каналов", callback_data=f"analyze:{username}:100"),
             ],
             [
-                InlineKeyboardButton(text="🔢 500 каналов (макс)", callback_data=f"analyze:{username}:500"),
+                InlineKeyboardButton(text="🚀 500 каналов (макс)", callback_data=f"analyze:{username}:500"),
             ],
         ]
     )
