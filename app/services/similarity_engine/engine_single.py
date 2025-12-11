@@ -1,5 +1,6 @@
 import json
 from typing import List, Dict, Set
+from math import log, sqrt
 
 from sqlalchemy import delete
 
@@ -7,7 +8,6 @@ from app.db.database import async_session_maker
 from app.db.models import AnalyticsResults
 from app.core.logging import get_logger
 from app.services.similarity_engine.shared import (
-    normalize_text,
     is_noise_channel,
     load_keywords_corpus,
 )
@@ -22,10 +22,10 @@ async def calculate_similarity_for_channel(
     min_keywords_per_channel: int = 4,
 ) -> bool:
     """
-    Считает похожие каналы для ОДНОГО channel_id на основе keywords_cache.
-    Общая логика нормализации/фильтрации вынесена в shared.
+    Лёгкий по памяти расчёт похожих каналов для одного channel_id.
+    Вместо большой TF-IDF матрицы считаем IDF и пересечение токенов.
     """
-    logger.info("ENGINE_SINGLE v2.1 run target=%s", target_channel_id)
+    logger.info("ENGINE_SINGLE v2.2 run target=%s", target_channel_id)
 
     raw_tokens_by_channel, meta_by_channel = await load_keywords_corpus()
 
@@ -66,8 +66,7 @@ async def calculate_similarity_for_channel(
 
     df: Dict[str, int] = {}
     for tokens in filtered_tokens_by_channel.values():
-        unique = set(tokens)
-        for t in unique:
+        for t in set(tokens):
             df[t] = df.get(t, 0) + 1
 
     num_docs = len(filtered_tokens_by_channel)
@@ -90,17 +89,14 @@ async def calculate_similarity_for_channel(
         if count / num_docs > max_df_ratio:
             frequent_tokens.add(t)
 
-    ids: List[int] = []
-    docs: List[str] = []
-
+    cleaned_by_channel: Dict[int, List[str]] = {}
     for cid, tokens in filtered_tokens_by_channel.items():
         cleaned = [t for t in tokens if t not in frequent_tokens]
         if len(cleaned) < min_keywords_per_channel:
             continue
-        ids.append(cid)
-        docs.append(" ".join(cleaned))
+        cleaned_by_channel[cid] = cleaned
 
-    if target_channel_id not in ids or len(ids) < 2:
+    if target_channel_id not in cleaned_by_channel or len(cleaned_by_channel) < 2:
         async with async_session_maker() as session:
             await session.execute(
                 delete(AnalyticsResults).where(AnalyticsResults.channel_id == target_channel_id)
@@ -114,23 +110,26 @@ async def calculate_similarity_for_channel(
             await session.commit()
         return False
 
-    from sklearn.feature_extraction.text import TfidfVectorizer
-    from sklearn.metrics.pairwise import cosine_similarity
+    # IDF weights
+    idf = {t: log(num_docs / (1 + df_val)) for t, df_val in df.items() if t not in frequent_tokens}
 
-    vectorizer = TfidfVectorizer()
-    X = vectorizer.fit_transform(docs)
-    sim_matrix = cosine_similarity(X)
+    target_tokens = cleaned_by_channel[target_channel_id]
+    target_set = set(target_tokens)
+    target_len = len(target_tokens)
 
-    target_index = ids.index(target_channel_id)
-    sim_row = sim_matrix[target_index]
+    pairs = []
+    for cid, tokens in cleaned_by_channel.items():
+        if cid == target_channel_id:
+            continue
+        common = target_set.intersection(tokens)
+        if not common:
+            continue
+        score = sum(idf.get(t, 0.0) for t in common)
+        denom = sqrt(target_len * len(tokens)) or 1.0
+        score /= denom
+        pairs.append((cid, float(score)))
 
-    pairs = [
-        (cid, float(score))
-        for cid, score in zip(ids, sim_row)
-        if cid != target_channel_id
-    ]
     pairs.sort(key=lambda x: x[1], reverse=True)
-
     if top_n is not None and top_n > 0:
         pairs = pairs[:top_n]
 

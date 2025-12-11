@@ -9,6 +9,7 @@ from telethon.errors import (
     FloodWaitError,
     RPCError,
 )
+from telethon.tl.functions.channels import GetFullChannelRequest
 
 from .client import client, start_client
 
@@ -64,17 +65,16 @@ async def get_channel_with_posts(
     if not getattr(entity, "broadcast", False):
         return None, None, "Это не канал"
 
-    try:
-        full = await _with_retries(lambda: client.get_entity(entity))
-    except Exception:
-        full = None
-
     about = ""
     subs = 0
 
-    if full and hasattr(full, "full_chat"):
-        about = getattr(full.full_chat, "about", "") or ""
-        subs = getattr(full.full_chat, "participants_count", 0) or 0
+    try:
+        full_channel = await _with_retries(lambda: client(GetFullChannelRequest(entity)))
+        if full_channel and hasattr(full_channel, "full_chat"):
+            about = getattr(full_channel.full_chat, "about", "") or ""
+            subs = getattr(full_channel.full_chat, "participants_count", 0) or 0
+    except Exception:
+        pass
 
     channel_data = {
         "id": entity.id,

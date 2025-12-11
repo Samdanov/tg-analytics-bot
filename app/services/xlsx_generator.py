@@ -136,7 +136,8 @@ async def generate_similar_channels_xlsx(
 
 
     # 6) Заполняем строки (даже если список пустой — это нормально)
-    for item in similar_list:
+    # Ограничиваем выдачу первыми 500 каналами, чтобы файл не разрастался
+    for item in similar_list[:500]:
         ch_id = item.get("channel_id")
         score = float(item.get("score", 0.0))
         ch = channels_map.get(ch_id)

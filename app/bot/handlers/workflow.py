@@ -1,6 +1,7 @@
 # app/bot/handlers/workflow.py
 
 import re
+import time
 from pathlib import Path
 
 from aiogram import Router, F
@@ -18,6 +19,28 @@ from app.services.helpers import build_channel_summary
 router = Router()
 
 USERNAME_RE = re.compile(r"(?:t\.me/|@)([A-Za-z0-9_]{3,})")
+
+# Простой кеш для дедупликации media_group
+_media_group_cache = {}
+_CACHE_TTL = 60  # секунд
+
+
+def _is_duplicate_media_group(media_group_id: str | None) -> bool:
+    """Проверяет, был ли уже обработан этот media_group."""
+    if not media_group_id:
+        return False
+    
+    now = time.time()
+    # Очистка устаревших записей
+    expired = [k for k, v in _media_group_cache.items() if now - v > _CACHE_TTL]
+    for k in expired:
+        _media_group_cache.pop(k, None)
+    
+    if media_group_id in _media_group_cache:
+        return True
+    
+    _media_group_cache[media_group_id] = now
+    return False
 
 
 def _extract_channel_from_message(message: Message):
@@ -39,6 +62,13 @@ def _extract_channel_from_message(message: Message):
         if m:
             username = m.group(1)
             title = username
+    
+    # Также проверяем caption (для постов с картинками)
+    if not username and message.caption:
+        m = USERNAME_RE.search(message.caption)
+        if m:
+            username = m.group(1)
+            title = username
 
     if username:
         username = username.lstrip("@")
@@ -46,8 +76,12 @@ def _extract_channel_from_message(message: Message):
     return username, title
 
 
-@router.message(F.text | F.forward_from_chat)
+@router.message(F.text | F.forward_from_chat | F.photo | F.video)
 async def detect_channel_handler(message: Message):
+    # Игнорируем дубликаты из media_group (альбомы)
+    if _is_duplicate_media_group(message.media_group_id):
+        return
+
     username, title = _extract_channel_from_message(message)
     if not username:
         return

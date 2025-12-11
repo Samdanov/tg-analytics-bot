@@ -51,59 +51,90 @@ def normalize_russian_keywords(words: list) -> list:
     return normalized[:20]
 
 
-async def analyze_channel(channel: dict, posts: list):
+def try_parse_json(raw: str):
+    try:
+        return json.loads(raw)
+    except Exception:
+        pass
+
+    m = re.search(r"```(?:json)?\s*([\s\S]*?)```", raw)
+    if m:
+        try:
+            return json.loads(m.group(1).strip())
+        except Exception:
+            pass
+
+    m = re.search(r"\{[\s\S]*\}", raw)
+    if m:
+        try:
+            return json.loads(m.group(0))
+        except Exception:
+            pass
+
+    return None
+
+
+async def analyze_channel(channel: dict, posts: list, llm_retries: int = 2):
     logger.info("LLM analysis started: posts=%s", len(posts))
 
     for p in posts[:5]:
         logger.debug("POST TEXT SAMPLE: %r", p.get("text"))
 
-    description = clean_text(channel.get("description", "") or "")
+    title = clean_text(channel.get("title", "") or "")
+    description = clean_text(channel.get("description", "") or channel.get("about", "") or "")
 
-    fragments = []
-    for p in posts[:20]:
+    all_posts_text = []
+    for p in posts:
         text = clean_text(p.get("text", ""))
         if text:
-            fragments.append(text[:500])
+            all_posts_text.append(text[:500])
+
+    fragments = all_posts_text[:20]
 
     if not fragments and not description:
+        kws = extract_keywords_from_text(title, limit=20)
+        kws = normalize_russian_keywords(kws)
         return {
             "audience": "Контента нет — анализ невозможен.",
-            "keywords": [],
+            "keywords": kws if kws else [channel.get("username", "unknown")],
             "tone": ""
         }
 
     posts_text = "\n\n".join(fragments)
     prompt = build_analysis_prompt(description, posts_text)
 
-    raw = await ask_llm(prompt, max_tokens=600)
+    last_error = None
+    for attempt in range(llm_retries + 1):
+        try:
+            raw = await ask_llm(prompt, max_tokens=600)
+            res = try_parse_json(raw)
 
-    try:
-        res = json.loads(raw)
+            if res and isinstance(res.get("keywords"), list):
+                kws = res.get("keywords") or []
+                kws = normalize_russian_keywords(kws)
+                res["keywords"] = kws
+                return res
+            else:
+                last_error = f"Invalid JSON structure: {raw[:200]}"
+                logger.warning("LLM attempt %s: %s", attempt + 1, last_error)
 
-        kws = res.get("keywords") or []
-        kws = normalize_russian_keywords(kws)
-        res["keywords"] = kws
+        except Exception as e:
+            last_error = str(e)
+            logger.warning("LLM attempt %s error: %s", attempt + 1, e)
 
-        return res
+    logger.error("LLM failed after %s attempts: %s", llm_retries + 1, last_error)
+    fallback_source = " ".join([title, description] + all_posts_text)
+    kws = extract_keywords_from_text(fallback_source, limit=30)
+    kws = normalize_russian_keywords(kws)
 
-    except Exception as e:
-        logger.error("LLM response parse error: %s", e)
-
-        fallback_source = (description + " " + posts_text).strip()
-        kws = extract_keywords_from_text(fallback_source)
-        kws = normalize_russian_keywords(kws)
-
-        return {
-            "audience": "Не удалось распарсить JSON",
-            "tone": "",
-            "keywords": kws
-        }
+    return {
+        "audience": "Не удалось получить анализ от LLM",
+        "tone": "",
+        "keywords": kws
+    }
 
 
 async def save_analysis(channel_id: int, result: dict):
-    """
-    Сохраняет результат LLM в channels/keywords_cache через SQLAlchemy.
-    """
     keywords = result.get("keywords") or []
     audience = result.get("audience", "")
 

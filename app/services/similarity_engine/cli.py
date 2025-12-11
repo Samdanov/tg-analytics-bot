@@ -21,11 +21,11 @@ from app.db.models import AnalyticsResults
 logger = get_logger(__name__)
 
 
-async def build_corpus(max_df_ratio: float = 0.3, min_keywords_per_channel: int = 4):
-    raw_tokens_by_channel, meta_by_channel = await load_keywords_corpus()
-
+def build_filtered_corpus(raw_tokens_by_channel, meta_by_channel, max_df_ratio: float, min_keywords_per_channel: int, ids_filter=None):
     filtered = {}
     for cid, tokens in raw_tokens_by_channel.items():
+        if ids_filter is not None and cid not in ids_filter:
+            continue
         meta = meta_by_channel.get(cid, {})
         if is_noise_channel(meta.get("username"), meta.get("title"), tokens):
             continue
@@ -55,7 +55,8 @@ async def build_corpus(max_df_ratio: float = 0.3, min_keywords_per_channel: int 
 
 
 async def recalc_seq(top_n: int = 10, max_df_ratio: float = 0.3, min_keywords_per_channel: int = 4, commit_every: int = 200):
-    ids, docs = await build_corpus(max_df_ratio=max_df_ratio, min_keywords_per_channel=min_keywords_per_channel)
+    raw_tokens_by_channel, meta_by_channel = await load_keywords_corpus()
+    ids, docs = build_filtered_corpus(raw_tokens_by_channel, meta_by_channel, max_df_ratio, min_keywords_per_channel)
 
     total = len(ids)
     if total < 2:
@@ -102,6 +103,57 @@ async def recalc_seq(top_n: int = 10, max_df_ratio: float = 0.3, min_keywords_pe
     logger.info("[SEQ] готово")
 
 
+async def recalc_chunked(top_n: int = 10, chunk_size: int = 2000, max_df_ratio: float = 0.3, min_keywords_per_channel: int = 4):
+    raw_tokens_by_channel, meta_by_channel = await load_keywords_corpus()
+    all_ids = list(raw_tokens_by_channel.keys())
+    total = len(all_ids)
+    if total < 2:
+        logger.warning("[CHUNK] недостаточно каналов для similarity")
+        return
+
+    logger.info("[CHUNK] каналов для анализа: %s (chunk=%s)", total, chunk_size)
+
+    async with async_session_maker() as session:
+        for start in range(0, total, chunk_size):
+            chunk_ids = set(all_ids[start:start + chunk_size])
+            ids, docs = build_filtered_corpus(raw_tokens_by_channel, meta_by_channel, max_df_ratio, min_keywords_per_channel, ids_filter=chunk_ids)
+            if len(ids) < 2:
+                continue
+
+            vectorizer = TfidfVectorizer()
+            X = vectorizer.fit_transform(docs)
+
+            for idx, cid in enumerate(ids):
+                sims = cosine_similarity(X[idx], X).ravel()
+                sims[idx] = 0.0
+
+                pairs = [
+                    (other_id, float(score))
+                    for other_id, score in zip(ids, sims)
+                    if other_id != cid
+                ]
+                pairs.sort(key=lambda x: x[1], reverse=True)
+                if top_n is not None and top_n > 0:
+                    pairs = pairs[:top_n]
+
+                await session.execute(delete(AnalyticsResults).where(AnalyticsResults.channel_id == cid))
+                payload = json.dumps([
+                    {"channel_id": ch, "score": sc} for ch, sc in pairs
+                ])
+                session.add(
+                    AnalyticsResults(
+                        channel_id=cid,
+                        similar_channels_json=payload,
+                        created_at=datetime.utcnow(),
+                    )
+                )
+
+            await session.commit()
+            logger.info("[CHUNK] processed chunk %s-%s / %s", start + 1, min(total, start + chunk_size), total)
+
+    logger.info("[CHUNK] готово")
+
+
 async def main():
     setup_logging()
 
@@ -112,8 +164,11 @@ async def main():
         await recalc_all(top_n=top_n)
     elif mode == "seq":
         await recalc_seq(top_n=top_n)
+    elif mode == "chunk":
+        chunk_size = int(sys.argv[3]) if len(sys.argv) >= 4 else 2000
+        await recalc_chunked(top_n=top_n, chunk_size=chunk_size)
     else:
-        print("Usage: python -m app.services.similarity_engine.cli [batch|seq] [top_n]")
+        print("Usage: python -m app.services.similarity_engine.cli [batch|seq|chunk] [top_n] [chunk_size]")
 
 
 if __name__ == "__main__":
