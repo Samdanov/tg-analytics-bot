@@ -92,35 +92,47 @@ async def detect_channel_handler(message: Message):
         f"Найден канал:\n"
         f"<b>{title or username}</b>\n"
         f"@{username}\n\n"
-        f"Нажми кнопку, чтобы запустить анализ."
+        f"Выбери количество похожих каналов для анализа:"
     )
 
     kb = InlineKeyboardMarkup(
         inline_keyboard=[
             [
-                InlineKeyboardButton(
-                    text="🚀 Начать анализ",
-                    callback_data=f"start_analysis:{username}",
-                )
-            ]
+                InlineKeyboardButton(text="🔟 10 каналов", callback_data=f"analyze:{username}:10"),
+                InlineKeyboardButton(text="2️⃣5️⃣ 25 каналов", callback_data=f"analyze:{username}:25"),
+            ],
+            [
+                InlineKeyboardButton(text="5️⃣0️⃣ 50 каналов", callback_data=f"analyze:{username}:50"),
+                InlineKeyboardButton(text="💯 100 каналов", callback_data=f"analyze:{username}:100"),
+            ],
+            [
+                InlineKeyboardButton(text="🔢 500 каналов (макс)", callback_data=f"analyze:{username}:500"),
+            ],
         ]
     )
 
     await message.answer(text, reply_markup=kb)
 
 
-@router.callback_query(F.data.startswith("start_analysis:"))
+@router.callback_query(F.data.startswith("analyze:"))
 async def start_analysis_callback(callback: CallbackQuery):
     await callback.answer()
 
-    username = callback.data.split(":", 1)[1]
+    parts = callback.data.split(":")
+    if len(parts) < 3:
+        await callback.message.answer("❌ Ошибка: неверный формат команды")
+        return
+    
+    username = parts[1]
+    top_n = int(parts[2])
 
     msg = await callback.message.answer(
-        f"Запускаю анализ для @{username}...\nЭто может занять немного времени..."
+        f"Запускаю анализ для @{username}...\n"
+        f"Поиск {top_n} похожих каналов. Это может занять немного времени..."
     )
 
     try:
-        report_path: Path = await run_full_pipeline_usecase(username)
+        report_path: Path = await run_full_pipeline_usecase(username, top_n=top_n)
     except ValueError as e:
         await msg.edit_text(f"⚠️ Не удалось выполнить анализ: {e}")
         return
@@ -136,5 +148,5 @@ async def start_analysis_callback(callback: CallbackQuery):
 
     await callback.message.answer_document(
         document=doc,
-        caption=f"📊 Отчёт по похожим каналам для @{username}",
+        caption=f"📊 Отчёт: {top_n} похожих каналов для @{username}",
     )

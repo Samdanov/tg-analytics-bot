@@ -10,7 +10,7 @@ from app.core.logging import get_logger
 logger = get_logger(__name__)
 
 
-async def run_full_analysis_pipeline(username: str) -> Path:
+async def run_full_analysis_pipeline(username: str, top_n: int = 10) -> Path:
     """
     Полный пайплайн анализа канала:
     1) Получаем данные через Telethon
@@ -20,7 +20,7 @@ async def run_full_analysis_pipeline(username: str) -> Path:
     5) Генерация XLSX
     """
 
-    logger.info("WF: start pipeline username=%s", username)
+    logger.info("WF: start pipeline username=%s top_n=%s", username, top_n)
     channel_data, posts, error = await get_channel_with_posts(raw_username=username, limit=100)
 
     if error:
@@ -37,10 +37,10 @@ async def run_full_analysis_pipeline(username: str) -> Path:
 
     logger.info("WF: analysis completed channel_id=%s", channel_id)
 
-    await recalc_for_channel(channel_id)
+    await recalc_for_channel(channel_id, top_n=top_n)
 
     username_clean = channel_data.get("username") or username.lstrip("@")
     report_path = await generate_similar_channels_xlsx(username_clean)
 
-    logger.info("WF: pipeline finished channel_id=%s report=%s", channel_id, report_path)
+    logger.info("WF: pipeline finished channel_id=%s report=%s top_n=%s", channel_id, report_path, top_n)
     return report_path

@@ -54,8 +54,8 @@ async def analyze_usecase(username: str, post_limit: int = 50) -> Tuple[Optional
     return result, None
 
 
-async def run_full_pipeline_usecase(username: str) -> Path:
+async def run_full_pipeline_usecase(username: str, top_n: int = 10) -> Path:
     """
     Обёртка над полным пайплайном (Telethon → LLM → similarity → XLSX).
     """
-    return await run_full_analysis_pipeline(username)
+    return await run_full_analysis_pipeline(username, top_n=top_n)

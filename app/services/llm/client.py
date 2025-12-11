@@ -22,7 +22,7 @@ async def ask_llm(prompt: str, max_tokens: int = 512, timeout: float = 30.0, ret
             response = await asyncio.wait_for(
                 asyncio.to_thread(
                     client.chat.completions.create,
-                    model="gpt-5.1-mini",
+                    model="gpt-4.1-mini",
                     messages=[{"role": "user", "content": prompt}],
                     max_tokens=max_tokens,
                     temperature=0.2,
