@@ -910,3 +910,25 @@ Use `default=DefaultBotProperties(...)` instead.
 2025-12-12 16:32:26,432 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
 2025-12-12 16:32:26,669 [INFO] aiogram.dispatcher - Start polling
 2025-12-12 16:32:26,751 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 16:33:13,989 [INFO] aiogram.event - Update id=999071268 is handled. Duration 110 ms by bot id=8570381804
+2025-12-12 16:33:16,167 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1279926928, username=bezposhady, title=Беспощадный Банкстер
+2025-12-12 16:33:16,310 [INFO] app.bot.handlers.workflow - Channel check: @bezposhady - posts: 43, linked_channels: 1, avg_text_per_post: 322.0, link_posts_ratio: 93.02%
+2025-12-12 16:33:16,397 [INFO] app.services.workflow_pipeline - WF: start pipeline username=bezposhady top_n=100
+2025-12-12 16:33:16,427 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1279926928, username=bezposhady, title=Беспощадный Банкстер
+2025-12-12 16:33:16,889 [INFO] app.services.llm.analyzer - LLM analysis started: posts=82
+2025-12-12 16:33:23,601 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 16:33:23,673 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=1 keywords=['банкинг', 'финансы', 'экономика', 'финансовые продукт', 'кешбэк', 'инвестиция', 'недвижимость', 'законодательство', 'государственная политик', 'технология', 'кибербезопасность', 'нейросеть', 'автоматизация', 'рынок труд', 'социальная сфера', 'мошенничество', 'мобильные приложение', 'инновация', 'регулирование']
+2025-12-12 16:33:23,674 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=1
+2025-12-12 16:33:23,674 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=1
+2025-12-12 16:33:27,563 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=1 results=100
+2025-12-12 16:33:27,678 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=1 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_bezposhady_20251212_163327.xlsx top_n=100
+2025-12-12 16:33:27,827 [INFO] aiogram.event - Update id=999071269 is handled. Duration 11921 ms by bot id=8570381804
+2025-12-12 16:36:34,408 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 16:37:30,479 [INFO] telethon.client.updates - Got difference for channel 2307062628 updates
+2025-12-12 16:38:49,788 [INFO] telethon.client.updates - Got difference for channel 2307062628 updates
+2025-12-12 16:40:29,513 [INFO] telethon.client.updates - Got difference for channel 1279926928 updates
+2025-12-12 16:41:02,890 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-12 16:41:02,893 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 16:41:02,893 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-12 16:41:03,146 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-12 16:41:03,147 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
