@@ -1,5 +1,5 @@
 [Unit]
-Description=ADSCAN AI Telegram Bot
+Description=ORBITA AI Telegram Bot
 After=network.target postgresql.service
 
 [Service]

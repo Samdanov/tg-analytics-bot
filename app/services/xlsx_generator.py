@@ -138,10 +138,33 @@ async def generate_similar_channels_xlsx(
 
     # 6) Заполняем строки (даже если список пустой — это нормально)
     # Ограничиваем выдачу первыми 500 каналами, чтобы файл не разрастался
+    
+    # Сначала фильтруем список, исключая исходный канал по ID
+    source_channel_id_int = int(source_channel.id)
+    filtered_similar_list = []
+    for item in similar_list:
+        ch_id = item.get("channel_id")
+        if ch_id is not None:
+            ch_id_int = int(ch_id) if not isinstance(ch_id, int) else ch_id
+            # Исключаем исходный канал из списка похожих
+            if ch_id_int == source_channel_id_int:
+                continue
+        filtered_similar_list.append(item)
+    
+    # Находим максимальный score для нормализации (только среди отфильтрованных каналов)
+    max_score = 0.0
+    if filtered_similar_list:
+        scores = [float(item.get("score", 0.0)) for item in filtered_similar_list]
+        max_score = max(scores) if scores else 1.0
+    
     rows_added = 0
     rows_skipped_no_channel = 0
     
-    for item in similar_list[:500]:
+    # Получаем данные исходного канала для дополнительной проверки
+    source_username = source_channel.username or ""
+    source_title = getattr(source_channel, "title", "") or ""
+    
+    for item in filtered_similar_list[:500]:
         ch_id = item.get("channel_id")
         
         # Убеждаемся, что ch_id - это int
@@ -155,7 +178,37 @@ async def generate_similar_channels_xlsx(
             rows_skipped_no_channel += 1
             continue
 
-        relevance_percent = round(score * 100, 1)
+        # Дополнительная проверка: исключаем исходный канал по ID, username, title и subscribers
+        ch_username = getattr(ch, "username", "") or ""
+        ch_title = getattr(ch, "title", "") or ""
+        ch_subscribers = getattr(ch, "subscribers", None)
+        source_subscribers = getattr(source_channel, "subscribers", None)
+        
+        # Проверяем по ID (основная проверка)
+        if ch.id == source_channel.id:
+            continue
+        
+        # Дополнительная проверка по username (если оба не пустые)
+        if source_username and ch_username and ch_username == source_username:
+            continue
+        
+        # Дополнительная проверка по title и subscribers (если оба не пустые и совпадают)
+        # Это помогает отфильтровать исходный канал даже если ID не совпадает
+        if source_title and ch_title and ch_title.strip() == source_title.strip():
+            if source_subscribers is not None and ch_subscribers is not None:
+                if source_subscribers == ch_subscribers:
+                    continue
+            # Если subscribers не совпадают, но title совпадает - все равно пропускаем для безопасности
+            continue
+
+        # Нормализуем score до диапазона 0-1, затем умножаем на 100 для процентов
+        # Если max_score > 0, нормализуем; иначе используем score как есть (но ограничиваем максимумом 1.0)
+        if max_score > 0:
+            normalized_score = min(score / max_score, 1.0)  # Ограничиваем максимум 1.0
+        else:
+            normalized_score = min(score, 1.0)  # Если max_score = 0, просто ограничиваем 1.0
+        
+        relevance_percent = round(normalized_score * 100, 1)
         
         # Для ID-based каналов (username начинается с "id:") не создаём ссылку
         if ch.username and ch.username.startswith("id:"):

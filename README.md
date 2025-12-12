@@ -1,4 +1,4 @@
-# ADSCAN AI — Аналитик Telegram-каналов
+# ORBITA AI — Аналитик Telegram-каналов
 
 🤖 Telegram-бот с AI для анализа целевой аудитории каналов и поиска похожих каналов для размещения рекламы.
 
@@ -106,19 +106,19 @@ PYTHONPATH=/home/alex/apps/tg-analytics-bot python -m app.main
 
 ```bash
 # Установка
-sudo cp adscan-bot.service /etc/systemd/system/
+sudo cp orbita-bot.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable adscan-bot
-sudo systemctl start adscan-bot
+sudo systemctl enable orbita-bot
+sudo systemctl start orbita-bot
 
 # Проверка статуса
-sudo systemctl status adscan-bot
+sudo systemctl status orbita-bot
 
 # Просмотр логов
 tail -f /home/alex/apps/tg-analytics-bot/logs/bot.log
 
 # Перезапуск
-sudo systemctl restart adscan-bot
+sudo systemctl restart orbita-bot
 ```
 
 ## 💬 Команды бота
@@ -192,7 +192,7 @@ tg-analytics-bot/
 ├── reports/                   # Сгенерированные отчёты
 ├── logs/                      # Логи
 ├── requirements.txt
-├── adscan-bot.service        # Systemd service
+├── orbita-bot.service        # Systemd service
 └── README.md
 ```
 
@@ -227,7 +227,7 @@ Excel Generator (отчёт)
 
 ```bash
 # Проверить логи
-sudo journalctl -u adscan-bot -n 100
+sudo journalctl -u orbita-bot -n 100
 
 # Проверить конфигурацию
 python -c "from app.core.config import validate_config; validate_config()"
@@ -263,7 +263,7 @@ tail -f /home/alex/apps/tg-analytics-bot/logs/bot.log
 tail -f /home/alex/apps/tg-analytics-bot/logs/bot-error.log
 
 # Systemd journal
-sudo journalctl -u adscan-bot -f
+sudo journalctl -u orbita-bot -f
 ```
 
 ### Метрики БД
@@ -308,12 +308,12 @@ Proprietary - All rights reserved
 
 ## 👨‍💻 Автор
 
-Alex - [Telegram Bot](https://t.me/adscan_ai_bot)
+Alex - [Telegram Bot](https://t.me/orbita_ai_bot)
 
 ## 🆘 Поддержка
 
 Если возникли проблемы:
 1. Проверь логи (`tail -f logs/bot.log`)
-2. Проверь статус сервиса (`sudo systemctl status adscan-bot`)
+2. Проверь статус сервиса (`sudo systemctl status orbita-bot`)
 3. Запусти health check (`python -m app.services.health_cli`)
 4. Проверь .env конфигурацию

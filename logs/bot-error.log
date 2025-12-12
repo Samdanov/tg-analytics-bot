@@ -802,3 +802,111 @@ Use `default=DefaultBotProperties(...)` instead.
 2025-12-12 16:07:17,501 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32475 results=100
 2025-12-12 16:07:17,659 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=32475 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_id:-1002508742544_20251212_160717.xlsx top_n=100
 2025-12-12 16:07:17,872 [INFO] aiogram.event - Update id=999071261 is handled. Duration 13723 ms by bot id=8570381804
+2025-12-12 16:15:00,244 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-12 16:15:00,247 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 16:15:00,247 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-12 16:15:00,499 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-12 16:15:00,501 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+/home/alex/apps/tg-analytics-bot/app/main.py:24: DeprecationWarning: Passing `parse_mode`, `disable_web_page_preview` or `protect_content` to Bot initializer is deprecated. This arguments will be removed in 3.5.0 version
+Use `default=DefaultBotProperties(...)` instead.
+  bot = Bot(token=config.bot_token, parse_mode=ParseMode.HTML)
+2025-12-12 16:15:08,946 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-12 16:15:08,949 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-12 16:15:09,056 [INFO] aiogram.dispatcher - Start polling
+2025-12-12 16:15:09,136 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 16:15:10,068 [INFO] app.bot.handlers.workflow - Channel without username detected: TERMINAL (ID: -1002508742544)
+2025-12-12 16:15:10,126 [INFO] aiogram.event - Update id=999071262 is handled. Duration 58 ms by bot id=8570381804
+2025-12-12 16:15:12,228 [INFO] app.services.telegram_parser.channel_info - Entity received: id=2508742544, username=None, title=TERMINAL
+2025-12-12 16:15:12,474 [INFO] app.services.workflow_pipeline - WF: start pipeline username=-1002508742544 top_n=500
+2025-12-12 16:15:12,487 [INFO] app.services.telegram_parser.channel_info - Entity received: id=2508742544, username=None, title=TERMINAL
+2025-12-12 16:15:12,734 [INFO] app.db.repo - Channel without username, using ID: id:-1002508742544 (original channel_data['id']=-1002508742544, type=<class 'int'>)
+2025-12-12 16:15:12,896 [INFO] app.services.llm.analyzer - LLM analysis started: posts=81
+2025-12-12 16:15:19,522 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 16:15:19,578 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32475 keywords=['программирование', 'frontend', 'css', 'javascript', 'python', 'linux', 'devops', 'git', 'docker', 'алгоритм', 'game development', 'облачные технология', 'искусственный интеллект', 'data science', 'кибербезопасность', 'собеседование', 'вёрстка', 'интерактивное обучение', 'командная строк', 'архитектура']
+2025-12-12 16:15:19,578 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32475
+2025-12-12 16:15:19,579 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32475
+2025-12-12 16:15:22,972 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32475 results=390
+2025-12-12 16:15:23,196 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=32475 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_id:-1002508742544_20251212_161523.xlsx top_n=500
+2025-12-12 16:15:23,562 [INFO] aiogram.event - Update id=999071263 is handled. Duration 11404 ms by bot id=8570381804
+2025-12-12 16:18:04,240 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 16:18:09,738 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 16:18:44,868 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 16:19:04,392 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 16:19:13,509 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-12 16:19:13,510 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 16:19:13,510 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-12 16:19:13,762 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-12 16:19:13,763 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+/home/alex/apps/tg-analytics-bot/app/main.py:24: DeprecationWarning: Passing `parse_mode`, `disable_web_page_preview` or `protect_content` to Bot initializer is deprecated. This arguments will be removed in 3.5.0 version
+Use `default=DefaultBotProperties(...)` instead.
+  bot = Bot(token=config.bot_token, parse_mode=ParseMode.HTML)
+2025-12-12 16:19:22,724 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-12 16:19:22,727 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-12 16:19:22,814 [INFO] aiogram.dispatcher - Start polling
+2025-12-12 16:19:22,888 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 16:19:38,771 [INFO] app.bot.handlers.workflow - Channel without username detected: TERMINAL (ID: -1002508742544)
+2025-12-12 16:19:38,893 [INFO] aiogram.event - Update id=999071264 is handled. Duration 123 ms by bot id=8570381804
+2025-12-12 16:19:40,721 [INFO] app.services.telegram_parser.channel_info - Entity received: id=2508742544, username=None, title=TERMINAL
+2025-12-12 16:19:40,975 [INFO] app.services.workflow_pipeline - WF: start pipeline username=-1002508742544 top_n=500
+2025-12-12 16:19:40,989 [INFO] app.services.telegram_parser.channel_info - Entity received: id=2508742544, username=None, title=TERMINAL
+2025-12-12 16:19:41,282 [INFO] app.db.repo - Channel without username, using ID: id:-1002508742544 (original channel_data['id']=-1002508742544, type=<class 'int'>)
+2025-12-12 16:19:41,462 [INFO] app.services.llm.analyzer - LLM analysis started: posts=81
+2025-12-12 16:19:46,595 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 16:19:46,660 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32475 keywords=['программирование', 'frontend', 'css', 'вёрстка', 'python', 'linux', 'администрирование', 'git', 'devops', 'алгоритм', 'game development', 'data science', 'искусственный интеллект', 'облачные технология', 'безопасность', 'собеседование', 'обучение', 'интерактивные курс', 'шпаргалка', 'технология']
+2025-12-12 16:19:46,660 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32475
+2025-12-12 16:19:46,661 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32475
+2025-12-12 16:19:50,128 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32475 results=440
+2025-12-12 16:19:50,360 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=32475 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_id:-1002508742544_20251212_161950.xlsx top_n=500
+2025-12-12 16:19:50,556 [INFO] aiogram.event - Update id=999071265 is handled. Duration 10003 ms by bot id=8570381804
+2025-12-12 16:20:51,429 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 16:23:53,574 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-12 16:23:53,576 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 16:23:53,577 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-12 16:23:53,830 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-12 16:23:53,832 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+/home/alex/apps/tg-analytics-bot/app/main.py:24: DeprecationWarning: Passing `parse_mode`, `disable_web_page_preview` or `protect_content` to Bot initializer is deprecated. This arguments will be removed in 3.5.0 version
+Use `default=DefaultBotProperties(...)` instead.
+  bot = Bot(token=config.bot_token, parse_mode=ParseMode.HTML)
+2025-12-12 16:24:02,307 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-12 16:24:02,310 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-12 16:24:02,396 [INFO] aiogram.dispatcher - Start polling
+2025-12-12 16:24:02,461 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 16:24:11,212 [INFO] app.bot.handlers.workflow - Channel without username detected: TERMINAL (ID: -1002508742544)
+2025-12-12 16:24:11,280 [INFO] aiogram.event - Update id=999071266 is handled. Duration 69 ms by bot id=8570381804
+2025-12-12 16:24:12,499 [INFO] app.services.telegram_parser.channel_info - Entity received: id=2508742544, username=None, title=TERMINAL
+2025-12-12 16:24:12,687 [INFO] app.services.workflow_pipeline - WF: start pipeline username=-1002508742544 top_n=25
+2025-12-12 16:24:12,723 [INFO] app.services.telegram_parser.channel_info - Entity received: id=2508742544, username=None, title=TERMINAL
+2025-12-12 16:24:13,051 [INFO] app.db.repo - Channel without username, using ID: id:-1002508742544 (original channel_data['id']=-1002508742544, type=<class 'int'>)
+2025-12-12 16:24:13,228 [INFO] app.services.llm.analyzer - LLM analysis started: posts=81
+2025-12-12 16:24:18,110 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 16:24:18,165 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32475 keywords=['программирование', 'frontend', 'css', 'вёрстка', 'python', 'linux', 'администрирование', 'devops', 'git', 'docker', 'алгоритм', 'game development', 'data science', 'искусственный интеллект', 'облачные технология', 'кибербезопасность', 'собеседование', 'обучение', 'интерактивный курс', 'технология']
+2025-12-12 16:24:18,165 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32475
+2025-12-12 16:24:18,166 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32475
+2025-12-12 16:24:22,015 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32475 results=25
+2025-12-12 16:24:22,130 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=32475 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_id:-1002508742544_20251212_162422.xlsx top_n=25
+2025-12-12 16:24:22,300 [INFO] aiogram.event - Update id=999071267 is handled. Duration 9904 ms by bot id=8570381804
+2025-12-12 16:26:00,384 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-12 16:26:00,386 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 16:26:00,386 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-12 16:26:00,639 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-12 16:26:00,640 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+/home/alex/apps/tg-analytics-bot/app/main.py:24: DeprecationWarning: Passing `parse_mode`, `disable_web_page_preview` or `protect_content` to Bot initializer is deprecated. This arguments will be removed in 3.5.0 version
+Use `default=DefaultBotProperties(...)` instead.
+  bot = Bot(token=config.bot_token, parse_mode=ParseMode.HTML)
+2025-12-12 16:26:09,067 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-12 16:26:09,070 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-12 16:26:09,535 [INFO] aiogram.dispatcher - Start polling
+2025-12-12 16:26:09,600 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 16:28:02,513 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 16:31:56,684 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-12 16:31:56,689 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 16:31:56,691 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-12 16:31:56,945 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-12 16:31:56,947 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+/home/alex/apps/tg-analytics-bot/app/main.py:24: DeprecationWarning: Passing `parse_mode`, `disable_web_page_preview` or `protect_content` to Bot initializer is deprecated. This arguments will be removed in 3.5.0 version
+Use `default=DefaultBotProperties(...)` instead.
+  bot = Bot(token=config.bot_token, parse_mode=ParseMode.HTML)
+2025-12-12 16:32:26,429 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-12 16:32:26,432 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-12 16:32:26,669 [INFO] aiogram.dispatcher - Start polling
+2025-12-12 16:32:26,751 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
