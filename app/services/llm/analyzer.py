@@ -150,6 +150,72 @@ async def analyze_channel(channel: dict, posts: list, llm_retries: int = 2):
     }
 
 
+async def analyze_text_content(text: str, title: str = "", description: str = "", llm_retries: int = 2) -> dict:
+    """
+    Анализирует текстовый контент (например, с сайта) через LLM.
+    Аналогично analyze_channel, но работает с готовым текстом.
+    
+    Args:
+        text: Текст для анализа
+        title: Заголовок (опционально)
+        description: Описание (опционально)
+        llm_retries: Количество попыток запроса к LLM
+    
+    Returns:
+        Словарь с результатами анализа: {audience, keywords, tone}
+    """
+    logger.info("LLM analysis started for text content: length=%s", len(text))
+    
+    title_clean = clean_text(title or "")
+    description_clean = clean_text(description or "")
+    
+    # Берем первые 5000 символов текста для анализа
+    text_clean = clean_text(text)[:5000]
+    
+    if not text_clean and not description_clean:
+        kws = extract_keywords_from_text(title_clean, limit=20)
+        kws = normalize_russian_keywords(kws)
+        return {
+            "audience": "Контента нет — анализ невозможен.",
+            "keywords": kws if kws else [],
+            "tone": ""
+        }
+    
+    # Формируем промпт для анализа
+    content_text = text_clean[:3000]  # Ограничиваем длину для LLM
+    prompt = build_analysis_prompt(description_clean, content_text)
+    
+    last_error = None
+    for attempt in range(llm_retries + 1):
+        try:
+            raw = await ask_llm(prompt, max_tokens=600)
+            res = try_parse_json(raw)
+            
+            if res and isinstance(res.get("keywords"), list):
+                kws = res.get("keywords") or []
+                kws = normalize_russian_keywords(kws)
+                res["keywords"] = kws
+                return res
+            else:
+                last_error = f"Invalid JSON structure: {raw[:200]}"
+                logger.warning("LLM attempt %s: %s", attempt + 1, last_error)
+        
+        except Exception as e:
+            last_error = str(e)
+            logger.warning("LLM attempt %s error: %s", attempt + 1, e)
+    
+    logger.error("LLM failed after %s attempts: %s", llm_retries + 1, last_error)
+    fallback_source = " ".join([title_clean, description_clean, text_clean])
+    kws = extract_keywords_from_text(fallback_source, limit=30)
+    kws = normalize_russian_keywords(kws)
+    
+    return {
+        "audience": "Не удалось получить анализ от LLM",
+        "tone": "",
+        "keywords": kws
+    }
+
+
 async def save_analysis(channel_id: int, result: dict):
     keywords = result.get("keywords") or []
     audience = result.get("audience", "")

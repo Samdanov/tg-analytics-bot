@@ -3,6 +3,7 @@ from app.db.database import async_session_maker
 from app.db.models import Channel, KeywordsCache
 import json
 import re
+from app.bot.styles import Icons, get_separator
 
 
 def format_audience(audience: str) -> str:
@@ -85,8 +86,6 @@ async def build_channel_summary(username: str) -> str:
             channel_display = f"<b>@{ch.username}</b>"
 
         # ---- Card style summary (стиль ОРБИТА) ----
-        from app.bot.styles import Icons, get_separator
-        
         separator = get_separator(20)
         text = (
             f"{separator}\n"
@@ -100,3 +99,45 @@ async def build_channel_summary(username: str) -> str:
         )
 
         return text
+
+
+def build_website_summary(url: str, analysis_result: dict) -> str:
+    """
+    Создаёт красивую карточку для веб-сайта с результатами анализа.
+    Аналогично build_channel_summary, но для сайтов.
+    
+    Args:
+        url: URL сайта
+        analysis_result: Результат анализа от LLM (содержит audience, keywords, tone)
+    
+    Returns:
+        Отформатированный текст карточки
+    """
+    # ---- Audience (LLM) ----
+    audience_raw = analysis_result.get("audience", "") or "—"
+    audience_fmt = format_audience(audience_raw)
+
+    # ---- Keywords ----
+    keywords_list = analysis_result.get("keywords", []) or []
+    keywords = ", ".join(keywords_list) if keywords_list else "—"
+
+    # ---- Tone (опционально) ----
+    tone = analysis_result.get("tone", "") or "—"
+
+    # ---- Card style summary (стиль ОРБИТА) ----
+    separator = get_separator(20)
+    text = (
+        f"{separator}\n"
+        f"{Icons.SATELLITE} <b>Веб-сайт</b>\n"
+        f"{Icons.DATA} <code>{url}</code>\n"
+        f"{separator}\n"
+        f"{Icons.TARGET} <b>Целевая аудитория:</b>\n{audience_fmt}\n\n"
+        f"{Icons.KEYWORDS} <b>Ключевые слова:</b>\n{keywords}\n"
+    )
+    
+    if tone != "—":
+        text += f"\n{Icons.CHART} <b>Тональность:</b> {tone}\n"
+    
+    text += f"{separator}"
+    
+    return text

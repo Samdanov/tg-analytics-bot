@@ -15,7 +15,8 @@ from aiogram.types import (
 )
 
 from app.services.usecases.channel_service import run_full_pipeline_usecase
-from app.services.helpers import build_channel_summary
+from app.services.usecases.website_service import run_website_analysis_pipeline
+from app.services.helpers import build_channel_summary, build_website_summary
 from app.services.telegram_parser.channel_info import get_channel_with_posts
 from app.core.logging import get_logger
 from app.bot.styles import (
@@ -35,6 +36,8 @@ USERNAME_RE = re.compile(r"(?:t\.me/|@)([A-Za-z0-9_]{3,})")
 # Регулярка для извлечения username из ссылок в постах
 CHANNEL_LINK_RE = re.compile(r"(?:https?://)?(?:www\.)?t\.me/([A-Za-z0-9_]{3,})")
 USERNAME_MENTION_RE = re.compile(r"@([A-Za-z0-9_]{3,})")
+# Регулярка для определения веб-сайтов
+WEBSITE_RE = re.compile(r"https?://(?:www\.)?([a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,})")
 
 # Простой кеш для дедупликации media_group
 _media_group_cache = {}
@@ -99,6 +102,37 @@ def _extract_channel_links_from_posts(posts: list, exclude_username: str = None)
     return top_channels  # Топ-10 упоминаемых каналов
 
 
+def _extract_url_from_message(message: Message) -> tuple:
+    """
+    Извлекает URL из сообщения и определяет его тип.
+    
+    Возвращает: (url, url_type)
+    - url: URL или None
+    - url_type: "channel" | "website" | None
+    """
+    text = message.text or message.caption or ""
+    
+    if not text:
+        return None, None
+    
+    # Сначала проверяем на канал Telegram
+    channel_match = CHANNEL_LINK_RE.search(text)
+    if channel_match:
+        return None, "channel"  # Обрабатывается в _extract_channel_from_message
+    
+    # Проверяем на веб-сайт
+    website_match = WEBSITE_RE.search(text)
+    if website_match:
+        url = text[website_match.start():website_match.end()]
+        # Извлекаем полный URL если есть
+        if url.startswith("http"):
+            return url, "website"
+        else:
+            return f"https://{url}", "website"
+    
+    return None, None
+
+
 def _extract_channel_from_message(message: Message):
     """
     Пытаемся достать username/ID и title канала из:
@@ -155,6 +189,40 @@ async def detect_channel_handler(message: Message):
     if _is_duplicate_media_group(message.media_group_id):
         return
 
+    # Проверяем на веб-сайт
+    url, url_type = _extract_url_from_message(message)
+    if url_type == "website" and url:
+        # Обрабатываем как сайт
+        text = (
+            f"{Icons.SATELLITE} <b>Найден веб-сайт:</b>\n"
+            f"<b>{url}</b>\n\n"
+            f"{Icons.ANALYTICS} Выбери количество похожих каналов для анализа:"
+        )
+        
+        # Создаем кнопки для выбора количества каналов
+        # Используем специальный префикс "analyze_website|" для сайтов (| вместо : чтобы избежать конфликтов с URL)
+        import urllib.parse
+        url_encoded = urllib.parse.quote(url, safe='')
+        kb = InlineKeyboardMarkup(
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(text=f"{Icons.NUM_10} 10 каналов", callback_data=f"analyze_website|{url_encoded}|10"),
+                    InlineKeyboardButton(text=f"{Icons.NUM_25} 25 каналов", callback_data=f"analyze_website|{url_encoded}|25"),
+                ],
+                [
+                    InlineKeyboardButton(text=f"{Icons.NUM_50} 50 каналов", callback_data=f"analyze_website|{url_encoded}|50"),
+                    InlineKeyboardButton(text=f"{Icons.NUM_100} 100 каналов", callback_data=f"analyze_website|{url_encoded}|100"),
+                ],
+                [
+                    InlineKeyboardButton(text=f"{Icons.NUM_500} 500 каналов (макс)", callback_data=f"analyze_website|{url_encoded}|500"),
+                ],
+            ]
+        )
+        
+        await message.answer(text, reply_markup=kb)
+        return
+
+    # Обрабатываем как канал Telegram
     identifier, title, is_id_based = _extract_channel_from_message(message)
     if not identifier:
         return
@@ -301,6 +369,55 @@ async def start_analysis_callback(callback: CallbackQuery):
     await callback.message.answer_document(
         document=doc,
         caption=f"📊 Отчёт: {top_n} похожих каналов для {display_name}",
+    )
+
+
+@router.callback_query(F.data.startswith("analyze_website|"))
+async def analyze_website_callback(callback: CallbackQuery):
+    """Обработчик анализа веб-сайта"""
+    await callback.answer()
+    
+    # Формат: analyze_website|URL_ENCODED|top_n (используем | вместо : чтобы избежать конфликтов с URL)
+    import urllib.parse
+    parts = callback.data.split("|")
+    if len(parts) != 3:
+        await callback.message.answer(format_error_message("неверный формат команды для сайта"))
+        return
+    
+    url = urllib.parse.unquote(parts[1])
+    try:
+        top_n = int(parts[2])
+    except ValueError:
+        await callback.message.answer(format_error_message("неверное количество каналов"))
+        return
+    
+    msg = await callback.message.answer(
+        f"{Icons.SEARCH} {Icons.LOADING} Парсинг сайта {url}...\n"
+        f"{Icons.ANALYTICS} Поиск {top_n} похожих каналов. Это может занять время..."
+    )
+    
+    try:
+        result = await run_website_analysis_pipeline(url, top_n=top_n)
+        report_path: Path = result[0]
+        analysis_result = result[1]
+    except ValueError as e:
+        await msg.edit_text(format_error_message(f"Не удалось выполнить анализ: {e}"))
+        return
+    except Exception as e:
+        await msg.edit_text(format_error_message(f"Ошибка: {e}"))
+        logger.exception("Ошибка при анализе сайта")
+        return
+    
+    # Выводим информацию по ЦА и ключам (как для каналов)
+    summary = build_website_summary(url, analysis_result)
+    await callback.message.answer(summary)
+    
+    doc = FSInputFile(report_path)
+    await msg.edit_text(f"{Icons.SUCCESS} Анализ завершён, отправляю отчёт...")
+    
+    await callback.message.answer_document(
+        document=doc,
+        caption=f"{Icons.ANALYTICS} Отчёт: {top_n} похожих каналов для сайта {url}",
     )
 
 

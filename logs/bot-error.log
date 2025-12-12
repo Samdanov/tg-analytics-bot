@@ -1035,3 +1035,67 @@ Use `default=DefaultBotProperties(...)` instead.
 2025-12-12 21:01:09,802 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=213439 results=10
 2025-12-12 21:01:10,390 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=213439 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_edu_archieve_20251212_210110.xlsx top_n=10
 2025-12-12 21:01:10,602 [INFO] aiogram.event - Update id=999071281 is handled. Duration 43237 ms by bot id=8570381804
+2025-12-12 21:16:20,137 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-12 21:16:20,139 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 21:16:20,139 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-12 21:16:20,391 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-12 21:16:20,392 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+/home/alex/apps/tg-analytics-bot/app/main.py:24: DeprecationWarning: Passing `parse_mode`, `disable_web_page_preview` or `protect_content` to Bot initializer is deprecated. This arguments will be removed in 3.5.0 version
+Use `default=DefaultBotProperties(...)` instead.
+  bot = Bot(token=config.bot_token, parse_mode=ParseMode.HTML)
+2025-12-12 21:16:31,060 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-12 21:16:31,071 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-12 21:16:31,193 [INFO] aiogram.dispatcher - Start polling
+2025-12-12 21:16:31,304 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 21:17:22,739 [INFO] aiogram.event - Update id=999071282 is handled. Duration 119 ms by bot id=8570381804
+2025-12-12 21:17:25,944 [INFO] app.services.usecases.website_service - [WEBSITE] Начало анализа сайта: https://pyyplbot.com
+2025-12-12 21:17:26,741 [INFO] app.services.website_parser.parser - Парсинг сайта https://pyyplbot.com: извлечено 6512 символов
+2025-12-12 21:17:26,742 [INFO] app.services.usecases.website_service - [WEBSITE] Извлечено текста: 6512 символов
+2025-12-12 21:17:26,742 [INFO] app.services.llm.analyzer - LLM analysis started for text content: length=6512
+2025-12-12 21:17:32,765 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 21:17:32,805 [INFO] app.services.usecases.website_service - [WEBSITE] Анализ завершен. Ключевые слова: 19
+2025-12-12 21:17:32,806 [INFO] app.services.similarity_engine.website_similarity - Searching similar channels for 30 keywords
+2025-12-12 21:17:57,049 [INFO] app.services.similarity_engine.website_similarity - Found 10 similar channels
+2025-12-12 21:17:57,216 [INFO] app.services.usecases.website_service - [WEBSITE] Найдено похожих каналов: 10
+2025-12-12 21:17:57,245 [INFO] app.services.usecases.website_service - Generated Excel report: /home/alex/apps/tg-analytics-bot/reports/similar_channels_website_pyyplbot.com_20251212_211757.xlsx
+2025-12-12 21:17:57,245 [INFO] app.services.usecases.website_service - [WEBSITE] Pipeline завершен. Отчет: /home/alex/apps/tg-analytics-bot/reports/similar_channels_website_pyyplbot.com_20251212_211757.xlsx
+2025-12-12 21:17:57,422 [INFO] aiogram.event - Update id=999071283 is handled. Duration 31545 ms by bot id=8570381804
+2025-12-12 21:23:30,117 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-12 21:23:30,119 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 21:23:30,120 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-12 21:23:30,373 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-12 21:23:30,374 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+/home/alex/apps/tg-analytics-bot/app/main.py:24: DeprecationWarning: Passing `parse_mode`, `disable_web_page_preview` or `protect_content` to Bot initializer is deprecated. This arguments will be removed in 3.5.0 version
+Use `default=DefaultBotProperties(...)` instead.
+  bot = Bot(token=config.bot_token, parse_mode=ParseMode.HTML)
+2025-12-12 21:23:39,310 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-12 21:23:39,313 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-12 21:23:39,585 [INFO] aiogram.dispatcher - Start polling
+2025-12-12 21:23:39,650 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 21:23:42,553 [INFO] aiogram.event - Update id=999071284 is handled. Duration 65 ms by bot id=8570381804
+2025-12-12 21:23:44,645 [INFO] app.services.usecases.website_service - [WEBSITE] Начало анализа сайта: https://pyyplbot.com
+2025-12-12 21:23:44,645 [INFO] app.services.website_parser.parser - [PARSER] Начинаю загрузку страницы: https://pyyplbot.com
+2025-12-12 21:23:45,054 [INFO] app.services.website_parser.parser - [PARSER] HTTP статус: 200, Content-Type: text/html; charset=utf-8
+2025-12-12 21:23:45,101 [INFO] app.services.website_parser.parser - [PARSER] Загружено HTML: 162698 символов
+2025-12-12 21:23:45,102 [INFO] app.services.website_parser.parser - [PARSER] Начинаю очистку HTML...
+2025-12-12 21:23:45,503 [INFO] app.services.website_parser.parser - [PARSER] Парсинг сайта https://pyyplbot.com: извлечено 6661 символов, после очистки 6538 символов (сокращение: 1.8%)
+2025-12-12 21:23:45,503 [INFO] app.services.usecases.website_service - [WEBSITE] Извлечено текста: 6538 символов
+2025-12-12 21:23:45,503 [INFO] app.services.usecases.website_service - [WEBSITE] Запуск LLM анализа...
+2025-12-12 21:23:45,503 [INFO] app.services.llm.analyzer - LLM analysis started for text content: length=6538
+2025-12-12 21:23:52,177 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 21:23:52,212 [INFO] app.services.usecases.website_service - [WEBSITE] Анализ завершен. Ключевые слова: 20, ЦА: 566 символов, Ключевые слова: ['финансы', 'виртуальная карта', 'онлайн-платёж', 'безопасность', 'криптовалюта']...
+2025-12-12 21:23:52,213 [INFO] app.services.similarity_engine.website_similarity - Searching similar channels for 31 keywords
+2025-12-12 21:24:14,635 [INFO] app.services.similarity_engine.website_similarity - Found 10 similar channels
+2025-12-12 21:24:14,844 [INFO] app.services.usecases.website_service - [WEBSITE] Найдено похожих каналов: 10
+2025-12-12 21:24:14,864 [INFO] app.services.usecases.website_service - Generated Excel report: /home/alex/apps/tg-analytics-bot/reports/similar_channels_website_pyyplbot.com_20251212_212414.xlsx
+2025-12-12 21:24:14,864 [INFO] app.services.usecases.website_service - [WEBSITE] Pipeline завершен. Отчет: /home/alex/apps/tg-analytics-bot/reports/similar_channels_website_pyyplbot.com_20251212_212414.xlsx
+2025-12-12 21:24:15,073 [INFO] aiogram.event - Update id=999071285 is handled. Duration 30511 ms by bot id=8570381804
+2025-12-12 21:26:12,992 [INFO] aiogram.event - Update id=999071286 is handled. Duration 103 ms by bot id=8570381804
+2025-12-12 21:26:16,277 [INFO] app.services.usecases.website_service - [WEBSITE] Начало анализа сайта: https://dtf.ru
+2025-12-12 21:26:16,277 [INFO] app.services.website_parser.parser - [PARSER] Начинаю загрузку страницы: https://dtf.ru
+2025-12-12 21:26:16,645 [INFO] app.services.website_parser.parser - [PARSER] HTTP статус: 200, Content-Type: text/html; charset=utf-8
+2025-12-12 21:26:16,753 [INFO] app.services.website_parser.parser - [PARSER] Загружено HTML: 580217 символов
+2025-12-12 21:26:16,754 [INFO] app.services.website_parser.parser - [PARSER] Начинаю очистку HTML...
+2025-12-12 21:26:17,488 [WARNING] app.services.website_parser.parser - [PARSER] Не удалось извлечь достаточное количество текста: 47 символов
+2025-12-12 21:26:17,489 [ERROR] app.services.usecases.website_service - [WEBSITE] Ошибка парсинга: Не удалось извлечь достаточное количество текста
+2025-12-12 21:26:17,549 [INFO] aiogram.event - Update id=999071287 is handled. Duration 1323 ms by bot id=8570381804

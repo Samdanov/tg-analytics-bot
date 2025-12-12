@@ -6,6 +6,7 @@ pydantic
 openai
 selectolax
 beautifulsoup4
+aiohttp
 openpyxl
 scikit-learn
 numpy
