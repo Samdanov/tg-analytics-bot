@@ -932,3 +932,52 @@ Use `default=DefaultBotProperties(...)` instead.
 2025-12-12 16:41:02,893 [INFO] aiogram.dispatcher - Polling stopped
 2025-12-12 16:41:03,146 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
 2025-12-12 16:41:03,147 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+/home/alex/apps/tg-analytics-bot/app/main.py:24: DeprecationWarning: Passing `parse_mode`, `disable_web_page_preview` or `protect_content` to Bot initializer is deprecated. This arguments will be removed in 3.5.0 version
+Use `default=DefaultBotProperties(...)` instead.
+  bot = Bot(token=config.bot_token, parse_mode=ParseMode.HTML)
+2025-12-12 20:21:08,626 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-12 20:21:08,629 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-12 20:21:08,785 [INFO] aiogram.dispatcher - Start polling
+2025-12-12 20:21:08,854 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 20:27:09,696 [INFO] aiogram.event - Update id=999071271 is handled. Duration 132 ms by bot id=8570381804
+2025-12-12 20:27:11,463 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1923765411, username=stalinhdtv, title=StalinHDTV
+2025-12-12 20:27:11,600 [INFO] app.bot.handlers.workflow - Channel check: @stalinhdtv - posts: 18, linked_channels: 1, avg_text_per_post: 246.7, link_posts_ratio: 5.56%
+2025-12-12 20:27:11,634 [INFO] app.services.workflow_pipeline - WF: start pipeline username=stalinhdtv top_n=500
+2025-12-12 20:27:11,649 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1923765411, username=stalinhdtv, title=StalinHDTV
+2025-12-12 20:27:12,150 [INFO] app.services.llm.analyzer - LLM analysis started: posts=29
+2025-12-12 20:27:18,489 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 20:27:18,554 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=2036 keywords=['политика', 'история', 'археология', 'культура', 'альтернативная аналитик', 'конспирология', 'общество', 'геополитика', 'исторические личность', 'мифология', 'религия', 'искусство', 'социальные процесс', 'литература', 'альтернативная история', 'политический анализ', 'новости украина', 'советская история', 'экспертное мнение']
+2025-12-12 20:27:18,554 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=2036
+2025-12-12 20:27:18,554 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=2036
+2025-12-12 20:27:55,583 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=2036 results=500
+2025-12-12 20:27:56,837 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=2036 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_stalinhdtv_20251212_202756.xlsx top_n=500
+2025-12-12 20:27:57,139 [INFO] aiogram.event - Update id=999071272 is handled. Duration 45737 ms by bot id=8570381804
+2025-12-12 20:30:10,622 [INFO] app.bot.handlers.workflow - Channel without username detected: Вайб-кодинг (ID: -1001555418015)
+2025-12-12 20:30:10,741 [INFO] aiogram.event - Update id=999071273 is handled. Duration 122 ms by bot id=8570381804
+2025-12-12 20:30:13,306 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1555418015, username=None, title=Вайб-кодинг
+2025-12-12 20:30:13,505 [INFO] app.services.workflow_pipeline - WF: start pipeline username=-1001555418015 top_n=500
+2025-12-12 20:30:13,518 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1555418015, username=None, title=Вайб-кодинг
+2025-12-12 20:30:13,742 [INFO] app.db.repo - Channel without username, using ID: id:-1001555418015 (original channel_data['id']=-1001555418015, type=<class 'int'>)
+2025-12-12 20:30:13,861 [INFO] app.services.llm.analyzer - LLM analysis started: posts=77
+2025-12-12 20:30:20,628 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 20:30:20,710 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32476 keywords=['искусственный интеллект', 'нейросеть', 'машинное обучение', 'автоматизация', 'разработка', 'программирование', 'ai-агенты', 'кодинга', 'инструменты разработчик', 'облачные технология', 'инновация', 'технология', 'devops', 'интерфейс', 'прототипирование', 'api', 'обзор', 'workflow', 'продуктивность', 'обучение']
+2025-12-12 20:30:20,711 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32476
+2025-12-12 20:30:20,711 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32476
+2025-12-12 20:30:59,233 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32476 results=500
+2025-12-12 20:31:00,136 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=32476 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_id:-1001555418015_20251212_203059.xlsx top_n=500
+2025-12-12 20:31:00,350 [INFO] aiogram.event - Update id=999071274 is handled. Duration 47169 ms by bot id=8570381804
+2025-12-12 20:31:49,859 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 20:33:25,249 [INFO] aiogram.event - Update id=999071275 is handled. Duration 131 ms by bot id=8570381804
+2025-12-12 20:33:26,588 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1133664901, username=homeasy, title=HOMEASY - идеи для дома
+2025-12-12 20:33:26,711 [INFO] app.bot.handlers.workflow - Channel check: @homeasy - posts: 7, linked_channels: 1, avg_text_per_post: 340.4, link_posts_ratio: 42.86%
+2025-12-12 20:33:26,770 [INFO] app.services.workflow_pipeline - WF: start pipeline username=homeasy top_n=25
+2025-12-12 20:33:26,784 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1133664901, username=homeasy, title=HOMEASY - идеи для дома
+2025-12-12 20:33:27,045 [INFO] app.services.llm.analyzer - LLM analysis started: posts=14
+2025-12-12 20:33:31,202 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 20:33:31,267 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=80448 keywords=['интерьер', 'дизайн', 'хоумстейджинг', 'ремонт', 'декор', 'мебель', 'текстиль', 'функциональность', 'уют', 'планировка', 'семейный д', 'комнатное растение', 'праздничный декор', 'освещение', 'кухня', 'гостиная', 'студия', 'современный стиль', 'русский стиль', 'арт']
+2025-12-12 20:33:31,269 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=80448
+2025-12-12 20:33:31,270 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=80448
+2025-12-12 20:34:10,597 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=80448 results=25
+2025-12-12 20:34:11,289 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=80448 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_homeasy_20251212_203411.xlsx top_n=25
+2025-12-12 20:34:11,485 [INFO] aiogram.event - Update id=999071276 is handled. Duration 44967 ms by bot id=8570381804
+2025-12-12 20:37:26,947 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
