@@ -219,6 +219,7 @@ async def analyze_text_content(text: str, title: str = "", description: str = ""
 async def save_analysis(channel_id: int, result: dict):
     keywords = result.get("keywords") or []
     audience = result.get("audience", "")
+    tone = result.get("tone", "")
 
     async with async_session_maker() as session:
         channel = await session.get(Channel, channel_id)
@@ -231,15 +232,17 @@ async def save_analysis(channel_id: int, result: dict):
             kc = KeywordsCache(
                 channel_id=channel_id,
                 audience=audience,
+                tone=tone,
                 keywords_json=json.dumps(keywords),
                 created_at=datetime.utcnow(),
             )
             session.add(kc)
         else:
             kc.audience = audience
+            kc.tone = tone
             kc.keywords_json = json.dumps(keywords)
             kc.created_at = datetime.utcnow()
 
         await session.commit()
 
-    logger.info("SAVE_ANALYSIS OK → channel_id=%s keywords=%s", channel_id, keywords)
+    logger.info("SAVE_ANALYSIS OK → channel_id=%s keywords=%s tone=%s", channel_id, keywords, tone)

@@ -66,6 +66,9 @@ async def build_channel_summary(username: str) -> str:
         audience_raw = kc.audience or "—"
         audience_fmt = format_audience(audience_raw)
 
+        # ---- Tone (Тональность) ----
+        tone = getattr(kc, 'tone', None) or "—"
+
         # ---- Keywords ----
         keywords_list = []
         if kc.keywords_json:
@@ -95,8 +98,13 @@ async def build_channel_summary(username: str) -> str:
             f"{Icons.CHANNEL} <b>Название:</b> {ch.title}\n\n"
             f"{Icons.TARGET} <b>Целевая аудитория:</b>\n{audience_fmt}\n\n"
             f"{Icons.KEYWORDS} <b>Ключевые слова:</b>\n{keywords}\n"
-            f"{separator}"
         )
+        
+        # Добавляем тональность, если она есть
+        if tone != "—":
+            text += f"\n{Icons.CHART} <b>Тональность:</b> {tone}\n"
+        
+        text += f"{separator}"
 
         return text
 

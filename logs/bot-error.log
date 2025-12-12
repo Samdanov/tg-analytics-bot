@@ -1099,3 +1099,68 @@ Use `default=DefaultBotProperties(...)` instead.
 2025-12-12 21:26:17,488 [WARNING] app.services.website_parser.parser - [PARSER] Не удалось извлечь достаточное количество текста: 47 символов
 2025-12-12 21:26:17,489 [ERROR] app.services.usecases.website_service - [WEBSITE] Ошибка парсинга: Не удалось извлечь достаточное количество текста
 2025-12-12 21:26:17,549 [INFO] aiogram.event - Update id=999071287 is handled. Duration 1323 ms by bot id=8570381804
+2025-12-12 21:30:34,749 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-12 21:30:34,753 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 21:30:34,753 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-12 21:30:35,006 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-12 21:30:35,007 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+/home/alex/apps/tg-analytics-bot/app/main.py:24: DeprecationWarning: Passing `parse_mode`, `disable_web_page_preview` or `protect_content` to Bot initializer is deprecated. This arguments will be removed in 3.5.0 version
+Use `default=DefaultBotProperties(...)` instead.
+  bot = Bot(token=config.bot_token, parse_mode=ParseMode.HTML)
+2025-12-12 21:30:43,796 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-12 21:30:43,804 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-12 21:30:43,873 [INFO] aiogram.dispatcher - Start polling
+2025-12-12 21:30:43,950 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 21:31:30,843 [INFO] aiogram.event - Update id=999071288 is handled. Duration 112 ms by bot id=8570381804
+2025-12-12 21:31:32,285 [INFO] app.services.usecases.website_service - [WEBSITE] Начало анализа сайта: https://dtf.ru
+2025-12-12 21:31:32,286 [INFO] app.services.website_parser.parser - [PARSER] Начинаю загрузку страницы: https://dtf.ru
+2025-12-12 21:31:32,713 [INFO] app.services.website_parser.parser - [PARSER] HTTP статус: 200, Content-Type: text/html; charset=utf-8
+2025-12-12 21:31:32,822 [INFO] app.services.website_parser.parser - [PARSER] Загружено HTML: 580385 символов
+2025-12-12 21:31:32,822 [INFO] app.services.website_parser.parser - [PARSER] Начинаю очистку HTML...
+2025-12-12 21:31:33,508 [INFO] app.services.website_parser.parser - [PARSER] Парсинг сайта https://dtf.ru: извлечено 3513 символов, после очистки 3513 символов (сокращение: 0.0%)
+2025-12-12 21:31:33,509 [INFO] app.services.usecases.website_service - [WEBSITE] Извлечено текста: 3513 символов
+2025-12-12 21:31:33,509 [INFO] app.services.usecases.website_service - [WEBSITE] Запуск LLM анализа...
+2025-12-12 21:31:33,509 [INFO] app.services.llm.analyzer - LLM analysis started for text content: length=3513
+2025-12-12 21:31:39,453 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 21:31:39,481 [INFO] app.services.usecases.website_service - [WEBSITE] Анализ завершен. Ключевые слова: 20, ЦА: 363 символов, Ключевые слова: ['игра', 'кино', 'технология', 'гаджет', 'мультимедиа']...
+2025-12-12 21:31:39,482 [INFO] app.services.similarity_engine.website_similarity - Searching similar channels for 21 keywords
+2025-12-12 21:32:03,666 [INFO] app.services.similarity_engine.website_similarity - Found 25 similar channels
+2025-12-12 21:32:03,959 [INFO] app.services.usecases.website_service - [WEBSITE] Найдено похожих каналов: 25
+2025-12-12 21:32:03,987 [INFO] app.services.usecases.website_service - Generated Excel report: /home/alex/apps/tg-analytics-bot/reports/similar_channels_website_dtf.ru_20251212_213203.xlsx
+2025-12-12 21:32:03,987 [INFO] app.services.usecases.website_service - [WEBSITE] Pipeline завершен. Отчет: /home/alex/apps/tg-analytics-bot/reports/similar_channels_website_dtf.ru_20251212_213203.xlsx
+2025-12-12 21:32:04,227 [INFO] aiogram.event - Update id=999071289 is handled. Duration 32000 ms by bot id=8570381804
+2025-12-12 21:32:48,953 [INFO] aiogram.event - Update id=999071290 is handled. Duration 153 ms by bot id=8570381804
+2025-12-12 21:32:50,280 [INFO] app.services.telegram_parser.channel_info - Entity received: id=2608561007, username=it_geeg, title=IT Geek
+2025-12-12 21:32:50,486 [INFO] app.bot.handlers.workflow - Channel check: @it_geeg - posts: 47, linked_channels: 3, avg_text_per_post: 463.9, link_posts_ratio: 6.38%
+2025-12-12 21:32:50,539 [INFO] app.services.workflow_pipeline - WF: start pipeline username=it_geeg top_n=25
+2025-12-12 21:32:50,574 [INFO] app.services.telegram_parser.channel_info - Entity received: id=2608561007, username=it_geeg, title=IT Geek
+2025-12-12 21:32:50,984 [INFO] app.services.llm.analyzer - LLM analysis started: posts=97
+2025-12-12 21:32:56,856 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 21:32:56,890 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32465 keywords=['программирование', 'backend', 'web', 'python', 'java', 'typescript', 'react', 'api', 'postgresql', 'sql', 'микросервис', 'devops', 'docker', 'робототехника', 'нейросеть', 'машинное обучение', 'безопасность', 'privacy', 'интеграция']
+2025-12-12 21:32:56,891 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32465
+2025-12-12 21:32:56,891 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32465
+2025-12-12 21:33:31,832 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32465 results=25
+2025-12-12 21:33:32,498 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=32465 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_it_geeg_20251212_213332.xlsx top_n=25
+2025-12-12 21:33:32,693 [INFO] aiogram.event - Update id=999071291 is handled. Duration 42479 ms by bot id=8570381804
+2025-12-12 21:39:58,121 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-12 21:39:58,124 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 21:39:58,125 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-12 21:39:58,377 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-12 21:39:58,378 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+/home/alex/apps/tg-analytics-bot/app/main.py:24: DeprecationWarning: Passing `parse_mode`, `disable_web_page_preview` or `protect_content` to Bot initializer is deprecated. This arguments will be removed in 3.5.0 version
+Use `default=DefaultBotProperties(...)` instead.
+  bot = Bot(token=config.bot_token, parse_mode=ParseMode.HTML)
+2025-12-12 21:40:07,400 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-12 21:40:07,404 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-12 21:40:07,474 [INFO] aiogram.dispatcher - Start polling
+2025-12-12 21:40:07,544 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 21:40:13,486 [INFO] aiogram.event - Update id=999071292 is handled. Duration 54 ms by bot id=8570381804
+2025-12-12 21:40:15,294 [INFO] app.services.telegram_parser.channel_info - Entity received: id=2608561007, username=it_geeg, title=IT Geek
+2025-12-12 21:40:15,469 [INFO] app.bot.handlers.workflow - Channel check: @it_geeg - posts: 47, linked_channels: 3, avg_text_per_post: 463.9, link_posts_ratio: 6.38%
+2025-12-12 21:40:15,501 [INFO] app.services.workflow_pipeline - WF: start pipeline username=it_geeg top_n=25
+2025-12-12 21:40:15,515 [INFO] app.services.telegram_parser.channel_info - Entity received: id=2608561007, username=it_geeg, title=IT Geek
+2025-12-12 21:40:15,983 [INFO] app.services.llm.analyzer - LLM analysis started: posts=97
+2025-12-12 21:40:20,425 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 21:40:20,475 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32465 keywords=['программирование', 'backend', 'python', 'java', 'typescript', 'react', 'react native', 'api', 'postgresql', 'sql', 'микросервис', 'docker', 'devops', 'робототехника', 'нейросеть', 'машинное обучение', 'векторный поиск', 'безопасность', 'архитектура'] tone=Экспертный с элементами мотивации и практической направленности, подача преимущественно формальная, но доступная и понятная, с акцентом на полезность и применимость знаний.
+2025-12-12 21:40:20,476 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32465
+2025-12-12 21:40:20,476 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32465

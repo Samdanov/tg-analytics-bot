@@ -31,6 +31,7 @@ REMOVE_SELECTORS = [
 def clean_html_text(html: str) -> str:
     """
     Очищает HTML от мусора и извлекает чистый текст.
+    Использует несколько стратегий для извлечения контента.
     
     Args:
         html: HTML содержимое страницы
@@ -46,38 +47,97 @@ def clean_html_text(html: str) -> str:
         
         # Удаляем ненужные элементы
         for selector in REMOVE_SELECTORS:
-            for element in soup.select(selector):
-                element.decompose()
+            try:
+                for element in soup.select(selector):
+                    element.decompose()
+            except Exception:
+                pass  # Игнорируем ошибки селекторов
         
         # Удаляем пустые элементы
         for element in soup.find_all(['div', 'span', 'p']):
             if not element.get_text(strip=True):
-                element.decompose()
+                try:
+                    element.decompose()
+                except Exception:
+                    pass
         
-        # Извлекаем текст из основных контентных элементов
+        # Стратегия 1: Извлекаем текст из основных контентных элементов
         # Приоритет: article > main > [role="main"] > body
         content = None
+        text = ""
         
         for selector in ['article', 'main', '[role="main"]', 'body']:
-            elements = soup.select(selector)
-            if elements:
-                content = elements[0]
-                break
+            try:
+                elements = soup.select(selector)
+                if elements:
+                    content = elements[0]
+                    text = content.get_text(separator=' ', strip=True)
+                    if len(text) > 100:  # Если нашли достаточно текста
+                        logger.debug(f"[PARSER] Найден контент через селектор '{selector}': {len(text)} символов")
+                        break
+            except Exception as e:
+                logger.debug(f"[PARSER] Ошибка при поиске через '{selector}': {e}")
+                continue
         
-        if not content:
-            content = soup
+        # Стратегия 2: Если не нашли достаточно текста, ищем по классам/ID с контентом
+        if len(text) < 100:
+            logger.debug("[PARSER] Пробую альтернативные методы извлечения...")
+            
+            # Ищем элементы с большим количеством текста
+            all_elements = soup.find_all(['div', 'section', 'article', 'main'])
+            best_element = None
+            max_text_length = 0
+            
+            for elem in all_elements:
+                try:
+                    elem_text = elem.get_text(separator=' ', strip=True)
+                    # Пропускаем элементы с слишком большим количеством ссылок (навигация)
+                    links_count = len(elem.find_all('a'))
+                    text_length = len(elem_text)
+                    
+                    # Если много ссылок относительно текста - это навигация
+                    if links_count > 0 and text_length / links_count < 50:
+                        continue
+                    
+                    if text_length > max_text_length and text_length > 200:
+                        max_text_length = text_length
+                        best_element = elem
+                except Exception:
+                    continue
+            
+            if best_element:
+                text = best_element.get_text(separator=' ', strip=True)
+                logger.debug(f"[PARSER] Найден контент через поиск лучшего элемента: {len(text)} символов")
         
-        # Извлекаем текст
-        text = content.get_text(separator=' ', strip=True)
+        # Стратегия 3: Если все еще мало текста, берем весь body
+        if len(text) < 100:
+            logger.debug("[PARSER] Использую fallback: весь body")
+            try:
+                body = soup.find('body')
+                if body:
+                    text = body.get_text(separator=' ', strip=True)
+                else:
+                    text = soup.get_text(separator=' ', strip=True)
+            except Exception:
+                text = soup.get_text(separator=' ', strip=True)
         
         # Очищаем от лишних пробелов и переносов
         text = re.sub(r'\s+', ' ', text)
         text = re.sub(r'\n\s*\n', '\n', text)
         
+        # Удаляем слишком короткие "слова" (вероятно мусор)
+        words = text.split()
+        filtered_words = [w for w in words if len(w) >= 2 or w.isalnum()]
+        text = ' '.join(filtered_words)
+        
+        logger.debug(f"[PARSER] Финальный размер текста: {len(text)} символов")
+        
         return text.strip()
         
     except Exception as e:
-        logger.error(f"Ошибка при очистке HTML: {e}")
+        logger.error(f"[PARSER] Ошибка при очистке HTML: {e}")
+        import traceback
+        logger.debug(f"[PARSER] Traceback: {traceback.format_exc()}")
         return ""
 
 
@@ -106,8 +166,8 @@ def extract_main_content(text: str, max_length: int = 10000) -> str:
     for sentence in sentences:
         sentence = sentence.strip()
         
-        # Пропускаем слишком короткие предложения
-        if len(sentence) < 20:
+        # Пропускаем слишком короткие предложения (уменьшили порог для сайтов)
+        if len(sentence) < 15:  # Было 20, уменьшили для сайтов
             continue
         
         # Пропускаем предложения только из цифр и символов
@@ -183,9 +243,46 @@ async def parse_website(url: str, timeout: int = 10) -> Tuple[Optional[str], Opt
         logger.info(f"[PARSER] Начинаю очистку HTML...")
         text = clean_html_text(html)
         
-        if not text or len(text) < 50:
-            logger.warning(f"[PARSER] Не удалось извлечь достаточное количество текста: {len(text) if text else 0} символов")
-            return None, "Не удалось извлечь достаточное количество текста"
+        if not text:
+            logger.warning(f"[PARSER] Не удалось извлечь текст из {url}")
+            # Пробуем агрессивное извлечение как последний шанс
+            try:
+                soup_fallback = BeautifulSoup(html, 'html.parser')
+                for tag in soup_fallback(['script', 'style']):
+                    tag.decompose()
+                text = soup_fallback.get_text(separator=' ', strip=True)
+                text = re.sub(r'\s+', ' ', text).strip()
+                logger.info(f"[PARSER] Агрессивное извлечение дало {len(text)} символов")
+            except Exception as e:
+                logger.error(f"[PARSER] Ошибка при агрессивном извлечении: {e}")
+                return None, "Не удалось извлечь текст с сайта"
+        
+        # Уменьшаем минимальный порог для сайтов с динамическим контентом
+        min_text_length = 30  # Было 50, уменьшили для сложных сайтов
+        
+        if len(text) < min_text_length:
+            logger.warning(
+                f"[PARSER] Недостаточно текста из {url}: "
+                f"извлечено {len(text)} символов (минимум {min_text_length})"
+            )
+            # Пробуем еще раз с более агрессивным извлечением
+            logger.info("[PARSER] Пробую агрессивное извлечение текста...")
+            try:
+                soup_fallback = BeautifulSoup(html, 'html.parser')
+                # Удаляем только скрипты и стили, остальное оставляем
+                for tag in soup_fallback(['script', 'style']):
+                    tag.decompose()
+                text_fallback = soup_fallback.get_text(separator=' ', strip=True)
+                # Очищаем от лишних пробелов
+                text_fallback = re.sub(r'\s+', ' ', text_fallback).strip()
+                if len(text_fallback) > len(text):
+                    text = text_fallback
+                    logger.info(f"[PARSER] Агрессивное извлечение дало {len(text)} символов")
+            except Exception as e:
+                logger.warning(f"[PARSER] Ошибка при агрессивном извлечении: {e}")
+        
+        if len(text) < min_text_length:
+            return None, f"Не удалось извлечь достаточное количество текста (получено {len(text)} символов, минимум {min_text_length})"
         
         # Уменьшаем количество токенов
         original_length = len(text)

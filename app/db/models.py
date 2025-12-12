@@ -45,6 +45,7 @@ class KeywordsCache(Base):
 
     channel_id = Column(Integer, ForeignKey("channels.id", ondelete="CASCADE"), primary_key=True)
     audience = Column(Text)
+    tone = Column(Text)  # Тональность канала
     keywords_json = Column(Text)   # jsonb → текст, хранится нормально
     created_at = Column(TIMESTAMP)
 
