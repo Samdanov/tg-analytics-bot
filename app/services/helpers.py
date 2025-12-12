@@ -22,7 +22,9 @@ def format_audience(audience: str) -> str:
 
 async def build_channel_summary(username: str) -> str:
     """
-    Создаёт красивую карточку канала:
+    Создаёт красивую карточку канала.
+    Поддерживает как обычные username, так и ID-based каналы.
+    
     ━━━━━━━━━━━━━━
     📊 @username
     ━━━━━━━━━━━━━━
@@ -33,18 +35,26 @@ async def build_channel_summary(username: str) -> str:
     📌 Ключевые слова: …
     ━━━━━━━━━━━━━━
     """
-    username = username.strip().lstrip("@")
+    identifier = username.strip().lstrip("@")
+    
+    # Если это ID канала (число), добавляем префикс "id:"
+    if identifier.lstrip('-').isdigit():
+        identifier = f"id:{identifier}"
 
     async with async_session_maker() as session:
         result = await session.execute(
             select(Channel, KeywordsCache)
             .join(KeywordsCache, KeywordsCache.channel_id == Channel.id)
-            .where(Channel.username == username)
+            .where(Channel.username == identifier)
         )
         row = result.first()
 
         if not row:
-            return f"Канал @{username} не найден в базе."
+            # Красивое отображение ошибки
+            if identifier.startswith("id:"):
+                return f"Канал с ID {identifier} не найден в базе."
+            else:
+                return f"Канал @{identifier} не найден в базе."
 
         ch, kc = row
 
@@ -67,10 +77,17 @@ async def build_channel_summary(username: str) -> str:
 
         keywords = ", ".join(keywords_list) if keywords_list else "—"
 
+        # ---- Определяем отображение канала ----
+        # Для ID-based каналов (username начинается с "id:")
+        if ch.username.startswith("id:"):
+            channel_display = f"<b>{ch.title or 'Приватный канал'}</b>\n🆔 <code>{ch.username}</code>"
+        else:
+            channel_display = f"<b>@{ch.username}</b>"
+
         # ---- Card style summary ----
         text = (
             "━━━━━━━━━━━━━━━━━━\n"
-            f"📊 <b>@{ch.username}</b>\n"
+            f"📊 {channel_display}\n"
             "━━━━━━━━━━━━━━━━━━\n"
             f"👥 <b>Подписчики:</b> {subs}\n"
             f"📌 <b>Название:</b> {ch.title}\n\n"

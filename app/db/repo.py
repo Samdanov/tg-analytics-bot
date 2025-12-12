@@ -14,12 +14,20 @@ async def save_channel(channel_data: Dict[str, Any]) -> int:
     """
     UPSERT канала через SQLAlchemy.
     Принимает данные так же, как раньше: about/description, participants_count/subscribers.
+    Для каналов без username использует ID канала.
     """
     username = channel_data.get("username")
+    
+    # Если username нет - используем ID канала (для приватных каналов)
     if not username:
-        raise ValueError("Не удалось определить username канала — невозможен анализ.")
-
-    username = username.strip().lstrip("@")
+        channel_id_from_data = channel_data.get("id")
+        if not channel_id_from_data:
+            raise ValueError("Не удалось определить username или ID канала — невозможен анализ.")
+        # Используем ID как username с префиксом для отличия
+        username = f"id:{channel_id_from_data}"
+        logger.info(f"Channel without username, using ID: {username} (original channel_data['id']={channel_id_from_data}, type={type(channel_id_from_data)})")
+    else:
+        username = username.strip().lstrip("@")
 
     title = channel_data.get("title") or ""
     description = channel_data.get("about") or channel_data.get("description") or ""
@@ -87,16 +95,21 @@ async def save_posts(channel_id: int, posts: List[Dict[str, Any]]) -> None:
 
 async def get_channel_id_by_username(username: str) -> Optional[int]:
     """
-    Находит ID канала по username или возвращает None.
+    Находит ID канала по username или ID канала.
+    Поддерживает как обычные username, так и ID-based (формат: "id:CHANNEL_ID" или просто ID).
     """
     if not username:
         return None
 
-    username = username.strip().lstrip("@")
-
+    identifier = username.strip().lstrip("@")
+    
+    # Если это похоже на ID канала (число или "id:число")
+    if identifier.lstrip('-').isdigit():
+        identifier = f"id:{identifier}"
+    
     async with async_session_maker() as session:
         result = await session.execute(
-            select(Channel.id).where(Channel.username == username)
+            select(Channel.id).where(Channel.username == identifier)
         )
         row = result.first()
 

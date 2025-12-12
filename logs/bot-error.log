@@ -59,3 +59,529 @@ Use `default=DefaultBotProperties(...)` instead.
 2025-12-11 17:56:40,090 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=1 results=500
 2025-12-11 17:56:40,364 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=1 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_bezposhady_20251211_175640.xlsx top_n=500
 2025-12-11 17:56:40,525 [INFO] aiogram.event - Update id=999071165 is handled. Duration 11519 ms by bot id=8570381804
+2025-12-11 17:58:16,658 [INFO] telethon.client.updates - Got difference for channel 1279926928 updates
+2025-12-11 18:06:39,792 [INFO] aiogram.event - Update id=999071166 is handled. Duration 6 ms by bot id=8570381804
+2025-12-11 18:06:48,983 [INFO] aiogram.event - Update id=999071167 is handled. Duration 102 ms by bot id=8570381804
+2025-12-11 18:17:13,440 [INFO] aiogram.event - Update id=999071168 is handled. Duration 155 ms by bot id=8570381804
+2025-12-11 18:17:16,656 [INFO] app.services.workflow_pipeline - WF: start pipeline username=stalinhdtv top_n=25
+2025-12-11 18:17:17,064 [INFO] app.services.llm.analyzer - LLM analysis started: posts=26
+2025-12-11 18:17:22,241 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-11 18:17:22,262 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=2036 keywords=['история', 'политика', 'археология', 'культура', 'мистика', 'эзотерика', 'оккультизм', 'биография', 'обман', 'легенда', 'мифология', 'религия', 'искусство', 'подарок', 'литература', 'событие', 'эксклюзив', 'анализ', 'конспирология', 'философия']
+2025-12-11 18:17:22,262 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=2036
+2025-12-11 18:17:22,262 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=2036
+2025-12-11 18:17:26,293 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=2036 results=25
+2025-12-11 18:17:26,429 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=2036 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_stalinhdtv_20251211_181726.xlsx top_n=25
+2025-12-11 18:17:26,607 [INFO] aiogram.event - Update id=999071169 is handled. Duration 10006 ms by bot id=8570381804
+2025-12-11 18:17:28,022 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-11 18:22:05,178 [INFO] aiogram.event - Update id=999071170 is handled. Duration 99 ms by bot id=8570381804
+2025-12-11 18:22:08,216 [INFO] app.services.workflow_pipeline - WF: start pipeline username=changellenge top_n=25
+2025-12-11 18:22:08,597 [INFO] app.services.llm.analyzer - LLM analysis started: posts=52
+2025-12-11 18:22:13,517 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-11 18:22:13,549 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32467 keywords=['карьера', 'стажировка', 'лидерская программа', 'студент', 'выпускник', 'развитие навык', 'образование', 'аналитика', 'маркетинг', 'бизнес', 'грант', 'конкурс', 'менторство', 'игра', 'мотивация', 'практика', 'работа', 'комьюнити']
+2025-12-11 18:22:13,549 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32467
+2025-12-11 18:22:13,549 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32467
+2025-12-11 18:22:17,618 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32467 results=25
+2025-12-11 18:22:17,745 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=32467 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_changellenge_20251211_182217.xlsx top_n=25
+2025-12-11 18:22:18,264 [INFO] aiogram.event - Update id=999071171 is handled. Duration 10100 ms by bot id=8570381804
+2025-12-11 19:07:06,254 [INFO] aiogram.event - Update id=999071172 is handled. Duration 115 ms by bot id=8570381804
+2025-12-11 19:07:08,346 [INFO] app.services.workflow_pipeline - WF: start pipeline username=vibecodings top_n=50
+2025-12-11 19:07:08,724 [INFO] app.services.llm.analyzer - LLM analysis started: posts=69
+2025-12-11 19:07:14,894 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-11 19:07:14,933 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32468 keywords=['технология', 'нейросеть', 'искусственный интеллект', 'веб-разработка', 'программирование', 'код', 'автоматизация', 'машинное обучение', 'безопасность', 'кибербезопасность', 'стартап', 'инновация', 'инструмент', 'обучение', 'дизайн', 'документация', 'чатбот', 'модель', 'обзор']
+2025-12-11 19:07:14,933 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32468
+2025-12-11 19:07:14,933 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32468
+2025-12-11 19:07:18,687 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32468 results=50
+2025-12-11 19:07:18,791 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=32468 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_vibecodings_20251211_190718.xlsx top_n=50
+2025-12-11 19:07:19,121 [INFO] aiogram.event - Update id=999071173 is handled. Duration 10862 ms by bot id=8570381804
+2025-12-11 19:21:10,222 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-11 19:56:17,772 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-11 20:06:19,914 [INFO] telethon.client.updates - Got difference for channel 1555418015 updates
+2025-12-11 20:41:17,872 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-11 20:43:20,128 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-11 20:56:17,924 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-11 21:41:17,998 [INFO] telethon.client.updates - Got difference for channel 2028914005 updates
+2025-12-11 21:54:35,689 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-11 22:16:01,950 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-11 22:48:18,168 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-11 22:56:18,120 [INFO] telethon.client.updates - Got difference for channel 2307062628 updates
+2025-12-11 23:03:18,189 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 00:55:16,393 [INFO] aiogram.event - Update id=999071175 is handled. Duration 5 ms by bot id=8570381804
+2025-12-12 00:55:16,394 [INFO] aiogram.event - Update id=999071176 is handled. Duration 5 ms by bot id=8570381804
+2025-12-12 00:55:16,394 [INFO] aiogram.event - Update id=999071177 is handled. Duration 3 ms by bot id=8570381804
+2025-12-12 00:55:16,480 [INFO] aiogram.event - Update id=999071174 is handled. Duration 94 ms by bot id=8570381804
+2025-12-12 00:55:19,163 [INFO] app.services.workflow_pipeline - WF: start pipeline username=vibecoding_tg top_n=100
+2025-12-12 00:55:19,274 [INFO] app.services.llm.analyzer - LLM analysis started: posts=1
+2025-12-12 00:55:22,176 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 00:55:22,195 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32469 keywords=[]
+2025-12-12 00:55:22,195 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32469
+2025-12-12 00:55:22,196 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32469
+2025-12-12 00:55:24,833 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=32469 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_vibecoding_tg_20251212_005524.xlsx top_n=100
+2025-12-12 00:55:24,943 [INFO] aiogram.event - Update id=999071178 is handled. Duration 5816 ms by bot id=8570381804
+2025-12-12 00:55:57,043 [INFO] aiogram.event - Update id=999071179 is handled. Duration 2 ms by bot id=8570381804
+2025-12-12 00:56:19,342 [INFO] aiogram.event - Update id=999071180 is handled. Duration 81 ms by bot id=8570381804
+2025-12-12 00:56:24,812 [INFO] aiogram.event - Update id=999071181 is handled. Duration 2 ms by bot id=8570381804
+2025-12-12 00:56:47,129 [INFO] aiogram.event - Update id=999071182 is handled. Duration 1 ms by bot id=8570381804
+2025-12-12 00:57:30,160 [INFO] aiogram.event - Update id=999071183 is handled. Duration 112 ms by bot id=8570381804
+2025-12-12 00:57:32,680 [INFO] app.services.workflow_pipeline - WF: start pipeline username=technolodzhia top_n=100
+2025-12-12 00:57:32,895 [INFO] app.services.llm.analyzer - LLM analysis started: posts=68
+2025-12-12 00:57:39,300 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 00:57:39,327 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=1428 keywords=['технология', 'гаджет', 'интернет-культура', 'кибербезопасность', 'нейросеть', 'социальные сеть', 'мессенджер', 'игра', 'vpn', 'цифровая экономик', 'мобильный интернуть', 'цифровая безопасность', 'онлайн-сервис', 'цифровая инфраструктура', 'инновация', 'цифровое общество', 'медиа', 'цифровое здоровие', 'развлечение', 'тренд']
+2025-12-12 00:57:39,327 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=1428
+2025-12-12 00:57:39,327 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=1428
+2025-12-12 00:57:42,045 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=1428 results=100
+2025-12-12 00:57:42,141 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=1428 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_technolodzhia_20251212_005742.xlsx top_n=100
+2025-12-12 00:57:42,251 [INFO] aiogram.event - Update id=999071184 is handled. Duration 9607 ms by bot id=8570381804
+2025-12-12 00:58:06,016 [INFO] aiogram.event - Update id=999071185 is handled. Duration 2 ms by bot id=8570381804
+2025-12-12 00:58:44,744 [INFO] aiogram.event - Update id=999071186 is handled. Duration 88 ms by bot id=8570381804
+2025-12-12 00:58:47,194 [INFO] app.services.workflow_pipeline - WF: start pipeline username=sharemed top_n=25
+2025-12-12 00:58:47,659 [INFO] app.services.llm.analyzer - LLM analysis started: posts=57
+2025-12-12 00:58:54,770 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 00:58:54,849 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=4 keywords=['видеоконтент', 'блогер', 'соцсеть', 'интернет-тренд', 'медиа', 'кино', 'сериал', 'аниме', 'стриминг', 'реклама', 'маркетинг', 'цифровая культура', 'вирусный контент', 'технология', 'развлечение', 'новость', 'инфлюенсер', 'подкаст', 'мем', 'digital']
+2025-12-12 00:58:54,850 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=4
+2025-12-12 00:58:54,850 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=4
+2025-12-12 00:58:57,522 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=4 results=25
+2025-12-12 00:58:57,593 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=4 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_sharemed_20251212_005857.xlsx top_n=25
+2025-12-12 00:58:57,695 [INFO] aiogram.event - Update id=999071187 is handled. Duration 10558 ms by bot id=8570381804
+2025-12-12 01:02:21,053 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-12 01:56:18,355 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-12 02:07:55,622 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-12 02:08:14,819 [INFO] aiogram.event - Update id=999071188 is handled. Duration 102 ms by bot id=8570381804
+2025-12-12 02:09:00,169 [INFO] aiogram.event - Update id=999071189 is handled. Duration 111 ms by bot id=8570381804
+2025-12-12 02:09:09,537 [INFO] app.services.workflow_pipeline - WF: start pipeline username=staff_tochka_by_dagroup top_n=50
+2025-12-12 02:09:09,699 [INFO] app.services.llm.analyzer - LLM analysis started: posts=23
+2025-12-12 02:09:16,476 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 02:09:16,501 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=5 keywords=['аутстаффинг', 'аутсорсинг', 'трудовое право', 'миграционное законодательство', 'управление персонал', 'трудовые отношение', 'чаз', 'юридические риска', 'проверка', 'штраф', 'трудовая миграция', 'административная ответственность', 'кадровое администрирование', 'производство', 'оптимизация штат', 'трудовые договор', 'самозанятой', 'контроль труд', 'ответственность заказчик']
+2025-12-12 02:09:16,501 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=5
+2025-12-12 02:09:16,501 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=5
+2025-12-12 02:09:19,564 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=5 results=50
+2025-12-12 02:09:19,644 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=5 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_staff_tochka_by_dagroup_20251212_020919.xlsx top_n=50
+2025-12-12 02:09:19,771 [INFO] aiogram.event - Update id=999071190 is handled. Duration 10270 ms by bot id=8570381804
+2025-12-12 02:13:29,627 [INFO] aiogram.event - Update id=999071191 is handled. Duration 112 ms by bot id=8570381804
+2025-12-12 02:13:34,773 [INFO] app.services.workflow_pipeline - WF: start pipeline username=klerkonline top_n=50
+2025-12-12 02:13:35,113 [INFO] app.services.llm.analyzer - LLM analysis started: posts=100
+2025-12-12 02:13:41,434 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 02:13:41,456 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32470 keywords=['бухгалтерия', 'налогообложение', 'финансы', 'отчётность', 'налоговый контроль', 'автоматизация', 'мсфо', 'трудовое право', 'страховые взнос', 'усн', 'псн', 'фнс', 'государственное регулирование', 'финансовое планирование', 'аудит', 'налоговая проверка', 'пенсия', 'экономика', 'законодательство', 'бизнес']
+2025-12-12 02:13:41,457 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32470
+2025-12-12 02:13:41,457 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32470
+2025-12-12 02:13:44,176 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32470 results=50
+2025-12-12 02:13:44,263 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=32470 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_klerkonline_20251212_021344.xlsx top_n=50
+2025-12-12 02:13:44,405 [INFO] aiogram.event - Update id=999071192 is handled. Duration 9710 ms by bot id=8570381804
+2025-12-12 02:15:41,780 [INFO] aiogram.event - Update id=999071193 is handled. Duration 87 ms by bot id=8570381804
+2025-12-12 02:15:43,938 [INFO] app.services.workflow_pipeline - WF: start pipeline username=Juristadvokat top_n=50
+2025-12-12 02:15:44,423 [INFO] app.services.llm.analyzer - LLM analysis started: posts=91
+2025-12-12 02:15:53,337 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 02:15:53,364 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32471 keywords=['миграция', 'гражданство', 'внж', 'рвп', 'миграционное право', 'трудовая миграция', 'легализация', 'патентная система', 'миграционная политик', 'судебная практика', 'законодательство', 'миграционный контроль', 'миграционные услуга', 'въезд в россия', 'медицинское освидетельствование', 'государственные услуга', 'миграционные проверка', 'безвизовый рёжить', 'миграционный учёт', 'адвокат по миграция']
+2025-12-12 02:15:53,364 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32471
+2025-12-12 02:15:53,364 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32471
+2025-12-12 02:15:56,155 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32471 results=50
+2025-12-12 02:15:56,238 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=32471 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_Juristadvokat_20251212_021556.xlsx top_n=50
+2025-12-12 02:15:56,350 [INFO] aiogram.event - Update id=999071194 is handled. Duration 12460 ms by bot id=8570381804
+2025-12-12 02:17:47,812 [INFO] aiogram.event - Update id=999071195 is handled. Duration 78 ms by bot id=8570381804
+2025-12-12 02:17:49,706 [INFO] app.services.workflow_pipeline - WF: start pipeline username=hr_nom top_n=50
+2025-12-12 02:17:49,987 [INFO] app.services.llm.analyzer - LLM analysis started: posts=82
+2025-12-12 02:17:55,437 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 02:17:55,458 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32472 keywords=['рынок труд', 'кадровое агентство', 'аутсорсинг', 'hr-менеджмент', 'управление персонал', 'рекрутинг', 'законодательство', 'трудовое право', 'цифровизация', 'hr-технологии', 'адаптация сотрудник', 'компетенция', 'обучение персонал', 'софт-скилла', 'hr-бренд', 'зарплата', 'трудоустройство', 'аутстаффинг', 'рынок it-кадров', 'гибкость рынка труд']
+2025-12-12 02:17:55,458 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32472
+2025-12-12 02:17:55,458 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32472
+2025-12-12 02:17:58,348 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32472 results=50
+2025-12-12 02:17:58,425 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=32472 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_hr_nom_20251212_021758.xlsx top_n=50
+2025-12-12 02:17:58,534 [INFO] aiogram.event - Update id=999071196 is handled. Duration 8869 ms by bot id=8570381804
+2025-12-12 02:45:02,500 [INFO] telethon.client.updates - Got difference for channel 2912029707 updates
+2025-12-12 02:52:54,702 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-12 03:05:52,439 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-12 03:07:41,676 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-12 03:11:19,000 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-12 03:18:46,785 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-12 03:33:11,391 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-12 03:39:04,504 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-12 04:39:04,589 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-12 04:44:07,213 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-12 04:44:46,740 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-12 04:49:45,814 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-12 04:50:53,900 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-12 05:04:06,592 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-12 05:19:06,670 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-12 05:28:17,838 [INFO] telethon.client.updates - Got difference for channel 1279926928 updates
+2025-12-12 05:33:47,958 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-12 05:42:26,167 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-12 06:15:37,144 [INFO] aiogram.event - Update id=999071197 is handled. Duration 111 ms by bot id=8570381804
+2025-12-12 06:15:39,518 [INFO] app.services.workflow_pipeline - WF: start pipeline username=Terminal_tg top_n=50
+2025-12-12 06:15:39,633 [INFO] app.services.llm.analyzer - LLM analysis started: posts=1
+2025-12-12 06:15:41,751 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 06:15:41,769 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32473 keywords=[]
+2025-12-12 06:15:41,769 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32473
+2025-12-12 06:15:41,769 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32473
+2025-12-12 06:15:44,493 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=32473 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_Terminal_tg_20251212_061544.xlsx top_n=50
+2025-12-12 06:15:44,635 [INFO] aiogram.event - Update id=999071198 is handled. Duration 5217 ms by bot id=8570381804
+2025-12-12 06:34:48,615 [INFO] aiogram.event - Update id=999071199 is handled. Duration 114 ms by bot id=8570381804
+2025-12-12 06:35:24,642 [INFO] aiogram.event - Update id=999071200 is handled. Duration 2 ms by bot id=8570381804
+2025-12-12 06:35:50,156 [INFO] aiogram.event - Update id=999071201 is handled. Duration 2 ms by bot id=8570381804
+2025-12-12 06:38:01,343 [INFO] aiogram.event - Update id=999071203 is handled. Duration 5 ms by bot id=8570381804
+2025-12-12 06:38:01,344 [INFO] aiogram.event - Update id=999071204 is handled. Duration 5 ms by bot id=8570381804
+2025-12-12 06:38:01,344 [INFO] aiogram.event - Update id=999071205 is handled. Duration 5 ms by bot id=8570381804
+2025-12-12 06:38:01,344 [INFO] aiogram.event - Update id=999071206 is handled. Duration 3 ms by bot id=8570381804
+2025-12-12 06:38:01,424 [INFO] aiogram.event - Update id=999071202 is handled. Duration 87 ms by bot id=8570381804
+2025-12-12 06:39:19,048 [INFO] aiogram.event - Update id=999071208 is handled. Duration 3 ms by bot id=8570381804
+2025-12-12 06:39:19,133 [INFO] aiogram.event - Update id=999071207 is handled. Duration 90 ms by bot id=8570381804
+2025-12-12 06:42:26,224 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-12 06:45:08,031 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 07:15:08,135 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 07:27:42,898 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-12 07:30:08,162 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 07:39:45,027 [INFO] aiogram.event - Update id=999071209 is handled. Duration 130 ms by bot id=8570381804
+2025-12-12 07:45:08,206 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 07:49:04,742 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 08:04:04,840 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 08:15:08,377 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 08:19:04,869 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 08:30:08,529 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 08:31:08,047 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 08:46:08,078 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 08:51:46,457 [INFO] telethon.client.updates - Got difference for channel 1543204515 updates
+2025-12-12 09:00:08,611 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 09:01:08,120 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 09:11:29,824 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 09:12:43,304 [INFO] telethon.client.updates - Got difference for channel 1279926928 updates
+2025-12-12 09:15:08,673 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 09:16:08,176 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 09:30:08,785 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 09:31:08,216 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 09:45:08,819 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 09:46:08,254 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 10:00:08,862 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 10:01:08,310 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 10:06:46,665 [INFO] telethon.client.updates - Got difference for channel 1543204515 updates
+2025-12-12 10:06:50,455 [INFO] telethon.client.updates - Got difference for channel 1279926928 updates
+2025-12-12 10:11:19,568 [INFO] telethon.client.updates - Got difference for channel 2028914005 updates
+2025-12-12 10:15:08,897 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 10:15:11,612 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 10:16:08,351 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 10:16:43,773 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 10:19:59,792 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 10:21:05,434 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 10:30:08,950 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 10:31:08,468 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 10:45:08,984 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 10:46:08,539 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 10:57:27,062 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-12 11:01:08,570 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 11:09:58,560 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 11:15:09,121 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 11:16:08,633 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 11:30:09,149 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 11:31:08,659 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 11:45:09,181 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 11:45:19,091 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-12 11:46:08,784 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 11:47:10,988 [INFO] telethon.client.updates - Got difference for channel 2270611076 updates
+2025-12-12 12:00:09,299 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 12:01:08,816 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 12:12:41,729 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 12:16:08,866 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 12:27:41,891 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 12:31:08,915 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 12:31:14,178 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 12:42:41,929 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 12:54:14,827 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 13:01:14,257 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 13:06:18,447 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 13:06:47,138 [INFO] telethon.client.updates - Got difference for channel 1543204515 updates
+2025-12-12 13:12:27,574 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-12 13:12:41,991 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 13:16:14,342 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 13:26:20,281 [INFO] telethon.client.updates - Got difference for channel 2028914005 updates
+2025-12-12 13:27:42,035 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 13:31:14,392 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 13:40:50,261 [INFO] telethon.client.updates - Got difference for channel 2028914005 updates
+2025-12-12 13:45:19,430 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-12 13:46:14,447 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 13:47:05,700 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 13:50:50,889 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 13:52:13,384 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 13:55:50,393 [INFO] telethon.client.updates - Got difference for channel 2028914005 updates
+2025-12-12 13:56:40,460 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 13:56:49,577 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 13:57:42,098 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 13:57:48,493 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 13:58:46,895 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 13:58:52,820 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:00:44,551 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:01:35,347 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:02:54,124 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:03:39,557 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:04:10,969 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:07:06,190 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:09:49,523 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:10:52,454 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:12:03,048 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:12:42,145 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 14:12:51,516 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:13:15,531 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:14:04,828 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:14:15,881 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:15:08,354 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:16:14,564 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 14:16:28,355 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:17:18,158 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:18:04,276 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:18:58,909 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:19:46,571 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:19:54,056 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:20:24,850 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:21:17,892 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:22:02,437 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:22:08,801 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:22:18,723 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:23:01,730 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:23:56,208 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:24:42,193 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:24:44,476 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:25:20,083 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:25:28,473 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:25:57,491 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-12 14:27:42,194 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-12 14:28:03,624 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:28:52,797 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:29:01,657 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:29:53,804 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:29:55,060 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-12 14:29:55,061 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 14:29:55,062 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-12 14:29:55,315 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-12 14:29:55,316 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+/home/alex/apps/tg-analytics-bot/app/main.py:24: DeprecationWarning: Passing `parse_mode`, `disable_web_page_preview` or `protect_content` to Bot initializer is deprecated. This arguments will be removed in 3.5.0 version
+Use `default=DefaultBotProperties(...)` instead.
+  bot = Bot(token=config.bot_token, parse_mode=ParseMode.HTML)
+2025-12-12 14:30:04,119 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-12 14:30:04,123 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-12 14:30:04,211 [INFO] aiogram.dispatcher - Start polling
+2025-12-12 14:30:04,289 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 14:30:30,395 [INFO] aiogram.event - Update id=999071210 is handled. Duration 101 ms by bot id=8570381804
+2025-12-12 14:30:31,432 [INFO] aiogram.event - Update id=999071211 is handled. Duration 3 ms by bot id=8570381804
+2025-12-12 14:30:31,432 [INFO] aiogram.event - Update id=999071212 is handled. Duration 2 ms by bot id=8570381804
+2025-12-12 14:30:31,433 [INFO] aiogram.event - Update id=999071213 is handled. Duration 1 ms by bot id=8570381804
+2025-12-12 14:30:52,393 [INFO] aiogram.event - Update id=999071214 is handled. Duration 2 ms by bot id=8570381804
+2025-12-12 14:31:45,837 [INFO] aiogram.event - Update id=999071215 is handled. Duration 2 ms by bot id=8570381804
+2025-12-12 14:33:33,608 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:34:58,305 [INFO] aiogram.event - Update id=999071216 is handled. Duration 109 ms by bot id=8570381804
+2025-12-12 14:35:01,229 [INFO] app.bot.handlers.workflow - Channel check: @Terminal_tg - posts: 1, linked_channels: 0, avg_text_per_post: 104.0, link_posts_ratio: 0.00%
+2025-12-12 14:35:01,276 [INFO] app.services.workflow_pipeline - WF: start pipeline username=Terminal_tg top_n=10
+2025-12-12 14:35:01,540 [INFO] app.services.llm.analyzer - LLM analysis started: posts=1
+2025-12-12 14:35:04,588 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 14:35:04,632 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32473 keywords=[]
+2025-12-12 14:35:04,632 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32473
+2025-12-12 14:35:04,632 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32473
+2025-12-12 14:35:07,608 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=32473 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_Terminal_tg_20251212_143507.xlsx top_n=10
+2025-12-12 14:35:08,091 [INFO] aiogram.event - Update id=999071217 is handled. Duration 7097 ms by bot id=8570381804
+2025-12-12 14:35:43,325 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:35:51,156 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:36:37,533 [INFO] aiogram.event - Update id=999071218 is handled. Duration 103 ms by bot id=8570381804
+2025-12-12 14:36:39,522 [INFO] app.bot.handlers.workflow - Channel check: @Terminal_tg - posts: 1, linked_channels: 0, avg_text_per_post: 104.0, link_posts_ratio: 0.00%
+2025-12-12 14:36:39,611 [INFO] app.services.workflow_pipeline - WF: start pipeline username=Terminal_tg top_n=10
+2025-12-12 14:36:39,819 [INFO] app.services.llm.analyzer - LLM analysis started: posts=1
+2025-12-12 14:36:42,451 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 14:36:42,475 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32473 keywords=[]
+2025-12-12 14:36:42,475 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32473
+2025-12-12 14:36:42,476 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32473
+2025-12-12 14:36:45,579 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=32473 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_Terminal_tg_20251212_143645.xlsx top_n=10
+2025-12-12 14:36:45,734 [INFO] aiogram.event - Update id=999071219 is handled. Duration 6579 ms by bot id=8570381804
+2025-12-12 14:37:48,432 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:37:53,889 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:40:27,443 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:42:52,208 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-12 14:42:52,209 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 14:42:52,209 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-12 14:42:52,462 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-12 14:42:52,464 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+/home/alex/apps/tg-analytics-bot/app/main.py:24: DeprecationWarning: Passing `parse_mode`, `disable_web_page_preview` or `protect_content` to Bot initializer is deprecated. This arguments will be removed in 3.5.0 version
+Use `default=DefaultBotProperties(...)` instead.
+  bot = Bot(token=config.bot_token, parse_mode=ParseMode.HTML)
+2025-12-12 14:43:01,404 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-12 14:43:01,408 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-12 14:43:01,579 [INFO] aiogram.dispatcher - Start polling
+2025-12-12 14:43:01,651 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 14:43:01,672 [INFO] app.bot.handlers.workflow - Channel without username detected: TERMINAL (ID: -1002508742544)
+2025-12-12 14:43:01,750 [INFO] aiogram.event - Update id=999071220 is handled. Duration 79 ms by bot id=8570381804
+2025-12-12 14:43:03,821 [INFO] app.services.workflow_pipeline - WF: start pipeline username=-1002508742544 top_n=25
+2025-12-12 14:43:04,478 [INFO] aiogram.event - Update id=999071221 is handled. Duration 1277 ms by bot id=8570381804
+2025-12-12 14:43:11,192 [INFO] app.services.workflow_pipeline - WF: start pipeline username=-1002508742544 top_n=10
+2025-12-12 14:43:11,470 [INFO] aiogram.event - Update id=999071222 is handled. Duration 772 ms by bot id=8570381804
+2025-12-12 14:45:33,605 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:48:28,693 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:49:36,050 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:49:52,335 [INFO] telethon.client.updates - Got difference for channel 3488969356 updates
+2025-12-12 14:51:02,972 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-12 14:51:02,977 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 14:51:02,977 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-12 14:51:03,229 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-12 14:51:03,230 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+/home/alex/apps/tg-analytics-bot/app/main.py:24: DeprecationWarning: Passing `parse_mode`, `disable_web_page_preview` or `protect_content` to Bot initializer is deprecated. This arguments will be removed in 3.5.0 version
+Use `default=DefaultBotProperties(...)` instead.
+  bot = Bot(token=config.bot_token, parse_mode=ParseMode.HTML)
+2025-12-12 14:51:11,824 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-12 14:51:11,827 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-12 14:51:11,918 [INFO] aiogram.dispatcher - Start polling
+2025-12-12 14:51:11,998 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 14:51:14,772 [INFO] app.bot.handlers.workflow - Channel without username detected: TERMINAL (ID: -1002508742544)
+2025-12-12 14:51:14,924 [INFO] aiogram.event - Update id=999071223 is handled. Duration 153 ms by bot id=8570381804
+2025-12-12 14:51:17,073 [INFO] app.services.workflow_pipeline - WF: start pipeline username=-1002508742544 top_n=10
+2025-12-12 14:51:17,335 [INFO] app.db.repo - Channel without username, using ID: id:2508742544
+2025-12-12 14:51:17,511 [INFO] app.services.llm.analyzer - LLM analysis started: posts=81
+2025-12-12 14:51:25,407 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 14:51:25,478 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32474 keywords=['программирование', 'frontend', 'css', 'javascript', 'python', 'devops', 'linux', 'администрирование', 'git', 'docker', 'алгоритм', 'game development', 'облачные технология', 'искусственный интеллект', 'data science', 'кибербезопасность', 'подготовка к собеседование', 'интерактивное обучение', 'шпаргалка', 'технология']
+2025-12-12 14:51:25,479 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32474
+2025-12-12 14:51:25,479 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32474
+2025-12-12 14:51:29,301 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32474 results=10
+2025-12-12 14:51:29,380 [INFO] aiogram.event - Update id=999071224 is handled. Duration 12564 ms by bot id=8570381804
+2025-12-12 14:52:18,810 [INFO] aiogram.event - Update id=999071225 is handled. Duration 124 ms by bot id=8570381804
+2025-12-12 14:52:20,491 [INFO] app.bot.handlers.workflow - Channel check: @it_geeg - posts: 47, linked_channels: 3, avg_text_per_post: 469.2, link_posts_ratio: 6.38%
+2025-12-12 14:52:20,611 [INFO] app.services.workflow_pipeline - WF: start pipeline username=it_geeg top_n=25
+2025-12-12 14:52:21,094 [INFO] app.services.llm.analyzer - LLM analysis started: posts=97
+2025-12-12 14:52:27,781 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 14:52:27,815 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32465 keywords=['программирование', 'python', 'java', 'backend', 'api', 'база дать', 'postgresql', 'sql', 'микросервис', 'devops', 'робототехника', 'искусственный интеллект', 'нейросеть', 'машинное обучение', 'веб-разработка', 'react', 'docker', 'безопасность', 'алгоритм', 'собеседование']
+2025-12-12 14:52:27,815 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32465
+2025-12-12 14:52:27,815 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32465
+2025-12-12 14:52:31,391 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32465 results=25
+2025-12-12 14:52:31,504 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=32465 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_it_geeg_20251212_145231.xlsx top_n=25
+2025-12-12 14:52:31,666 [INFO] aiogram.event - Update id=999071226 is handled. Duration 11690 ms by bot id=8570381804
+2025-12-12 14:56:10,307 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-12 14:56:10,309 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 14:56:10,310 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-12 14:56:10,562 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-12 14:56:10,564 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+/home/alex/apps/tg-analytics-bot/app/main.py:24: DeprecationWarning: Passing `parse_mode`, `disable_web_page_preview` or `protect_content` to Bot initializer is deprecated. This arguments will be removed in 3.5.0 version
+Use `default=DefaultBotProperties(...)` instead.
+  bot = Bot(token=config.bot_token, parse_mode=ParseMode.HTML)
+2025-12-12 14:56:19,621 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-12 14:56:19,625 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-12 14:56:19,775 [INFO] aiogram.dispatcher - Start polling
+2025-12-12 14:56:19,844 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 14:56:37,905 [INFO] app.bot.handlers.workflow - Channel without username detected: TERMINAL (ID: -1002508742544)
+2025-12-12 14:56:38,015 [INFO] aiogram.event - Update id=999071227 is handled. Duration 112 ms by bot id=8570381804
+2025-12-12 14:56:39,552 [INFO] app.services.workflow_pipeline - WF: start pipeline username=-1002508742544 top_n=25
+2025-12-12 14:56:39,828 [INFO] app.db.repo - Channel without username, using ID: id:2508742544
+2025-12-12 14:56:40,076 [INFO] app.services.llm.analyzer - LLM analysis started: posts=81
+2025-12-12 14:56:48,348 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 14:56:48,401 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32474 keywords=['программирование', 'frontend', 'css', 'javascript', 'python', 'linux', 'администрирование', 'devops', 'git', 'docker', 'алгоритм', 'game development', 'обучение', 'собеседование', 'интерактивные курс', 'искусственный интеллект', 'data science', 'облачные технология', 'кибербезопасность', 'software development']
+2025-12-12 14:56:48,402 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32474
+2025-12-12 14:56:48,402 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32474
+2025-12-12 14:56:52,768 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32474 results=25
+2025-12-12 14:56:52,955 [INFO] aiogram.event - Update id=999071228 is handled. Duration 13699 ms by bot id=8570381804
+2025-12-12 14:57:09,787 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-12 14:57:09,789 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 14:57:09,789 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-12 14:57:10,040 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-12 14:57:10,042 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+/home/alex/apps/tg-analytics-bot/app/main.py:24: DeprecationWarning: Passing `parse_mode`, `disable_web_page_preview` or `protect_content` to Bot initializer is deprecated. This arguments will be removed in 3.5.0 version
+Use `default=DefaultBotProperties(...)` instead.
+  bot = Bot(token=config.bot_token, parse_mode=ParseMode.HTML)
+2025-12-12 14:57:18,403 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-12 14:57:18,406 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-12 14:57:18,481 [INFO] aiogram.dispatcher - Start polling
+2025-12-12 14:57:18,546 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 14:57:21,620 [INFO] app.bot.handlers.workflow - Channel without username detected: TERMINAL (ID: -1002508742544)
+2025-12-12 14:57:21,673 [INFO] aiogram.event - Update id=999071229 is handled. Duration 55 ms by bot id=8570381804
+2025-12-12 14:57:23,440 [INFO] app.services.workflow_pipeline - WF: start pipeline username=-1002508742544 top_n=25
+2025-12-12 14:57:23,758 [INFO] app.db.repo - Channel without username, using ID: id:2508742544
+2025-12-12 14:57:23,946 [INFO] app.services.llm.analyzer - LLM analysis started: posts=81
+2025-12-12 14:57:28,566 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 14:57:28,622 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32474 keywords=['программирование', 'frontend', 'css', 'html', 'javascript', 'python', 'linux', 'devops', 'git', 'docker', 'облачные технология', 'искусственный интеллект', 'data science', 'алгоритм', 'геймдева', 'собеседование', 'безопасность', 'командная строк', 'интерактивное обучение', 'автоматизация']
+2025-12-12 14:57:28,623 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32474
+2025-12-12 14:57:28,623 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32474
+2025-12-12 14:57:32,459 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32474 results=25
+2025-12-12 14:57:32,556 [INFO] aiogram.event - Update id=999071230 is handled. Duration 9601 ms by bot id=8570381804
+2025-12-12 15:03:23,907 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-12 15:03:23,909 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 15:03:23,910 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-12 15:03:24,162 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-12 15:03:24,163 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+/home/alex/apps/tg-analytics-bot/app/main.py:24: DeprecationWarning: Passing `parse_mode`, `disable_web_page_preview` or `protect_content` to Bot initializer is deprecated. This arguments will be removed in 3.5.0 version
+Use `default=DefaultBotProperties(...)` instead.
+  bot = Bot(token=config.bot_token, parse_mode=ParseMode.HTML)
+2025-12-12 15:03:33,216 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-12 15:03:33,220 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-12 15:03:33,323 [INFO] aiogram.dispatcher - Start polling
+2025-12-12 15:03:33,390 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 15:03:33,480 [INFO] app.bot.handlers.workflow - Channel without username detected: TERMINAL (ID: -1002508742544)
+2025-12-12 15:03:33,530 [INFO] aiogram.event - Update id=999071231 is handled. Duration 51 ms by bot id=8570381804
+2025-12-12 15:03:34,938 [INFO] app.services.telegram_parser.channel_info - Entity received: id=2508742544, username=None, title=TERMINAL
+2025-12-12 15:03:35,147 [INFO] app.services.workflow_pipeline - WF: start pipeline username=-1002508742544 top_n=25
+2025-12-12 15:03:35,161 [INFO] app.services.telegram_parser.channel_info - Entity received: id=2508742544, username=None, title=TERMINAL
+2025-12-12 15:03:35,506 [INFO] app.db.repo - Channel without username, using ID: id:-1002508742544 (original channel_data['id']=-1002508742544, type=<class 'int'>)
+2025-12-12 15:03:35,718 [INFO] app.services.llm.analyzer - LLM analysis started: posts=81
+2025-12-12 15:03:40,693 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 15:03:40,751 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32475 keywords=['программирование', 'frontend', 'css', 'javascript', 'python', 'linux', 'администрирование', 'devops', 'git', 'docker', 'алгоритм', 'game development', 'data science', 'искусственный интеллект', 'облачные технология', 'кибербезопасность', 'собеседование', 'обучение', 'интерактивные курс', 'вёрстка']
+2025-12-12 15:03:40,752 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32475
+2025-12-12 15:03:40,752 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32475
+2025-12-12 15:03:44,886 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32475 results=25
+2025-12-12 15:03:45,038 [INFO] aiogram.event - Update id=999071232 is handled. Duration 10181 ms by bot id=8570381804
+2025-12-12 15:04:54,440 [INFO] app.bot.handlers.workflow - Channel without username detected: Вайб-кодинг (ID: -1001555418015)
+2025-12-12 15:04:54,444 [INFO] aiogram.event - Update id=999071234 is handled. Duration 7 ms by bot id=8570381804
+2025-12-12 15:04:54,444 [INFO] aiogram.event - Update id=999071235 is handled. Duration 6 ms by bot id=8570381804
+2025-12-12 15:04:54,607 [INFO] aiogram.event - Update id=999071233 is handled. Duration 172 ms by bot id=8570381804
+2025-12-12 15:04:56,060 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1555418015, username=None, title=Вайб-кодинг
+2025-12-12 15:04:56,301 [INFO] app.services.workflow_pipeline - WF: start pipeline username=-1001555418015 top_n=25
+2025-12-12 15:04:56,316 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1555418015, username=None, title=Вайб-кодинг
+2025-12-12 15:04:56,586 [INFO] app.db.repo - Channel without username, using ID: id:-1001555418015 (original channel_data['id']=-1001555418015, type=<class 'int'>)
+2025-12-12 15:04:56,641 [INFO] app.services.llm.analyzer - LLM analysis started: posts=77
+2025-12-12 15:05:04,241 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 15:05:04,272 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32476 keywords=['ai-агенты', 'кодинга', 'автоматизация', 'разработка', 'программирование', 'инструменты разработчик', 'машинное обучение', 'нейросеть', 'искусственный интеллект', 'devops', 'интеграция', 'тестирование', 'асинхронность', 'workflow', 'кодовая база', 'интерфейс', 'продуктивность', 'облачные технология', 'api', 'модели ai']
+2025-12-12 15:05:04,272 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32476
+2025-12-12 15:05:04,272 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32476
+2025-12-12 15:05:08,065 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32476 results=25
+2025-12-12 15:05:08,183 [INFO] aiogram.event - Update id=999071236 is handled. Duration 12278 ms by bot id=8570381804
+2025-12-12 15:06:27,543 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-12 15:06:27,546 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 15:06:27,546 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-12 15:06:27,798 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-12 15:06:27,800 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+/home/alex/apps/tg-analytics-bot/app/main.py:24: DeprecationWarning: Passing `parse_mode`, `disable_web_page_preview` or `protect_content` to Bot initializer is deprecated. This arguments will be removed in 3.5.0 version
+Use `default=DefaultBotProperties(...)` instead.
+  bot = Bot(token=config.bot_token, parse_mode=ParseMode.HTML)
+2025-12-12 15:06:36,550 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-12 15:06:36,552 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-12 15:06:36,741 [INFO] aiogram.dispatcher - Start polling
+2025-12-12 15:06:36,832 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-12 15:06:36,854 [INFO] app.bot.handlers.workflow - Channel without username detected: Вайб-кодинг (ID: -1001555418015)
+2025-12-12 15:06:36,858 [INFO] aiogram.event - Update id=999071238 is handled. Duration 6 ms by bot id=8570381804
+2025-12-12 15:06:36,858 [INFO] aiogram.event - Update id=999071239 is handled. Duration 5 ms by bot id=8570381804
+2025-12-12 15:06:36,906 [INFO] aiogram.event - Update id=999071237 is handled. Duration 54 ms by bot id=8570381804
+2025-12-12 15:06:38,417 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1555418015, username=None, title=Вайб-кодинг
+2025-12-12 15:06:38,674 [INFO] app.services.workflow_pipeline - WF: start pipeline username=-1001555418015 top_n=25
+2025-12-12 15:06:38,689 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1555418015, username=None, title=Вайб-кодинг
+2025-12-12 15:06:38,965 [INFO] app.db.repo - Channel without username, using ID: id:-1001555418015 (original channel_data['id']=-1001555418015, type=<class 'int'>)
+2025-12-12 15:06:39,191 [INFO] app.services.llm.analyzer - LLM analysis started: posts=77
+2025-12-12 15:06:44,662 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 15:06:44,747 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32476 keywords=['искусственный интеллект', 'нейросеть', 'автоматизация', 'кодинга', 'ai-агент', 'разработка', 'программирование', 'инструменты разработчик', 'облачные технология', 'интеграция', 'devops', 'тестирование', 'интерфейс', 'продуктивность', 'машинное обучение', 'кодовая база', 'асинхронность', 'api', 'workflow', 'отладка']
+2025-12-12 15:06:44,748 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32476
+2025-12-12 15:06:44,748 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32476
+2025-12-12 15:06:48,879 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32476 results=25
+2025-12-12 15:06:48,988 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=32476 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_id:-1001555418015_20251212_150648.xlsx top_n=25
+2025-12-12 15:06:49,296 [INFO] aiogram.event - Update id=999071240 is handled. Duration 10962 ms by bot id=8570381804
+2025-12-12 15:07:02,436 [INFO] app.bot.handlers.workflow - Channel without username detected: TERMINAL (ID: -1002508742544)
+2025-12-12 15:07:02,467 [INFO] aiogram.event - Update id=999071241 is handled. Duration 33 ms by bot id=8570381804
+2025-12-12 15:07:04,418 [INFO] app.services.telegram_parser.channel_info - Entity received: id=2508742544, username=None, title=TERMINAL
+2025-12-12 15:07:04,670 [INFO] app.services.workflow_pipeline - WF: start pipeline username=-1002508742544 top_n=25
+2025-12-12 15:07:04,686 [INFO] app.services.telegram_parser.channel_info - Entity received: id=2508742544, username=None, title=TERMINAL
+2025-12-12 15:07:04,962 [INFO] app.db.repo - Channel without username, using ID: id:-1002508742544 (original channel_data['id']=-1002508742544, type=<class 'int'>)
+2025-12-12 15:07:05,002 [INFO] app.services.llm.analyzer - LLM analysis started: posts=81
+2025-12-12 15:07:10,346 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 15:07:10,366 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=32475 keywords=['программирование', 'frontend', 'css', 'javascript', 'python', 'linux', 'администрирование', 'devops', 'git', 'docker', 'алгоритм', 'game development', 'data science', 'искусственный интеллект', 'облачные технология', 'кибербезопасность', 'обучение', 'подготовка к собеседование', 'интерактивное обучение', 'open source']
+2025-12-12 15:07:10,366 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=32475
+2025-12-12 15:07:10,366 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32475
+2025-12-12 15:07:13,944 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32475 results=25
+2025-12-12 15:07:14,037 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=32475 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_id:-1002508742544_20251212_150714.xlsx top_n=25
+2025-12-12 15:07:14,200 [INFO] aiogram.event - Update id=999071242 is handled. Duration 9890 ms by bot id=8570381804
+2025-12-12 15:08:05,386 [INFO] aiogram.event - Update id=999071243 is handled. Duration 97 ms by bot id=8570381804
+2025-12-12 15:08:07,706 [INFO] app.services.telegram_parser.channel_info - Entity received: id=2578059692, username=blackdragontehno, title=BlackDragon🔥
+2025-12-12 15:08:07,966 [INFO] app.bot.handlers.workflow - Channel check: @blackdragontehno - posts: 45, linked_channels: 0, avg_text_per_post: 307.2, link_posts_ratio: 0.00%
+2025-12-12 15:08:08,013 [INFO] app.services.workflow_pipeline - WF: start pipeline username=blackdragontehno top_n=25
+2025-12-12 15:08:08,076 [INFO] app.services.telegram_parser.channel_info - Entity received: id=2578059692, username=blackdragontehno, title=BlackDragon🔥
+2025-12-12 15:08:08,585 [INFO] app.services.llm.analyzer - LLM analysis started: posts=80
+2025-12-12 15:08:14,083 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-12 15:08:14,113 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=2032 keywords=['технология', 'инновация', 'нейросеть', 'искусственный интеллект', 'машинное обучение', 'кибербезопасность', 'гаджет', 'софт', 'игра', 'автоматизация', 'робототехника', 'цифровая трансформация', 'стартап', 'лайфхак', 'медиа', 'контент', 'веб-разработка', 'vr/ar', 'цифровая экономик', 'it-индустрия']
+2025-12-12 15:08:14,114 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=2032
+2025-12-12 15:08:14,114 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=2032
+2025-12-12 15:08:17,992 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=2032 results=25
+2025-12-12 15:08:18,105 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=2032 report=/home/alex/apps/tg-analytics-bot/reports/similar_channels_blackdragontehno_20251212_150818.xlsx top_n=25
+2025-12-12 15:08:18,358 [INFO] aiogram.event - Update id=999071244 is handled. Duration 10871 ms by bot id=8570381804

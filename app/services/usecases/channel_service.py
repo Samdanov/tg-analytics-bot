@@ -30,7 +30,8 @@ async def add_channel_usecase(
     await save_posts(channel_id, posts)
 
     posts_count = len(posts or [])
-    logger.info("Add channel done username=%s id=%s posts=%s", channel_data.get("username"), channel_id, posts_count)
+    identifier = channel_data.get("username") or f"ID:{channel_data.get('id')}"
+    logger.info("Add channel done identifier=%s channel_id=%s posts=%s", identifier, channel_id, posts_count)
     return channel_data, channel_id, posts_count, None
 
 
@@ -38,19 +39,22 @@ async def analyze_usecase(username: str, post_limit: int = 50) -> Tuple[Optional
     """
     Выполняет анализ канала с сохранением результатов в БД.
     Возвращает (result_dict, error_message).
+    Поддерживает как username, так и ID каналов.
     """
     channel, posts, error = await get_channel_with_posts(username, limit=post_limit)
     if error:
         return None, error
 
-    channel_id = await get_channel_id_by_username(channel.get("username"))
+    # Для ID-based каналов используем ID вместо username
+    identifier = channel.get("username") or str(channel.get("id"))
+    channel_id = await get_channel_id_by_username(identifier)
     if not channel_id:
         return None, "Сначала добавьте канал командой /add_channel"
 
     result = await analyze_channel(channel, posts)
     await save_analysis(channel_id, result)
 
-    logger.info("Analyze done username=%s id=%s", channel.get("username"), channel_id)
+    logger.info("Analyze done identifier=%s channel_id=%s", identifier, channel_id)
     return result, None
 
 

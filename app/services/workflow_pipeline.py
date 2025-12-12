@@ -39,7 +39,14 @@ async def run_full_analysis_pipeline(username: str, top_n: int = 10) -> Path:
 
     await recalc_for_channel(channel_id, top_n=top_n)
 
-    username_clean = channel_data.get("username") or username.lstrip("@")
+    # Определяем имя для отчёта
+    if channel_data.get("username"):
+        username_clean = channel_data["username"].lstrip("@")
+    else:
+        # Для каналов без username используем формат id:CHANNEL_ID (как в БД)
+        channel_id_value = channel_data.get('id', username)
+        username_clean = f"id:{channel_id_value}"
+    
     report_path = await generate_similar_channels_xlsx(username_clean)
 
     logger.info("WF: pipeline finished channel_id=%s report=%s top_n=%s", channel_id, report_path, top_n)
