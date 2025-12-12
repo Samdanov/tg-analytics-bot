@@ -18,6 +18,15 @@ from app.services.usecases.channel_service import run_full_pipeline_usecase
 from app.services.helpers import build_channel_summary
 from app.services.telegram_parser.channel_info import get_channel_with_posts
 from app.core.logging import get_logger
+from app.bot.styles import (
+    create_analysis_buttons,
+    format_channel_info,
+    format_loading_message,
+    format_error_message,
+    format_proxy_channel_message,
+    create_channel_selection_buttons,
+    Icons,
+)
 
 router = Router()
 logger = get_logger(__name__)
@@ -152,40 +161,11 @@ async def detect_channel_handler(message: Message):
 
     identifier = identifier.strip()
 
-    # Формируем текст с учетом типа идентификатора
-    if is_id_based:
-        text = (
-            f"Найден канал без публичной ссылки:\n"
-            f"<b>{title or 'Неизвестный канал'}</b>\n"
-            f"ID: <code>{identifier}</code>\n\n"
-            f"Выбери количество похожих каналов для анализа:"
-        )
-    else:
-        text = (
-            f"Найден канал:\n"
-            f"<b>{title or identifier}</b>\n"
-            f"@{identifier}\n\n"
-            f"Выбери количество похожих каналов для анализа:"
-        )
+    # Формируем текст с учетом типа идентификатора (стиль ОРБИТА)
+    text = format_channel_info(identifier, title, is_id_based)
 
-    # Кодируем в callback_data: "id:" для каналов по ID, обычно для username
-    callback_prefix = f"id:{identifier}" if is_id_based else identifier
-
-    kb = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(text="📊 10 каналов", callback_data=f"analyze:{callback_prefix}:10"),
-                InlineKeyboardButton(text="📊 25 каналов", callback_data=f"analyze:{callback_prefix}:25"),
-            ],
-            [
-                InlineKeyboardButton(text="📊 50 каналов", callback_data=f"analyze:{callback_prefix}:50"),
-                InlineKeyboardButton(text="📊 100 каналов", callback_data=f"analyze:{callback_prefix}:100"),
-            ],
-            [
-                InlineKeyboardButton(text="🚀 500 каналов (макс)", callback_data=f"analyze:{callback_prefix}:500"),
-            ],
-        ]
-    )
+    # Создаем стилизованные кнопки
+    kb = create_analysis_buttons(identifier, is_id_based)
 
     await message.answer(text, reply_markup=kb)
 
@@ -213,28 +193,23 @@ async def start_analysis_callback(callback: CallbackQuery):
             top_n = int(parts[3])
             is_id_based = True
         else:
-            await callback.message.answer("❌ Ошибка: неверный формат команды")
+            await callback.message.answer(format_error_message("неверный формат команды"))
             return
     except (ValueError, IndexError) as e:
-        await callback.message.answer(f"❌ Ошибка: неверный формат команды ({type(e).__name__})")
+        await callback.message.answer(format_error_message(f"неверный формат команды ({type(e).__name__})"))
         return
 
     # Проверяем, не является ли это каналом-прокладкой
-    if is_id_based:
-        msg = await callback.message.answer(
-            f"🔍 Проверяю канал (ID: <code>{identifier}</code>)..."
-        )
-    else:
-        msg = await callback.message.answer(
-            f"🔍 Проверяю канал @{identifier}..."
-        )
+    msg = await callback.message.answer(
+        format_loading_message(identifier, is_id_based)
+    )
 
     try:
         # Передаем идентификатор - это может быть username или ID
         channel_data, posts, error = await get_channel_with_posts(raw_username=identifier, limit=50)
         
         if error:
-            await msg.edit_text(f"⚠️ Ошибка при получении канала: {error}")
+            await msg.edit_text(format_error_message(f"Ошибка при получении канала: {error}"))
             return
         
         # Проверяем на канал-прокладку (только для каналов с username, у ID-based каналов нет смысла)
@@ -284,51 +259,23 @@ async def start_analysis_callback(callback: CallbackQuery):
                     f"found {len(linked_channels)} linked channels: {linked_channels[:5]}"
                 )
                 
-                await msg.edit_text(
-                    f"🔗 <b>Обнаружен канал-прокладка!</b>\n\n"
-                    f"Канал @{identifier} содержит в основном ссылки на другие каналы.\n"
-                    f"Найдены следующие каналы (по частоте упоминаний):\n\n"
-                )
+                # Создаем стилизованное сообщение о прокладке
+                proxy_message = format_proxy_channel_message(linked_channels, top_n)
+                kb = create_channel_selection_buttons(linked_channels, top_n, identifier, is_id_based)
                 
-                # Создаем клавиатуру с найденными каналами
-                keyboard = []
-                for idx, (ch_username, count) in enumerate(linked_channels[:8], 1):
-                    keyboard.append([
-                        InlineKeyboardButton(
-                            text=f"@{ch_username} ({count} упоминаний)",
-                            callback_data=f"analyze:{ch_username}:{top_n}"
-                        )
-                    ])
-                
-                # Добавляем опцию анализировать прокладку все равно
-                force_callback = f"force_analyze:id:{identifier}:{top_n}" if is_id_based else f"force_analyze:{identifier}:{top_n}"
-                keyboard.append([
-                    InlineKeyboardButton(
-                        text=f"⚠️ Все равно анализировать @{identifier}",
-                        callback_data=force_callback
-                    )
-                ])
-                
-                kb = InlineKeyboardMarkup(inline_keyboard=keyboard)
-                
-                await callback.message.answer(
-                    f"🔗 <b>Канал-прокладка обнаружен!</b>\n\n"
-                    f"@{identifier} содержит в основном ссылки на другие каналы.\n"
-                    f"Выберите канал для анализа:",
-                    reply_markup=kb
-                )
+                await callback.message.answer(proxy_message, reply_markup=kb)
                 return
         
         # Если не прокладка - продолжаем обычный анализ
         if is_id_based:
             await msg.edit_text(
-                f"Запускаю анализ для канала (ID: <code>{identifier}</code>)...\n"
-                f"Поиск {top_n} похожих каналов. Это может занять немного времени..."
+                f"{Icons.START} <b>Запускаю анализ для канала</b> (ID: <code>{identifier}</code>)...\n"
+                f"{Icons.ANALYTICS} Поиск {top_n} похожих каналов. Это может занять немного времени..."
             )
         else:
             await msg.edit_text(
-                f"Запускаю анализ для @{identifier}...\n"
-                f"Поиск {top_n} похожих каналов. Это может занять немного времени..."
+                f"{Icons.START} <b>Запускаю анализ для</b> @{identifier}...\n"
+                f"{Icons.ANALYTICS} Поиск {top_n} похожих каналов. Это может занять немного времени..."
             )
         
     except Exception as e:

@@ -84,16 +84,19 @@ async def build_channel_summary(username: str) -> str:
         else:
             channel_display = f"<b>@{ch.username}</b>"
 
-        # ---- Card style summary ----
+        # ---- Card style summary (стиль ОРБИТА) ----
+        from app.bot.styles import Icons, get_separator
+        
+        separator = get_separator(20)
         text = (
-            "━━━━━━━━━━━━━━━━━━\n"
-            f"📊 {channel_display}\n"
-            "━━━━━━━━━━━━━━━━━━\n"
-            f"👥 <b>Подписчики:</b> {subs}\n"
-            f"📌 <b>Название:</b> {ch.title}\n\n"
-            f"🎯 <b>Целевая аудитория:</b>\n{audience_fmt}\n\n"
-            f"🔑 <b>Ключевые слова:</b>\n{keywords}\n"
-            "━━━━━━━━━━━━━━━━━━"
+            f"{separator}\n"
+            f"{Icons.ORBIT} {channel_display}\n"
+            f"{separator}\n"
+            f"{Icons.SUBSCRIBERS} <b>Подписчики:</b> {subs}\n"
+            f"{Icons.CHANNEL} <b>Название:</b> {ch.title}\n\n"
+            f"{Icons.TARGET} <b>Целевая аудитория:</b>\n{audience_fmt}\n\n"
+            f"{Icons.KEYWORDS} <b>Ключевые слова:</b>\n{keywords}\n"
+            f"{separator}"
         )
 
         return text
