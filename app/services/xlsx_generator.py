@@ -112,9 +112,10 @@ async def generate_similar_channels_xlsx(
 
         # 4) Разбираем JSON
         try:
+            # Используем глобальный json модуль, не локальный json_module
             raw = json.loads(last_result.similar_channels_json or "[]")
             similar_list = raw if isinstance(raw, list) else []
-        except Exception:
+        except Exception as e:
             similar_list = []
 
     # 5) Готовим Workbook
@@ -137,16 +138,30 @@ async def generate_similar_channels_xlsx(
 
     # 6) Заполняем строки (даже если список пустой — это нормально)
     # Ограничиваем выдачу первыми 500 каналами, чтобы файл не разрастался
+    rows_added = 0
+    rows_skipped_no_channel = 0
+    
     for item in similar_list[:500]:
         ch_id = item.get("channel_id")
+        
+        # Убеждаемся, что ch_id - это int
+        if ch_id is not None:
+            ch_id = int(ch_id) if not isinstance(ch_id, int) else ch_id
+        
         score = float(item.get("score", 0.0))
         ch = channels_map.get(ch_id)
 
         if not ch:
+            rows_skipped_no_channel += 1
             continue
 
         relevance_percent = round(score * 100, 1)
-        link = f"https://t.me/{ch.username}" if ch.username else ""
+        
+        # Для ID-based каналов (username начинается с "id:") не создаём ссылку
+        if ch.username and ch.username.startswith("id:"):
+            link = ""  # Приватные каналы не имеют публичной ссылки
+        else:
+            link = f"https://t.me/{ch.username}" if ch.username else ""
 
         ws.append([
             created_str,
@@ -156,6 +171,7 @@ async def generate_similar_channels_xlsx(
             getattr(ch, "title", None),
             getattr(ch, "description", None),
         ])
+        rows_added += 1
 
     _auto_width(ws)
 

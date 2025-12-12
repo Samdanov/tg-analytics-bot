@@ -107,9 +107,12 @@ async def analyze_channel(channel: dict, posts: list, llm_retries: int = 2):
     if not fragments and not description:
         kws = extract_keywords_from_text(title, limit=20)
         kws = normalize_russian_keywords(kws)
+        
+        # Для ID-based каналов используем ID вместо username
+        fallback_identifier = channel.get("username") or f"id_{channel.get('id', 'unknown')}"
         return {
             "audience": "Контента нет — анализ невозможен.",
-            "keywords": kws if kws else [channel.get("username", "unknown")],
+            "keywords": kws if kws else [fallback_identifier],
             "tone": ""
         }
 

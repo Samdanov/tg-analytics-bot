@@ -48,6 +48,7 @@ async def get_channel_with_posts(
     # Проверяем, является ли это ID канала (число) или username
     identifier = raw_username.strip()
     is_channel_id = False
+    channel_id = None  # Инициализируем для избежания NameError
     
     # ID канала - это число (может начинаться с минуса для супергрупп/каналов)
     if identifier.lstrip('-').isdigit():
@@ -97,7 +98,10 @@ async def get_channel_with_posts(
 
     # Для ID-based каналов используем оригинальный переданный ID, а не entity.id
     # Telethon возвращает entity.id без префикса -100 для каналов
-    actual_id = channel_id if is_channel_id else entity.id
+    if is_channel_id and channel_id is not None:
+        actual_id = channel_id
+    else:
+        actual_id = entity.id
     
     channel_data = {
         "id": actual_id,

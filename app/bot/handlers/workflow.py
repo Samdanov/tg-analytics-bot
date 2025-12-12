@@ -201,18 +201,22 @@ async def start_analysis_callback(callback: CallbackQuery):
     identifier = None
     top_n = None
     
-    if len(parts) == 3:
-        # Формат: analyze:username:N
-        identifier = parts[1]
-        top_n = int(parts[2])
-        is_id_based = False
-    elif len(parts) == 4 and parts[1] == "id":
-        # Формат: analyze:id:CHANNEL_ID:N
-        identifier = parts[2]
-        top_n = int(parts[3])
-        is_id_based = True
-    else:
-        await callback.message.answer("❌ Ошибка: неверный формат команды")
+    try:
+        if len(parts) == 3:
+            # Формат: analyze:username:N
+            identifier = parts[1]
+            top_n = int(parts[2])
+            is_id_based = False
+        elif len(parts) == 4 and parts[1] == "id":
+            # Формат: analyze:id:CHANNEL_ID:N
+            identifier = parts[2]
+            top_n = int(parts[3])
+            is_id_based = True
+        else:
+            await callback.message.answer("❌ Ошибка: неверный формат команды")
+            return
+    except (ValueError, IndexError) as e:
+        await callback.message.answer(f"❌ Ошибка: неверный формат команды ({type(e).__name__})")
         return
 
     # Проверяем, не является ли это каналом-прокладкой
