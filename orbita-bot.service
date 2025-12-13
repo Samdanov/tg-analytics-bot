@@ -1,5 +1,5 @@
 [Unit]
-Description=ORBITA AI Telegram Bot
+Description=ORBITA AI Telegram Bot (Clean Architecture with DI)
 After=network.target postgresql.service
 
 [Service]
@@ -8,7 +8,8 @@ User=alex
 WorkingDirectory=/home/alex/apps/tg-analytics-bot
 Environment="PATH=/home/alex/apps/tg-analytics-bot/venv/bin:/usr/local/bin:/usr/bin:/bin"
 Environment="PYTHONPATH=/home/alex/apps/tg-analytics-bot"
-ExecStart=/home/alex/apps/tg-analytics-bot/venv/bin/python -m app.main
+Environment="USE_DI_HANDLERS=true"
+ExecStart=/home/alex/apps/tg-analytics-bot/venv/bin/python -m app.main_di
 Restart=always
 RestartSec=10
 StandardOutput=append:/home/alex/apps/tg-analytics-bot/logs/bot.log

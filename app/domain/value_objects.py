@@ -161,6 +161,46 @@ class ChannelIdentifier:
         else:
             return self.normalized_value
     
+    def to_telethon_format(self) -> str:
+        """
+        Возвращает формат для использования с Telethon API.
+        
+        - Username: "channel" (без @)
+        - ID: "-1002508742544" (число как строка, без префикса "id:")
+        """
+        if self.is_id_based:
+            # Убираем префикс "id:" для Telethon
+            return self.normalized_value.replace("id:", "")
+        else:
+            # Для username возвращаем без @
+            return self.normalized_value
+    
+    @property
+    def username(self) -> Optional[str]:
+        """
+        Возвращает username канала (без @) или None для ID-based каналов.
+        
+        - Username канал: "channel"
+        - ID канал: None
+        """
+        if self.is_id_based:
+            return None
+        return self.normalized_value
+    
+    @property
+    def channel_id(self) -> Optional[int]:
+        """
+        Возвращает числовой ID канала или None для username-based каналов.
+        
+        - Username канал: None
+        - ID канал: -1002508742544
+        """
+        if not self.is_id_based:
+            return None
+        # Убираем префикс "id:" и конвертируем в int
+        id_str = self.normalized_value.replace("id:", "")
+        return int(id_str)
+    
     def __str__(self) -> str:
         """Строковое представление."""
         return self.to_display_format()
