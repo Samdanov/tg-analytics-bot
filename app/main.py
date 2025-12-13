@@ -4,6 +4,7 @@ from aiogram.enums import ParseMode
 from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram.exceptions import TelegramForbiddenError
+from aiogram.client.default import DefaultBotProperties
 
 from app.core.config import config, validate_config
 from app.core.logging import setup_logging
@@ -21,7 +22,10 @@ async def main():
     setup_logging()
     validate_config()
 
-    bot = Bot(token=config.bot_token, parse_mode=ParseMode.HTML)
+    bot = Bot(
+        token=config.bot_token,
+        default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+    )
     dp = Dispatcher()
     dp.message.middleware(IgnoreForbiddenMiddleware())
     dp.callback_query.middleware(IgnoreForbiddenMiddleware())
