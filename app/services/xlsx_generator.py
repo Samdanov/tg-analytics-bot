@@ -235,11 +235,8 @@ async def generate_similar_channels_xlsx(
                 continue
         filtered_similar_list.append(item)
     
-    # Находим максимальный score для нормализации (только среди отфильтрованных каналов)
-    max_score = 0.0
-    if filtered_similar_list:
-        scores = [float(item.get("score", 0.0)) for item in filtered_similar_list]
-        max_score = max(scores) if scores else 1.0
+    # С абсолютной нормализацией max_score больше не нужен
+    # Score используется напрямую как абсолютная мера схожести [0, 1]
     
     rows_added = 0
     rows_skipped_no_channel = 0
@@ -285,12 +282,10 @@ async def generate_similar_channels_xlsx(
             # Если subscribers не совпадают, но title совпадает - все равно пропускаем для безопасности
             continue
 
-        # Нормализуем score до диапазона 0-1, затем умножаем на 100 для процентов
-        # Если max_score > 0, нормализуем; иначе используем score как есть (но ограничиваем максимумом 1.0)
-        if max_score > 0:
-            normalized_score = min(score / max_score, 1.0)  # Ограничиваем максимум 1.0
-        else:
-            normalized_score = min(score, 1.0)  # Если max_score = 0, просто ограничиваем 1.0
+        # Абсолютная нормализация: используем score напрямую
+        # Score из engine_single уже в диапазоне [0, ~1] (косинусное сходство)
+        # Не нормализуем относительно max_score - показываем реальную схожесть!
+        normalized_score = min(score, 1.0)  # Ограничиваем максимум 1.0
         
         relevance_percent = round(normalized_score * 100, 1)
         

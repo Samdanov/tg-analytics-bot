@@ -302,3 +302,142 @@ AttributeError: 'ChannelIdentifier' object has no attribute 'username'
 2025-12-13 17:08:00,801 [INFO] app.services.usecases.website_service - [WEBSITE] Pipeline завершен. Отчет: /home/alex/apps/tg-analytics-bot/reports/Похожие_каналы_сайт_goodstone.ru_2025-12-13.xlsx
 2025-12-13 17:08:00,801 [INFO] app.services.use_cases.analyze_website - [AnalyzeWebsite] DONE: url=https://goodstone.ru, keywords=15, top_n=10, elapsed=26.66s
 2025-12-13 17:08:02,057 [INFO] aiogram.event - Update id=999071387 is handled. Duration 27978 ms by bot id=8570381804
+2025-12-13 17:30:51,795 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-13 17:30:51,798 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-13 17:30:51,798 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-13 17:30:52,050 [INFO] __main__ - Shutting down...
+2025-12-13 17:30:52,051 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-13 17:30:52,052 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+2025-12-13 17:30:59,013 [INFO] __main__ - Starting ORBITA bot with DI architecture...
+2025-12-13 17:30:59,107 [INFO] __main__ - Using DI handlers (workflow_di.py)
+2025-12-13 17:30:59,111 [INFO] __main__ - Initializing Telegram client...
+2025-12-13 17:30:59,112 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-13 17:30:59,115 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-13 17:30:59,793 [INFO] __main__ - Starting bot polling...
+2025-12-13 17:30:59,794 [INFO] aiogram.dispatcher - Start polling
+2025-12-13 17:30:59,864 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-13 17:31:30,268 [INFO] aiogram.event - Update id=999071388 is handled. Duration 115 ms by bot id=8570381804
+2025-12-13 17:31:31,685 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1117110957, username=klerkonline, title=Бухучет и налоги Клерк
+2025-12-13 17:31:31,907 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 1: Fetching channel data for @klerkonline
+2025-12-13 17:31:31,928 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1117110957, username=klerkonline, title=Бухучет и налоги Клерк
+2025-12-13 17:31:32,220 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 2: Saving channel to DB
+2025-12-13 17:31:32,366 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Channel saved: id=32470
+2025-12-13 17:31:32,452 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Posts saved: count=100
+2025-12-13 17:31:32,452 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 3: LLM analysis
+2025-12-13 17:31:32,452 [INFO] app.services.llm.analyzer - LLM analysis started: posts=100
+2025-12-13 17:31:39,232 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-13 17:31:39,585 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Analysis saved: keywords=19
+2025-12-13 17:31:39,586 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 4: Calculating similarity (top_n=10)
+2025-12-13 17:31:39,586 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32470
+2025-12-13 17:32:15,204 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32470 results=0
+2025-12-13 17:32:15,635 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Similarity calculated successfully
+2025-12-13 17:32:15,635 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 5: Generating XLSX report
+2025-12-13 17:32:15,748 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] DONE: channel_id=32470, posts=100, keywords=19, top_n=10, elapsed=43.84s, report=/home/alex/apps/tg-analytics-bot/reports/Похожие_каналы_Бухучет_и_налоги_Клерк_2025-12-13.xlsx
+2025-12-13 17:32:15,964 [INFO] aiogram.event - Update id=999071389 is handled. Duration 44353 ms by bot id=8570381804
+2025-12-13 17:32:58,082 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-13 17:32:58,083 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-13 17:32:58,084 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-13 17:32:58,336 [INFO] __main__ - Shutting down...
+2025-12-13 17:32:58,336 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-13 17:32:58,337 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+2025-12-13 17:33:05,348 [INFO] __main__ - Starting ORBITA bot with DI architecture...
+2025-12-13 17:33:05,434 [INFO] __main__ - Using DI handlers (workflow_di.py)
+2025-12-13 17:33:05,438 [INFO] __main__ - Initializing Telegram client...
+2025-12-13 17:33:05,438 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-13 17:33:05,441 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-13 17:33:05,556 [INFO] __main__ - Starting bot polling...
+2025-12-13 17:33:05,557 [INFO] aiogram.dispatcher - Start polling
+2025-12-13 17:33:05,626 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-13 17:33:06,416 [INFO] aiogram.event - Update id=999071390 is handled. Duration 63 ms by bot id=8570381804
+2025-12-13 17:33:07,652 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1117110957, username=klerkonline, title=Бухучет и налоги Клерк
+2025-12-13 17:33:07,908 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 1: Fetching channel data for @klerkonline
+2025-12-13 17:33:07,927 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1117110957, username=klerkonline, title=Бухучет и налоги Клерк
+2025-12-13 17:33:08,274 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 2: Saving channel to DB
+2025-12-13 17:33:08,425 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Channel saved: id=32470
+2025-12-13 17:33:08,508 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Posts saved: count=100
+2025-12-13 17:33:08,508 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 3: LLM analysis
+2025-12-13 17:33:08,508 [INFO] app.services.llm.analyzer - LLM analysis started: posts=100
+2025-12-13 17:33:14,586 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-13 17:33:14,899 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Analysis saved: keywords=20
+2025-12-13 17:33:14,899 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 4: Calculating similarity (top_n=25)
+2025-12-13 17:33:14,899 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32470
+2025-12-13 17:33:51,470 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32470 results=0
+2025-12-13 17:33:51,841 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Similarity calculated successfully
+2025-12-13 17:33:51,841 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 5: Generating XLSX report
+2025-12-13 17:33:51,934 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] DONE: channel_id=32470, posts=100, keywords=20, top_n=25, elapsed=44.03s, report=/home/alex/apps/tg-analytics-bot/reports/Похожие_каналы_Бухучет_и_налоги_Клерк_2025-12-13.xlsx
+2025-12-13 17:33:52,178 [INFO] aiogram.event - Update id=999071391 is handled. Duration 44623 ms by bot id=8570381804
+2025-12-13 17:41:36,777 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-13 17:41:36,779 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-13 17:41:36,779 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-13 17:41:37,033 [INFO] __main__ - Shutting down...
+2025-12-13 17:41:37,034 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-13 17:41:37,035 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+2025-12-13 17:41:44,135 [INFO] __main__ - Starting ORBITA bot with DI architecture...
+2025-12-13 17:41:44,235 [INFO] __main__ - Using DI handlers (workflow_di.py)
+2025-12-13 17:41:44,239 [INFO] __main__ - Initializing Telegram client...
+2025-12-13 17:41:44,240 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-13 17:41:44,242 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-13 17:41:44,320 [INFO] __main__ - Starting bot polling...
+2025-12-13 17:41:44,321 [INFO] aiogram.dispatcher - Start polling
+2025-12-13 17:41:44,392 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-13 17:41:50,712 [INFO] aiogram.event - Update id=999071392 is handled. Duration 50 ms by bot id=8570381804
+2025-12-13 17:41:52,271 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1279926928, username=bezposhady, title=Беспощадный Банкстер
+2025-12-13 17:41:52,473 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 1: Fetching channel data for @bezposhady
+2025-12-13 17:41:52,507 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1279926928, username=bezposhady, title=Беспощадный Банкстер
+2025-12-13 17:41:52,796 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 2: Saving channel to DB
+2025-12-13 17:41:52,945 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Channel saved: id=1
+2025-12-13 17:41:53,023 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Posts saved: count=86
+2025-12-13 17:41:53,024 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 3: LLM analysis
+2025-12-13 17:41:53,024 [INFO] app.services.llm.analyzer - LLM analysis started: posts=86
+2025-12-13 17:41:59,448 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-13 17:41:59,519 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Analysis saved: keywords=20
+2025-12-13 17:41:59,519 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 4: Calculating similarity (top_n=100)
+2025-12-13 17:41:59,519 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=1
+2025-12-13 17:42:33,626 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE stats: candidates=14859, passed_threshold=4, filtered=14855, max_score=0.194 (19.4%), avg_score=0.019 (1.9%), threshold=0.15 (15%)
+2025-12-13 17:42:33,627 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE results: found=4, min=0.150 (15.0%), max=0.194 (19.4%), avg=0.171 (17.1%)
+2025-12-13 17:42:33,787 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=1 results=4
+2025-12-13 17:42:34,287 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Similarity calculated successfully
+2025-12-13 17:42:34,287 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 5: Generating XLSX report
+2025-12-13 17:42:34,414 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] DONE: channel_id=1, posts=86, keywords=20, top_n=100, elapsed=41.94s, report=/home/alex/apps/tg-analytics-bot/reports/Похожие_каналы_Беспощадный_Банкстер_2025-12-13.xlsx
+2025-12-13 17:42:34,606 [INFO] aiogram.event - Update id=999071393 is handled. Duration 42427 ms by bot id=8570381804
+2025-12-13 17:46:36,661 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-13 17:46:36,663 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-13 17:46:36,664 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-13 17:46:36,915 [INFO] __main__ - Shutting down...
+2025-12-13 17:46:36,916 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-13 17:46:36,917 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+2025-12-13 17:46:43,714 [INFO] __main__ - Starting ORBITA bot with DI architecture...
+2025-12-13 17:46:43,882 [INFO] __main__ - Using DI handlers (workflow_di.py)
+2025-12-13 17:46:43,889 [INFO] __main__ - Initializing Telegram client...
+2025-12-13 17:46:43,889 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-13 17:46:43,894 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-13 17:46:43,984 [INFO] __main__ - Starting bot polling...
+2025-12-13 17:46:43,985 [INFO] aiogram.dispatcher - Start polling
+2025-12-13 17:46:44,059 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-13 17:56:42,086 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-13 17:56:42,090 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-13 17:56:42,090 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-13 17:56:42,342 [INFO] __main__ - Shutting down...
+2025-12-13 17:56:42,343 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-13 17:56:42,344 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+2025-12-13 17:56:48,997 [INFO] __main__ - Starting ORBITA bot with DI architecture...
+2025-12-13 17:56:49,082 [INFO] __main__ - Using DI handlers (workflow_di.py)
+2025-12-13 17:56:49,086 [INFO] __main__ - Initializing Telegram client...
+2025-12-13 17:56:49,086 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-13 17:56:49,108 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-13 17:56:49,186 [INFO] __main__ - Starting bot polling...
+2025-12-13 17:56:49,187 [INFO] aiogram.dispatcher - Start polling
+2025-12-13 17:56:49,253 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-13 17:56:58,257 [INFO] aiogram.event - Update id=999071394 is handled. Duration 50 ms by bot id=8570381804
+2025-12-13 17:57:01,746 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1279926928, username=bezposhady, title=Беспощадный Банкстер
+2025-12-13 17:57:01,909 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 1: Fetching channel data for @bezposhady
+2025-12-13 17:57:01,925 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1279926928, username=bezposhady, title=Беспощадный Банкстер
+2025-12-13 17:57:02,148 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 2: Saving channel to DB
+2025-12-13 17:57:02,300 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Channel saved: id=1
+2025-12-13 17:57:02,376 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Posts saved: count=86
+2025-12-13 17:57:02,377 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 3: LLM analysis
+2025-12-13 17:57:02,377 [INFO] app.services.llm.analyzer - LLM analysis started: posts=86
+2025-12-13 17:57:08,596 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-13 17:57:08,665 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Analysis saved: keywords=19
+2025-12-13 17:57:08,665 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 4: Calculating similarity (top_n=100)
+2025-12-13 17:57:08,665 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=1
