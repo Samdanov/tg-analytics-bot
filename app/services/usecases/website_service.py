@@ -16,6 +16,8 @@ from app.services.xlsx_generator import generate_similar_channels_xlsx
 from app.core.logging import get_logger
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
+from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+import re
 
 logger = get_logger(__name__)
 
@@ -32,6 +34,71 @@ def _auto_width(ws):
                 value = ""
             max_length = max(max_length, len(value))
         ws.column_dimensions[column_letter].width = min(max_length + 2, 80)
+
+
+def _sanitize_filename(text: str, max_length: int = 50) -> str:
+    """Очищает текст для использования в имени файла."""
+    text = re.sub(r'[<>:"/\\|?*]', '', text)
+    text = text.replace(' ', '_')
+    text = re.sub(r'_+', '_', text)
+    if len(text) > max_length:
+        text = text[:max_length]
+    return text.strip('_')
+
+
+def _apply_header_style(ws, header_row: int = 1):
+    """Применяет стили к заголовкам таблицы."""
+    header_fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
+    header_font = Font(bold=True, color="FFFFFF", size=11)
+    header_alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+    border_side = Side(style="thin", color="000000")
+    header_border = Border(left=border_side, right=border_side, top=border_side, bottom=border_side)
+    
+    for cell in ws[header_row]:
+        cell.fill = header_fill
+        cell.font = header_font
+        cell.alignment = header_alignment
+        cell.border = header_border
+    
+    ws.row_dimensions[header_row].height = 30
+
+
+def _apply_data_style(ws, start_row: int = 2):
+    """Применяет стили к данным таблицы."""
+    border_side = Side(style="thin", color="CCCCCC")
+    data_border = Border(left=border_side, right=border_side, top=border_side, bottom=border_side)
+    
+    alignments = {
+        1: Alignment(horizontal="center", vertical="center"),
+        2: Alignment(horizontal="center", vertical="center"),
+        3: Alignment(horizontal="left", vertical="center"),
+        4: Alignment(horizontal="right", vertical="center"),
+        5: Alignment(horizontal="left", vertical="top", wrap_text=True),
+        6: Alignment(horizontal="left", vertical="top", wrap_text=True),
+    }
+    
+    for row in ws.iter_rows(min_row=start_row):
+        for idx, cell in enumerate(row, start=1):
+            cell.border = data_border
+            if idx in alignments:
+                cell.alignment = alignments[idx]
+            
+            if idx == 2 and isinstance(cell.value, (int, float)):
+                value = float(cell.value)
+                if value >= 80:
+                    cell.fill = PatternFill(start_color="C6EFCE", end_color="C6EFCE", fill_type="solid")
+                elif value >= 60:
+                    cell.fill = PatternFill(start_color="FFEB9C", end_color="FFEB9C", fill_type="solid")
+                elif value >= 40:
+                    cell.fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")
+                cell.number_format = "0.0"
+            
+            if idx == 4 and isinstance(cell.value, (int, float)):
+                cell.number_format = "#,##0"
+            
+            if idx == 3 and cell.value and isinstance(cell.value, str) and cell.value.startswith("http"):
+                cell.font = Font(color="0563C1", underline="single")
+                cell.hyperlink = cell.value
 
 
 async def generate_website_similar_channels_xlsx(
@@ -58,25 +125,24 @@ async def generate_website_similar_channels_xlsx(
     reports_dir = base_dir / "reports"
     reports_dir.mkdir(parents=True, exist_ok=True)
     
-    # Создаем безопасное имя файла
-    safe_url = url.replace("https://", "").replace("http://", "").replace("/", "_")[:50]
-    ts = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
-    filename = reports_dir / f"similar_channels_website_{safe_url}_{ts}.xlsx"
-    
     # Создаем Excel
     wb = Workbook()
     ws = wb.active
-    ws.title = "Каналы"
+    ws.title = "Похожие каналы"
     
-    # Заголовок
-    ws.append([
+    # Заголовки таблицы
+    headers = [
         "Дата создания",
         "Релевантность, %",
-        "Имя канала",
+        "Ссылка на канал",
         "Подписчики",
         "Название канала",
         "Описание канала",
-    ])
+    ]
+    ws.append(headers)
+    
+    # Применяем стили к заголовкам
+    _apply_header_style(ws, header_row=1)
     
     created_str = datetime.utcnow().strftime("%d.%m.%Y")
     
@@ -113,7 +179,27 @@ async def generate_website_similar_channels_xlsx(
             "",  # Описание не доступно для сайтов
         ])
     
+    # Применяем стили к данным
+    if similar_channels:
+        _apply_data_style(ws, start_row=2)
+    
+    # Автоподбор ширины колонок
     _auto_width(ws)
+    
+    # Замораживаем первую строку
+    ws.freeze_panes = "A2"
+    
+    # Включаем автофильтр
+    if similar_channels:
+        ws.auto_filter.ref = ws.dimensions
+    
+    # Формируем читаемое имя файла
+    date_str = datetime.utcnow().strftime("%Y-%m-%d")
+    # Извлекаем домен из URL
+    domain = url.replace("https://", "").replace("http://", "").split("/")[0]
+    safe_domain = _sanitize_filename(domain, max_length=40)
+    filename = reports_dir / f"Похожие_каналы_сайт_{safe_domain}_{date_str}.xlsx"
+    
     wb.save(filename)
     
     logger.info(f"Generated Excel report: {filename}")

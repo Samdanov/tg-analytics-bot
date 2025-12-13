@@ -11,10 +11,6 @@ from app.core.logging import setup_logging
 from app.services.telegram_parser import init_telegram, shutdown_telegram
 
 from app.bot.middlewares.error_handler import IgnoreForbiddenMiddleware
-from app.bot.handlers.fetch import router as fetch_router
-from app.bot.handlers.add_channel import router as add_channel_router
-from app.bot.handlers.analyze import router as analyze_router
-from app.bot.handlers.export import router as export_router
 from app.bot.handlers.workflow import router as workflow_router
 
 
@@ -30,16 +26,20 @@ async def main():
     dp.message.middleware(IgnoreForbiddenMiddleware())
     dp.callback_query.middleware(IgnoreForbiddenMiddleware())
 
-    dp.include_router(fetch_router)
-    dp.include_router(add_channel_router)
-    dp.include_router(analyze_router)
-    dp.include_router(export_router)
+    # Основной workflow: обработка постов и сайтов, отправленных напрямую в бота
     dp.include_router(workflow_router)
 
     @dp.message(Command("start"))
     async def start_handler(message: Message):
         try:
-            await message.answer("Готов к работе. Кидай ссылку на канал, пост или сайт.")
+            await message.answer(
+                "🤖 <b>ОРБИТА — Аналитик Telegram-каналов</b>\n\n"
+                "Просто отправь мне:\n"
+                "• 📱 <b>Пост из канала</b> (перешли или дай мне ссылку)\n"
+                "• 🔗 <b>Ссылку на канал</b> (t.me/username или @username)\n"
+                "• 🌐 <b>Ссылку на сайт</b>\n\n"
+                "Я автоматически найду похожие каналы и отправлю отчёт!"
+            )
         except TelegramForbiddenError:
             return
 

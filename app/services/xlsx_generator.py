@@ -7,7 +7,10 @@ from typing import Optional, List, Dict, Any
 
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
+from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+from openpyxl.styles.numbers import FORMAT_NUMBER
 from sqlalchemy import select
+import re
 
 from app.db.database import async_session_maker
 from app.db.models import Channel, AnalyticsResults
@@ -27,6 +30,82 @@ def _auto_width(ws):
             max_length = max(max_length, len(value))
 
         ws.column_dimensions[column_letter].width = min(max_length + 2, 80)
+
+
+def _sanitize_filename(text: str, max_length: int = 50) -> str:
+    """Очищает текст для использования в имени файла."""
+    # Удаляем недопустимые символы для Windows/Linux
+    text = re.sub(r'[<>:"/\\|?*]', '', text)
+    # Заменяем пробелы на подчёркивания
+    text = text.replace(' ', '_')
+    # Удаляем множественные подчёркивания
+    text = re.sub(r'_+', '_', text)
+    # Обрезаем до максимальной длины
+    if len(text) > max_length:
+        text = text[:max_length]
+    return text.strip('_')
+
+
+def _apply_header_style(ws, header_row: int = 1):
+    """Применяет стили к заголовкам таблицы."""
+    # Стили для заголовков
+    header_fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
+    header_font = Font(bold=True, color="FFFFFF", size=11)
+    header_alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+    border_side = Side(style="thin", color="000000")
+    header_border = Border(left=border_side, right=border_side, top=border_side, bottom=border_side)
+    
+    for cell in ws[header_row]:
+        cell.fill = header_fill
+        cell.font = header_font
+        cell.alignment = header_alignment
+        cell.border = header_border
+    
+    # Устанавливаем высоту строки заголовка
+    ws.row_dimensions[header_row].height = 30
+
+
+def _apply_data_style(ws, start_row: int = 2):
+    """Применяет стили к данным таблицы."""
+    border_side = Side(style="thin", color="CCCCCC")
+    data_border = Border(left=border_side, right=border_side, top=border_side, bottom=border_side)
+    
+    # Выравнивание для разных колонок
+    alignments = {
+        1: Alignment(horizontal="center", vertical="top"),  # Дата
+        2: Alignment(horizontal="center", vertical="top"),  # Релевантность
+        3: Alignment(horizontal="left", vertical="top"),   # Ссылка
+        4: Alignment(horizontal="center", vertical="top"),   # Подписчики
+        5: Alignment(horizontal="left", vertical="top", wrap_text=True),  # Название
+        6: Alignment(horizontal="left", vertical="top", wrap_text=True),  # Описание
+    }
+    
+    for row in ws.iter_rows(min_row=start_row):
+        for idx, cell in enumerate(row, start=1):
+            cell.border = data_border
+            if idx in alignments:
+                cell.alignment = alignments[idx]
+            
+            # Форматирование для релевантности (колонка 2)
+            if idx == 2 and isinstance(cell.value, (int, float)):
+                # Условное форматирование цветом в зависимости от значения
+                value = float(cell.value)
+                if value >= 80:
+                    cell.fill = PatternFill(start_color="C6EFCE", end_color="C6EFCE", fill_type="solid")
+                elif value >= 60:
+                    cell.fill = PatternFill(start_color="FFEB9C", end_color="FFEB9C", fill_type="solid")
+                elif value >= 40:
+                    cell.fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")
+                cell.number_format = "0.0"
+            
+            # Форматирование для подписчиков (колонка 4)
+            if idx == 4 and isinstance(cell.value, (int, float)):
+                cell.number_format = "#,##0"
+            
+            # Форматирование ссылок (колонка 3)
+            if idx == 3 and cell.value and isinstance(cell.value, str) and cell.value.startswith("http"):
+                cell.font = Font(color="0563C1", underline="single")
+                cell.hyperlink = cell.value
 
 
 async def _load_source_channel(channel_username: str) -> Optional[Channel]:
@@ -121,16 +200,21 @@ async def generate_similar_channels_xlsx(
     # 5) Готовим Workbook
     wb = Workbook()
     ws = wb.active
-    ws.title = "Каналы"
+    ws.title = "Похожие каналы"
 
-    ws.append([
+    # Заголовки таблицы
+    headers = [
         "Дата создания",
         "Релевантность, %",
-        "Имя канала",
+        "Ссылка на канал",
         "Подписчики",
         "Название канала",
         "Описание канала",
-    ])
+    ]
+    ws.append(headers)
+    
+    # Применяем стили к заголовкам
+    _apply_header_style(ws, header_row=1)
 
     created_at = last_result.created_at if last_result else None
     created_str = (created_at or datetime.utcnow()).strftime("%d.%m.%Y")
@@ -226,7 +310,19 @@ async def generate_similar_channels_xlsx(
         ])
         rows_added += 1
 
+    # Применяем стили к данным
+    if rows_added > 0:
+        _apply_data_style(ws, start_row=2)
+    
+    # Автоподбор ширины колонок
     _auto_width(ws)
+    
+    # Замораживаем первую строку (заголовки)
+    ws.freeze_panes = "A2"
+    
+    # Включаем автофильтр
+    if rows_added > 0:
+        ws.auto_filter.ref = ws.dimensions
 
     # 7) Путь и сохранение
     if base_dir is None:
@@ -235,9 +331,26 @@ async def generate_similar_channels_xlsx(
     reports_dir = base_dir / "reports"
     reports_dir.mkdir(parents=True, exist_ok=True)
 
-    ts = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
-    safe_username = (source_channel.username or f"id_{source_channel.id}").replace("@", "")
-    filename = reports_dir / f"similar_channels_{safe_username}_{ts}.xlsx"
+    # Формируем читаемое имя файла
+    date_str = datetime.utcnow().strftime("%Y-%m-%d")
+    channel_title = getattr(source_channel, "title", "") or ""
+    channel_username = source_channel.username or f"id_{source_channel.id}"
+    
+    # Очищаем username от префикса id: и @
+    if channel_username.startswith("id:"):
+        channel_name = f"ID_{channel_username[3:]}"
+    else:
+        channel_name = channel_username.replace("@", "")
+    
+    # Используем название канала, если есть, иначе username
+    if channel_title:
+        safe_title = _sanitize_filename(channel_title, max_length=40)
+        filename_base = f"Похожие_каналы_{safe_title}"
+    else:
+        safe_name = _sanitize_filename(channel_name, max_length=40)
+        filename_base = f"Похожие_каналы_{safe_name}"
+    
+    filename = reports_dir / f"{filename_base}_{date_str}.xlsx"
 
     wb.save(filename)
     return filename

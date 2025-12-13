@@ -1262,3 +1262,80 @@ Use `default=DefaultBotProperties(...)` instead.
 2025-12-13 08:40:18,349 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
 2025-12-13 08:40:19,000 [INFO] aiogram.dispatcher - Start polling
 2025-12-13 08:40:19,067 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-13 09:01:37,049 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-13 09:01:37,054 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-13 09:01:37,055 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-13 09:01:37,307 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-13 09:01:37,308 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+2025-12-13 09:01:45,021 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-13 09:01:45,024 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-13 09:01:45,101 [INFO] aiogram.dispatcher - Start polling
+2025-12-13 09:01:45,169 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-13 09:02:04,867 [INFO] aiogram.event - Update id=999071307 is handled. Duration 112 ms by bot id=8570381804
+2025-12-13 09:05:47,295 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-13 09:05:47,299 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-13 09:05:47,299 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-13 09:05:47,551 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-13 09:05:47,552 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+2025-12-13 09:05:55,463 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-13 09:05:55,466 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-13 09:05:55,877 [INFO] aiogram.dispatcher - Start polling
+2025-12-13 09:05:55,943 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-13 09:06:03,041 [INFO] aiogram.event - Update id=999071308 is handled. Duration 62 ms by bot id=8570381804
+2025-12-13 09:30:38,538 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-13 09:30:38,543 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-13 09:30:38,543 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-13 09:30:38,795 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-13 09:30:38,796 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+2025-12-13 09:30:46,473 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-13 09:30:46,476 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-13 09:30:46,728 [INFO] aiogram.dispatcher - Start polling
+2025-12-13 09:30:46,790 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-13 09:31:00,704 [INFO] aiogram.event - Update id=999071309 is handled. Duration 91 ms by bot id=8570381804
+2025-12-13 09:31:03,750 [INFO] app.services.telegram_parser.channel_info - Entity received: id=2578059692, username=blackdragontehno, title=BlackDragon🔥
+2025-12-13 09:31:03,923 [INFO] app.bot.handlers.workflow - Channel check: @blackdragontehno - posts: 42, linked_channels: 0, avg_text_per_post: 289.8, link_posts_ratio: 0.00%
+2025-12-13 09:31:03,959 [INFO] app.services.workflow_pipeline - WF: start pipeline username=blackdragontehno top_n=500
+2025-12-13 09:31:03,979 [INFO] app.services.telegram_parser.channel_info - Entity received: id=2578059692, username=blackdragontehno, title=BlackDragon🔥
+2025-12-13 09:31:04,594 [INFO] app.services.llm.analyzer - LLM analysis started: posts=79
+2025-12-13 09:31:10,786 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-13 09:31:10,839 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=2032 keywords=['технология', 'нейросеть', 'искусственный интеллект', 'гаджет', 'игра', 'кибербезопасность', 'инновация', 'автоматизация', 'vpn', 'машинное обучение', 'чат-бот', 'мобильное приложение', 'виртуальная реальность', 'цифровая трансформация', 'робототехника', 'софт', 'лайфхак', 'медиа', 'развлечение', 'стартап'] tone=Неформальный, живой и эмоциональный стиль с элементами иронии и лёгкой шутливости, при этом информативный и мотивирующий к изучению новых технологий и трендов.
+2025-12-13 09:31:10,839 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=2032
+2025-12-13 09:31:10,839 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=2032
+2025-12-13 09:31:41,642 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=2032 results=500
+2025-12-13 09:31:42,913 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=2032 report=/home/alex/apps/tg-analytics-bot/reports/Похожие_каналы_BlackDragon🔥_2025-12-13.xlsx top_n=500
+2025-12-13 09:31:43,121 [INFO] aiogram.event - Update id=999071310 is handled. Duration 39462 ms by bot id=8570381804
+2025-12-13 09:32:47,851 [INFO] aiogram.event - Update id=999071311 is handled. Duration 275 ms by bot id=8570381804
+2025-12-13 09:32:52,292 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1707320634, username=zabotushi, title=1221
+2025-12-13 09:32:52,486 [INFO] app.bot.handlers.workflow - Channel check: @zabotushi - posts: 40, linked_channels: 2, avg_text_per_post: 311.1, link_posts_ratio: 2.50%
+2025-12-13 09:32:52,520 [INFO] app.services.workflow_pipeline - WF: start pipeline username=zabotushi top_n=25
+2025-12-13 09:32:52,534 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1707320634, username=zabotushi, title=1221
+2025-12-13 09:32:52,979 [INFO] app.services.llm.analyzer - LLM analysis started: posts=87
+2025-12-13 09:32:57,725 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-13 09:32:57,755 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=209529 keywords=['робототехника', 'бпла', 'авионика', 'система управление', 'искусственный интеллект', 'комплексная навигация', 'скн', 'кэнс', 'автопилот', 'imu', 'бесспутниковая навигация', 'радиосвязь', 'инженерная платформ', 'испытание', 'полезная нагрузка', 'дрон', 'модуль питание', 'can', 'px4', 'ardupilot'] tone=Формальный, экспертный, технический стиль с акцентом на подробное описание испытаний и технических характеристик. Тон нейтральный, информативный, без эмоциональной окраски.
+2025-12-13 09:32:57,755 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=209529
+2025-12-13 09:32:57,755 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=209529
+2025-12-13 09:33:28,511 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=209529 results=25
+2025-12-13 09:33:29,015 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=209529 report=/home/alex/apps/tg-analytics-bot/reports/Похожие_каналы_1221_2025-12-13.xlsx top_n=25
+2025-12-13 09:33:29,215 [INFO] aiogram.event - Update id=999071312 is handled. Duration 36982 ms by bot id=8570381804
+2025-12-13 09:40:19,697 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-13 09:40:19,699 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-13 09:40:19,699 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-13 09:40:19,951 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-13 09:40:19,952 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+2025-12-13 09:40:27,874 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-13 09:40:27,877 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-13 09:40:28,003 [INFO] aiogram.dispatcher - Start polling
+2025-12-13 09:40:28,078 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-13 09:40:28,818 [INFO] aiogram.event - Update id=999071313 is handled. Duration 91 ms by bot id=8570381804
+2025-12-13 09:40:30,398 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1707320634, username=zabotushi, title=1221
+2025-12-13 09:40:30,799 [INFO] app.bot.handlers.workflow - Channel check: @zabotushi - posts: 40, linked_channels: 2, avg_text_per_post: 311.1, link_posts_ratio: 2.50%
+2025-12-13 09:40:30,838 [INFO] app.services.workflow_pipeline - WF: start pipeline username=zabotushi top_n=25
+2025-12-13 09:40:30,934 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1707320634, username=zabotushi, title=1221
+2025-12-13 09:40:31,551 [INFO] app.services.llm.analyzer - LLM analysis started: posts=87
+2025-12-13 09:40:36,606 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-13 09:40:36,663 [INFO] app.services.llm.analyzer - SAVE_ANALYSIS OK → channel_id=209529 keywords=['робототехника', 'бпла', 'авионика', 'система управление', 'искусственный интеллект', 'комплексная навигация', 'скн', 'кэнс', 'автопилот', 'imu', 'бесспутниковая навигация', 'радиосвязь', 'полезная нагрузка', 'испытание', 'дрон', 'инженерная платформ', 'модуль питание', 'can', 'px4', 'ardupilot'] tone=Формальный, экспертный, технически детализированный, нейтральный, с акцентом на точность и практические результаты испытаний
+2025-12-13 09:40:36,664 [INFO] app.services.workflow_pipeline - WF: analysis completed channel_id=209529
+2025-12-13 09:40:36,664 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=209529
+2025-12-13 09:41:06,557 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=209529 results=25
+2025-12-13 09:41:07,178 [INFO] app.services.workflow_pipeline - WF: pipeline finished channel_id=209529 report=/home/alex/apps/tg-analytics-bot/reports/Похожие_каналы_1221_2025-12-13.xlsx top_n=25
+2025-12-13 09:41:07,376 [INFO] aiogram.event - Update id=999071314 is handled. Duration 37182 ms by bot id=8570381804
