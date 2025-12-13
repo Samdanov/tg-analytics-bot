@@ -458,14 +458,16 @@ python -m app.main
 
 ## 📚 Документация
 
-### Архитектурная документация
+### 🚀 Быстрый старт
 
 | Документ | Описание |
 |----------|----------|
-| [REFACTORING_OVERVIEW.md](REFACTORING_OVERVIEW.md) | Общий обзор рефакторинга и архитектуры |
-| [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md) | Руководство по миграции на новую архитектуру |
+| [README.md](README.md) | Главная документация (вы здесь) |
+| [ARCHITECTURE_DIAGRAM.md](ARCHITECTURE_DIAGRAM.md) | Диаграммы и визуализация архитектуры |
+| [docs/guides/QUICKSTART.md](docs/guides/QUICKSTART.md) | Быстрый старт для новых разработчиков |
+| [docs/guides/MIGRATION_GUIDE.md](docs/guides/MIGRATION_GUIDE.md) | Руководство по миграции на Clean Architecture |
 
-### Документация по слоям
+### 📖 Документация по слоям
 
 | Слой | Документация | Примеры |
 |------|--------------|---------|
@@ -475,18 +477,24 @@ python -m app.main
 | **Use Cases** | [app/services/use_cases/README.md](app/services/use_cases/README.md) | Встроенные примеры |
 | **DI Container** | [app/core/DI_CONTAINER_README.md](app/core/DI_CONTAINER_README.md) | [container_examples.py](app/core/container_examples.py) |
 
-### Отчёты по этапам рефакторинга
+### 🏗️ Рефакторинг
 
-| Этап | Документ | Статус |
-|------|----------|--------|
-| Этап 1 | [REFACTORING_STAGE_1_SUMMARY.md](REFACTORING_STAGE_1_SUMMARY.md) | ✅ Domain Layer |
-| Этап 2 | [REFACTORING_STAGE_2_SUMMARY.md](REFACTORING_STAGE_2_SUMMARY.md) | ✅ Schemas Layer |
-| Этап 3 | [REFACTORING_STAGE_3_SUMMARY.md](REFACTORING_STAGE_3_SUMMARY.md) | ✅ Repositories |
-| Этап 4 | [REFACTORING_STAGE_4_SUMMARY.md](REFACTORING_STAGE_4_SUMMARY.md) | ✅ Handlers + Use Cases |
-| Этап 5 | [REFACTORING_STAGE_5_SUMMARY.md](REFACTORING_STAGE_5_SUMMARY.md) | ✅ DI Container |
-| Этап 6 | [REFACTORING_STAGE_6_SUMMARY.md](REFACTORING_STAGE_6_SUMMARY.md) | ✅ Integration & Tests |
+**Статус:** ✅ Завершено (6/6 этапов)
 
-**Всего:** ~6000 строк документации с примерами
+| Документ | Описание |
+|----------|----------|
+| [docs/refactoring/REFACTORING_OVERVIEW.md](docs/refactoring/REFACTORING_OVERVIEW.md) | Общий обзор рефакторинга |
+| [docs/refactoring/REFACTORING_COMPLETE.md](docs/refactoring/REFACTORING_COMPLETE.md) | Финальный отчёт 🎉 |
+| [docs/refactoring/](docs/refactoring/) | Все этапы (1-6) |
+
+### 📚 Полная документация
+
+Вся документация организована в [docs/](docs/):
+- **[docs/guides/](docs/guides/)** - руководства (5 файлов)
+- **[docs/refactoring/](docs/refactoring/)** - рефакторинг (8 файлов)
+- **[docs/archive/](docs/archive/)** - архив устаревших документов (12 файлов)
+
+**Итого:** 30 файлов, ~311 KB документации
 
 ---
 
