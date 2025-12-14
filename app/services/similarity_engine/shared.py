@@ -18,7 +18,31 @@ def normalize_text(text: str) -> str:
     return text.strip()
 
 
-def is_noise_channel(username: str | None, title: str | None, tokens: List[str]) -> bool:
+# Мусорные категории - не подходят для бизнес-подбора
+NOISE_CATEGORIES = {
+    "блоги", "блог",
+    "цитаты", "цитата",
+    "картинки и фото", "картинки",
+    "юмор", "мемы",
+    "для взрослых", "18+",
+    "эзотерика", "астрология",
+    "даркнет",
+    "инстаграм", "instagram",
+    "telegram",
+    "другое",
+}
+
+
+def is_noise_channel(username: str | None, title: str | None, tokens: List[str], keywords: List[str] = None) -> bool:
+    """
+    Проверяет, является ли канал "мусорным" (не подходит для similarity).
+    
+    Args:
+        username: Username канала
+        title: Название канала
+        tokens: Нормализованные токены
+        keywords: Оригинальные keywords (для проверки категории)
+    """
     name = f"{username or ''} {title or ''}".lower()
 
     noise_markers = [
@@ -44,11 +68,25 @@ def is_noise_channel(username: str | None, title: str | None, tokens: List[str])
 
     if len(tokens) < 3:
         return True
+    
+    # Проверка на мусорную категорию (первый keyword = категория)
+    if keywords and len(keywords) > 0:
+        first_keyword = str(keywords[0]).lower().strip()
+        if first_keyword in NOISE_CATEGORIES:
+            return True
 
     return False
 
 
-async def load_keywords_corpus() -> Tuple[Dict[int, List[str]], Dict[int, Dict[str, str | None]]]:
+async def load_keywords_corpus(
+    filter_noise: bool = True
+) -> Tuple[Dict[int, List[str]], Dict[int, Dict[str, str | None]]]:
+    """
+    Загружает корпус keywords для similarity.
+    
+    Args:
+        filter_noise: Фильтровать мусорные каналы (Блоги, Цитаты, etc)
+    """
     async with async_session_maker() as session:
         q = (
             select(
@@ -63,6 +101,7 @@ async def load_keywords_corpus() -> Tuple[Dict[int, List[str]], Dict[int, Dict[s
 
     tokens_by_channel: Dict[int, List[str]] = {}
     meta_by_channel: Dict[int, Dict[str, str | None]] = {}
+    filtered_noise = 0
 
     for cid, username, title, kw_json in rows:
         if not kw_json:
@@ -90,6 +129,11 @@ async def load_keywords_corpus() -> Tuple[Dict[int, List[str]], Dict[int, Dict[s
 
         tokens = sorted(token_set)
         if not tokens:
+            continue
+        
+        # Фильтруем мусорные каналы (Блоги, Цитаты, etc)
+        if filter_noise and is_noise_channel(username, title, tokens, keywords=kws):
+            filtered_noise += 1
             continue
 
         tokens_by_channel[cid] = tokens

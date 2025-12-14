@@ -54,7 +54,22 @@ def build_filtered_corpus(raw_tokens_by_channel, meta_by_channel, max_df_ratio: 
     return ids, docs
 
 
-async def recalc_seq(top_n: int = 10, max_df_ratio: float = 0.3, min_keywords_per_channel: int = 4, commit_every: int = 200):
+async def recalc_seq(
+    top_n: int = 10, 
+    max_df_ratio: float = 0.3, 
+    min_keywords_per_channel: int = 4, 
+    commit_every: int = 200,
+    start_idx: int = 0,
+    end_idx: int = None
+):
+    """
+    Последовательный пересчёт similarity.
+    
+    Args:
+        top_n: Количество похожих каналов
+        start_idx: Начальный индекс (для многопроцессорности)
+        end_idx: Конечный индекс (для многопроцессорности)
+    """
     raw_tokens_by_channel, meta_by_channel = await load_keywords_corpus()
     ids, docs = build_filtered_corpus(raw_tokens_by_channel, meta_by_channel, max_df_ratio, min_keywords_per_channel)
 
@@ -63,13 +78,26 @@ async def recalc_seq(top_n: int = 10, max_df_ratio: float = 0.3, min_keywords_pe
         logger.warning("[SEQ] недостаточно каналов для similarity")
         return
 
-    logger.info("[SEQ] каналов для анализа: %s", total)
+    # Ограничиваем диапазон для многопроцессорности
+    if end_idx is None or end_idx > total:
+        end_idx = total
+    if start_idx < 0:
+        start_idx = 0
+    if start_idx >= end_idx:
+        logger.warning("[SEQ] неверный диапазон: start=%s, end=%s", start_idx, end_idx)
+        return
+    
+    range_size = end_idx - start_idx
+    logger.info("[SEQ] каналов всего: %s, обрабатываем: %s-%s (%s каналов)", 
+                total, start_idx, end_idx, range_size)
 
     vectorizer = TfidfVectorizer()
     X = vectorizer.fit_transform(docs)
 
     async with async_session_maker() as session:
-        for idx, cid in enumerate(ids):
+        processed = 0
+        for idx in range(start_idx, end_idx):
+            cid = ids[idx]
             sims = cosine_similarity(X[idx], X).ravel()
             sims[idx] = 0.0
 
@@ -94,13 +122,14 @@ async def recalc_seq(top_n: int = 10, max_df_ratio: float = 0.3, min_keywords_pe
                 )
             )
 
-            if (idx + 1) % commit_every == 0:
+            processed += 1
+            if processed % commit_every == 0:
                 await session.commit()
-                logger.info("[SEQ] processed %s/%s", idx + 1, total)
+                logger.info("[SEQ] processed %s/%s (global idx: %s)", processed, range_size, idx + 1)
 
         await session.commit()
 
-    logger.info("[SEQ] готово")
+    logger.info("[SEQ] готово, обработано: %s", processed)
 
 
 async def recalc_chunked(top_n: int = 10, chunk_size: int = 2000, max_df_ratio: float = 0.3, min_keywords_per_channel: int = 4):
@@ -163,12 +192,32 @@ async def main():
     if mode == "batch":
         await recalc_all(top_n=top_n)
     elif mode == "seq":
-        await recalc_seq(top_n=top_n)
+        # Поддержка многопроцессорности: seq top_n [start_idx] [end_idx]
+        start_idx = int(sys.argv[3]) if len(sys.argv) >= 4 else 0
+        end_idx = int(sys.argv[4]) if len(sys.argv) >= 5 else None
+        await recalc_seq(top_n=top_n, start_idx=start_idx, end_idx=end_idx)
     elif mode == "chunk":
         chunk_size = int(sys.argv[3]) if len(sys.argv) >= 4 else 2000
         await recalc_chunked(top_n=top_n, chunk_size=chunk_size)
     else:
-        print("Usage: python -m app.services.similarity_engine.cli [batch|seq|chunk] [top_n] [chunk_size]")
+        print("""
+Usage: python -m app.services.similarity_engine.cli [mode] [top_n] [options]
+
+Modes:
+  batch              - Полный пересчёт (требует много RAM)
+  seq top_n [start] [end] - Последовательный пересчёт (поддержка многопроцессорности)
+  chunk top_n [chunk_size] - Пересчёт по чанкам
+
+Examples:
+  # Полный пересчёт
+  python -m app.services.similarity_engine.cli seq 500
+  
+  # Многопроцессорность (4 терминала):
+  python -m app.services.similarity_engine.cli seq 500 0 50000
+  python -m app.services.similarity_engine.cli seq 500 50000 100000
+  python -m app.services.similarity_engine.cli seq 500 100000 150000
+  python -m app.services.similarity_engine.cli seq 500 150000 210000
+""")
 
 
 if __name__ == "__main__":
