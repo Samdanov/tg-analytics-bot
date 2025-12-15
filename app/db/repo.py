@@ -32,6 +32,7 @@ async def save_channel(channel_data: Dict[str, Any]) -> int:
     title = channel_data.get("title") or ""
     description = channel_data.get("about") or channel_data.get("description") or ""
     subscribers = channel_data.get("participants_count") or channel_data.get("subscribers") or 0
+    category = channel_data.get("category") or ""  # Категория из Excel (PRIMARY TOPIC)
 
     async with async_session_maker() as session:
         result = await session.execute(select(Channel).where(Channel.username == username))
@@ -41,6 +42,7 @@ async def save_channel(channel_data: Dict[str, Any]) -> int:
             channel.title = title
             channel.description = description
             channel.subscribers = subscribers
+            channel.category = category  # Обновляем категорию
             channel.last_update = datetime.utcnow()
             logger.debug("Channel updated username=%s id=%s", username, channel.id)
         else:
@@ -49,6 +51,7 @@ async def save_channel(channel_data: Dict[str, Any]) -> int:
                 title=title,
                 description=description,
                 subscribers=subscribers,
+                category=category,  # Сохраняем категорию
                 last_update=datetime.utcnow(),
             )
             session.add(channel)

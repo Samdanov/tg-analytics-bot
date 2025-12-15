@@ -27,6 +27,7 @@ class Channel(Base):
     title = Column(Text)
     description = Column(Text)
     subscribers = Column(Integer)
+    category = Column(Text, index=True)  # Категория из Excel (48 тем) - PRIMARY TOPIC
 
     keywords = Column(ARRAY(Text))
     last_update = Column(TIMESTAMP)

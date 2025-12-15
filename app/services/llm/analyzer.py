@@ -222,11 +222,12 @@ async def save_analysis(channel_id: int, result: dict):
     tone = result.get("tone", "")
 
     async with async_session_maker() as session:
+        # Обновляем только last_update в channel (keywords хранятся в keywords_cache!)
         channel = await session.get(Channel, channel_id)
         if channel:
-            channel.keywords = keywords
             channel.last_update = datetime.utcnow()
 
+        # Keywords сохраняются ТОЛЬКО в keywords_cache (единственный источник правды)
         kc = await session.get(KeywordsCache, channel_id)
         if not kc:
             kc = KeywordsCache(

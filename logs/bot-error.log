@@ -536,3 +536,217 @@ AttributeError: 'ChannelIdentifier' object has no attribute 'username'
 2025-12-14 12:58:01,544 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 5: Generating XLSX report
 2025-12-14 12:58:01,653 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] DONE: channel_id=32470, posts=100, keywords=20, top_n=10, elapsed=28.99s, report=/home/alex/apps/tg-analytics-bot/reports/Похожие_каналы_Бухучет_и_налоги_Клерк_2025-12-14.xlsx
 2025-12-14 12:58:01,969 [INFO] aiogram.event - Update id=999071401 is handled. Duration 29840 ms by bot id=8570381804
+2025-12-14 14:07:39,023 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-14 14:37:39,061 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-14 14:39:09,972 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-14 15:04:24,355 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-14 15:19:24,412 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-14 15:34:24,459 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-14 15:54:10,318 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-14 16:04:24,507 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-14 16:09:10,472 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-14 16:34:24,614 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-14 16:37:39,379 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-14 16:37:39,417 [INFO] telethon.client.updates - Got difference for channel 1923765411 updates
+2025-12-14 16:52:39,508 [INFO] telethon.client.updates - Got difference for channel 2127378473 updates
+2025-12-14 17:04:24,710 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-14 17:11:59,792 [INFO] telethon.client.updates - Got difference for channel 2578059692 updates
+2025-12-14 17:19:24,747 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-14 17:26:59,133 [INFO] telethon.client.updates - Got difference for channel 2648262934 updates
+2025-12-14 17:49:24,833 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-14 17:56:59,211 [INFO] telethon.client.updates - Got difference for channel 2648262934 updates
+2025-12-14 18:04:24,870 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-14 18:19:24,906 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-14 18:26:59,328 [INFO] telethon.client.updates - Got difference for channel 2648262934 updates
+2025-12-14 18:34:24,938 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-14 18:41:59,432 [INFO] telethon.client.updates - Got difference for channel 2648262934 updates
+2025-12-14 18:49:25,002 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-14 19:04:25,057 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-14 19:11:59,577 [INFO] telethon.client.updates - Got difference for channel 2648262934 updates
+2025-12-14 19:19:25,130 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-14 19:34:25,200 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-14 19:49:25,225 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-14 20:04:25,246 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-14 20:06:09,747 [INFO] telethon.client.updates - Got difference for channel 2307062628 updates
+2025-12-14 20:11:59,691 [INFO] telethon.client.updates - Got difference for channel 2648262934 updates
+2025-12-14 20:19:25,271 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-14 20:34:25,288 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-14 21:34:25,408 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-14 22:22:34,168 [INFO] telethon.client.updates - Got difference for channel 2127378473 updates
+2025-12-14 22:49:25,482 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-14 23:04:25,498 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 00:04:25,628 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 01:04:25,809 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 01:19:25,826 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 01:34:25,856 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 01:49:25,886 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 02:04:25,900 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 02:05:17,854 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 02:20:17,868 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 02:22:47,335 [INFO] telethon.client.updates - Got difference for channel 2408159395 updates
+2025-12-15 02:32:26,569 [INFO] telethon.client.updates - Got difference for channel 2270611076 updates
+2025-12-15 02:35:17,891 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 02:54:30,685 [INFO] aiogram.event - Update id=999071402 is handled. Duration 139 ms by bot id=8570381804
+2025-12-15 02:54:35,377 [INFO] app.services.telegram_parser.channel_info - Entity received: id=2169035660, username=hr_nom, title=Кадры | HR | найм
+2025-12-15 02:54:35,534 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 1: Fetching channel data for @hr_nom
+2025-12-15 02:54:35,545 [INFO] app.services.telegram_parser.channel_info - Entity received: id=2169035660, username=hr_nom, title=Кадры | HR | найм
+2025-12-15 02:54:35,746 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 2: Saving channel to DB
+2025-12-15 02:54:35,781 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Channel saved: id=32472
+2025-12-15 02:54:35,841 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Posts saved: count=82
+2025-12-15 02:54:35,841 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 3: LLM analysis
+2025-12-15 02:54:35,841 [INFO] app.services.llm.analyzer - LLM analysis started: posts=82
+2025-12-15 02:54:44,940 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-15 02:54:44,971 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Analysis saved: keywords=20
+2025-12-15 02:54:44,971 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 4: Calculating similarity (top_n=100)
+2025-12-15 02:54:44,972 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32472
+2025-12-15 02:55:05,180 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE stats: candidates=20031, passed_threshold=20031, filtered=0, max_score=0.299 (29.9%), avg_score=0.021 (2.1%), threshold=0.00 (0%)
+2025-12-15 02:55:05,184 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE results: found=20031, min=0.005 (0.5%), max=0.299 (29.9%), avg=0.021 (2.1%)
+2025-12-15 02:55:05,305 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32472 results=100
+2025-12-15 02:55:05,487 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Similarity calculated successfully
+2025-12-15 02:55:05,487 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 5: Generating XLSX report
+2025-12-15 02:55:05,629 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] DONE: channel_id=32472, posts=82, keywords=20, top_n=100, elapsed=30.10s, report=/home/alex/apps/tg-analytics-bot/reports/Похожие_каналы_Кадры_HR_найм_2025-12-15.xlsx
+2025-12-15 02:55:05,832 [INFO] aiogram.event - Update id=999071403 is handled. Duration 30508 ms by bot id=8570381804
+2025-12-15 02:57:24,895 [INFO] aiogram.event - Update id=999071404 is handled. Duration 78 ms by bot id=8570381804
+2025-12-15 02:57:26,509 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1117110957, username=klerkonline, title=Бухучет и налоги Клерк
+2025-12-15 02:57:26,688 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 1: Fetching channel data for @klerkonline
+2025-12-15 02:57:26,699 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1117110957, username=klerkonline, title=Бухучет и налоги Клерк
+2025-12-15 02:57:26,977 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 2: Saving channel to DB
+2025-12-15 02:57:26,987 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Channel saved: id=32470
+2025-12-15 02:57:27,020 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Posts saved: count=100
+2025-12-15 02:57:27,021 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 3: LLM analysis
+2025-12-15 02:57:27,021 [INFO] app.services.llm.analyzer - LLM analysis started: posts=100
+2025-12-15 02:57:32,890 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-15 02:57:32,919 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Analysis saved: keywords=19
+2025-12-15 02:57:32,919 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 4: Calculating similarity (top_n=100)
+2025-12-15 02:57:32,919 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE v2.2 run target=32470
+2025-12-15 02:57:51,504 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE stats: candidates=782, passed_threshold=782, filtered=0, max_score=0.180 (18.0%), avg_score=0.060 (6.0%), threshold=0.00 (0%)
+2025-12-15 02:57:51,504 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE results: found=782, min=0.028 (2.8%), max=0.180 (18.0%), avg=0.060 (6.0%)
+2025-12-15 02:57:51,610 [INFO] app.services.similarity_engine.engine_single - ENGINE_SINGLE finished target=32470 results=100
+2025-12-15 02:57:51,785 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Similarity calculated successfully
+2025-12-15 02:57:51,785 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 5: Generating XLSX report
+2025-12-15 02:57:51,922 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] DONE: channel_id=32470, posts=100, keywords=19, top_n=100, elapsed=25.23s, report=/home/alex/apps/tg-analytics-bot/reports/Похожие_каналы_Бухучет_и_налоги_Клерк_2025-12-15.xlsx
+2025-12-15 02:57:52,093 [INFO] aiogram.event - Update id=999071405 is handled. Duration 25651 ms by bot id=8570381804
+2025-12-15 03:05:17,943 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 03:20:17,961 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 03:35:17,979 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 03:39:11,673 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-15 03:50:17,998 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 03:50:46,147 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-15 04:05:18,022 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 04:12:18,137 [INFO] telethon.client.updates - Got difference for channel 2408159395 updates
+2025-12-15 04:20:18,037 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 04:25:53,162 [INFO] telethon.client.updates - Got difference for channel 2270611076 updates
+2025-12-15 04:35:18,058 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 04:50:18,071 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 04:50:46,328 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-15 04:54:11,763 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-15 05:05:18,086 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 05:20:18,099 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 05:35:18,113 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 05:35:46,395 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-15 05:50:18,127 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 06:05:18,147 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 06:07:34,466 [INFO] telethon.client.updates - Got difference for channel 2028914005 updates
+2025-12-15 06:20:18,160 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 06:22:35,148 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-15 06:35:18,183 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 06:50:18,198 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 07:05:18,220 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 07:12:00,673 [INFO] telethon.client.updates - Got difference for channel 2648262934 updates
+2025-12-15 07:20:18,288 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 07:35:18,304 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 07:35:47,035 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-15 07:36:34,449 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-15 07:37:41,008 [INFO] telethon.client.updates - Got difference for channel 2912029707 updates
+2025-12-15 07:50:18,339 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 07:50:47,074 [INFO] telethon.client.updates - Got difference for channel 1923765411 updates
+2025-12-15 07:51:34,469 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-15 08:05:18,490 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 08:06:34,493 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-15 08:07:24,532 [INFO] telethon.client.updates - Got difference for channel 1923765411 updates
+2025-12-15 08:12:00,916 [INFO] telethon.client.updates - Got difference for channel 2648262934 updates
+2025-12-15 08:20:18,514 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 08:20:47,091 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-15 08:20:47,296 [INFO] telethon.client.updates - Got difference for channel 1555418015 updates
+2025-12-15 08:29:35,733 [INFO] telethon.client.updates - Got difference for channel 2307062628 updates
+2025-12-15 08:35:18,532 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 08:50:18,546 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 08:55:47,846 [INFO] telethon.client.updates - Got difference for channel 1543204515 updates
+2025-12-15 08:57:01,036 [INFO] telethon.client.updates - Got difference for channel 2648262934 updates
+2025-12-15 09:05:18,563 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 09:07:34,968 [INFO] telethon.client.updates - Got difference for channel 2028914005 updates
+2025-12-15 09:12:01,115 [INFO] telethon.client.updates - Got difference for channel 2648262934 updates
+2025-12-15 09:13:56,390 [INFO] telethon.client.updates - Got difference for channel 2127378473 updates
+2025-12-15 09:20:18,601 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 09:35:18,667 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 09:35:47,345 [INFO] telethon.client.updates - Got difference for channel 2578059692 updates
+2025-12-15 09:42:01,333 [INFO] telethon.client.updates - Got difference for channel 2648262934 updates
+2025-12-15 09:47:41,234 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-15 09:50:18,692 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 09:50:47,333 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-15 09:52:24,875 [INFO] telethon.client.updates - Got difference for channel 1923765411 updates
+2025-12-15 10:02:41,276 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-15 10:12:01,400 [INFO] telethon.client.updates - Got difference for channel 2648262934 updates
+2025-12-15 10:20:56,915 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 10:50:56,971 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 10:52:24,987 [INFO] telethon.client.updates - Got difference for channel 1923765411 updates
+2025-12-15 11:02:11,203 [INFO] telethon.client.updates - Got difference for channel 2307062628 updates
+2025-12-15 11:03:26,737 [INFO] telethon.client.updates - Got difference for channel 2578059692 updates
+2025-12-15 11:05:47,591 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-15 11:05:57,009 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 11:06:31,169 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 11:12:01,500 [INFO] telethon.client.updates - Got difference for channel 2648262934 updates
+2025-12-15 11:18:26,786 [INFO] telethon.client.updates - Got difference for channel 2578059692 updates
+2025-12-15 11:21:31,211 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 11:25:17,360 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-15 11:27:01,691 [INFO] telethon.client.updates - Got difference for channel 2648262934 updates
+2025-12-15 11:35:54,160 [INFO] telethon.client.updates - Got difference for channel 1543204515 updates
+2025-12-15 11:36:31,297 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 11:40:17,389 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-15 11:51:31,325 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 11:55:17,423 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-15 12:06:31,366 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 12:07:25,798 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 12:07:37,285 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 12:10:17,528 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-15 12:12:01,811 [INFO] telethon.client.updates - Got difference for channel 2648262934 updates
+2025-12-15 12:13:56,774 [INFO] telethon.client.updates - Got difference for channel 2127378473 updates
+2025-12-15 12:22:37,332 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 12:25:17,563 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-15 12:37:37,364 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 12:52:37,453 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 12:55:17,691 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-15 12:58:56,877 [INFO] telethon.client.updates - Got difference for channel 2127378473 updates
+2025-12-15 13:07:37,548 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 13:10:17,797 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-15 13:12:01,980 [INFO] telethon.client.updates - Got difference for channel 2648262934 updates
+2025-12-15 13:20:48,300 [INFO] telethon.client.updates - Got difference for channel 2578059692 updates
+2025-12-15 13:22:37,642 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 13:25:17,836 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-15 13:27:16,424 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-15 13:34:20,780 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-15 13:34:24,584 [INFO] telethon.client.updates - Got difference for channel 2270611076 updates
+2025-12-15 13:37:37,670 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 13:43:57,559 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-15 13:55:17,900 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-15 14:07:37,726 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 14:10:17,947 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-15 14:12:16,491 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-15 14:14:07,138 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 14:15:11,056 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-15 14:19:56,564 [INFO] telethon.client.updates - Got difference for channel 1543204515 updates
+2025-12-15 14:25:17,985 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-15 14:27:16,518 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-15 14:29:07,168 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 14:30:11,094 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-15 14:34:08,291 [INFO] telethon.client.updates - Got difference for channel 1748730883 updates
+2025-12-15 14:34:13,097 [INFO] telethon.client.updates - Got difference for channel 1543204515 updates
+2025-12-15 14:40:18,136 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-15 14:42:16,574 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-15 14:44:07,200 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-15 14:54:55,423 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-15 14:54:55,430 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-15 14:54:55,433 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-15 14:54:55,686 [INFO] __main__ - Shutting down...
+2025-12-15 14:54:55,687 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-15 14:54:55,689 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!

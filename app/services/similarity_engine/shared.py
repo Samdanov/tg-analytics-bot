@@ -33,18 +33,24 @@ NOISE_CATEGORIES = {
 }
 
 
-def is_noise_channel(username: str | None, title: str | None, tokens: List[str], keywords: List[str] = None) -> bool:
+def is_noise_channel(
+    username: str | None, 
+    title: str | None, 
+    tokens: List[str], 
+    category: str | None = None
+) -> bool:
     """
     Проверяет, является ли канал "мусорным" (не подходит для similarity).
     
     Args:
         username: Username канала
         title: Название канала
-        tokens: Нормализованные токены
-        keywords: Оригинальные keywords (для проверки категории)
+        tokens: Нормализованные токены из keywords
+        category: Категория канала (из БД, не из keywords!)
     """
     name = f"{username or ''} {title or ''}".lower()
 
+    # Маркеры мусора в названии
     noise_markers = [
         "sticker", "stickers", "стикер", "стикеры",
         "emoji", "эмодзи",
@@ -55,6 +61,7 @@ def is_noise_channel(username: str | None, title: str | None, tokens: List[str],
     if any(m in name for m in noise_markers):
         return True
 
+    # Мусорные токены в keywords
     noise_keys = {
         "стикер", "стикеры", "emoji", "эмодзи",
         "gif", "гиф", "мем", "мемы",
@@ -66,13 +73,14 @@ def is_noise_channel(username: str | None, title: str | None, tokens: List[str],
         if noise_count / max(1, len(tokens)) >= 0.5:
             return True
 
+    # Слишком мало токенов = ненадёжный контент
     if len(tokens) < 3:
         return True
     
-    # Проверка на мусорную категорию (первый keyword = категория)
-    if keywords and len(keywords) > 0:
-        first_keyword = str(keywords[0]).lower().strip()
-        if first_keyword in NOISE_CATEGORIES:
+    # Проверка на мусорную категорию (теперь используем реальную category из БД!)
+    if category:
+        category_lower = category.lower().strip()
+        if category_lower in NOISE_CATEGORIES:
             return True
 
     return False
@@ -86,6 +94,10 @@ async def load_keywords_corpus(
     
     Args:
         filter_noise: Фильтровать мусорные каналы (Блоги, Цитаты, etc)
+    
+    Returns:
+        tokens_by_channel: {channel_id: [token1, token2, ...]}
+        meta_by_channel: {channel_id: {"username": ..., "title": ..., "category": ...}}
     """
     async with async_session_maker() as session:
         q = (
@@ -93,6 +105,7 @@ async def load_keywords_corpus(
                 Channel.id,
                 Channel.username,
                 Channel.title,
+                Channel.category,  # Добавляем category для фильтрации и бустинга
                 KeywordsCache.keywords_json,
             )
             .join(KeywordsCache, KeywordsCache.channel_id == Channel.id)
@@ -103,7 +116,7 @@ async def load_keywords_corpus(
     meta_by_channel: Dict[int, Dict[str, str | None]] = {}
     filtered_noise = 0
 
-    for cid, username, title, kw_json in rows:
+    for cid, username, title, category, kw_json in rows:
         if not kw_json:
             continue
 
@@ -132,11 +145,12 @@ async def load_keywords_corpus(
             continue
         
         # Фильтруем мусорные каналы (Блоги, Цитаты, etc)
-        if filter_noise and is_noise_channel(username, title, tokens, keywords=kws):
+        # Используем category для фильтрации вместо первого keyword
+        if filter_noise and is_noise_channel(username, title, tokens, category=category):
             filtered_noise += 1
             continue
 
         tokens_by_channel[cid] = tokens
-        meta_by_channel[cid] = {"username": username, "title": title}
+        meta_by_channel[cid] = {"username": username, "title": title, "category": category}
 
     return tokens_by_channel, meta_by_channel
