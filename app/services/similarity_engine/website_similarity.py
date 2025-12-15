@@ -12,7 +12,7 @@ from math import log, sqrt
 from sqlalchemy import select
 from app.db.database import async_session_maker
 from app.db.models import Channel, KeywordsCache
-from app.services.similarity_engine.shared import normalize_text, is_noise_channel
+from app.services.similarity_engine.shared import normalize_text, should_exclude_category
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -61,6 +61,7 @@ async def find_similar_channels_by_keywords(
                 Channel.username,
                 Channel.title,
                 Channel.subscribers,
+                Channel.category,
                 KeywordsCache.keywords_json,
             )
             .join(KeywordsCache, KeywordsCache.channel_id == Channel.id)
@@ -70,8 +71,12 @@ async def find_similar_channels_by_keywords(
     # Вычисляем схожесть для каждого канала
     similarities = []
     
-    for channel_id, username, title, subscribers, kw_json in rows:
+    for channel_id, username, title, subscribers, category, kw_json in rows:
         if not kw_json:
+            continue
+        
+        # Пропускаем исключённые категории (Блоги, Цитаты, etc.)
+        if should_exclude_category(category):
             continue
         
         try:
@@ -92,10 +97,6 @@ async def find_similar_channels_by_keywords(
                         channel_tokens.add(t)
         
         if not channel_tokens:
-            continue
-        
-        # Проверяем на шумовые каналы
-        if is_noise_channel(username, title, list(channel_tokens)):
             continue
         
         # Вычисляем пересечение ключевых слов

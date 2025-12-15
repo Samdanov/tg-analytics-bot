@@ -6,12 +6,70 @@ from pymorphy2 import MorphAnalyzer
 from app.db.database import async_session_maker
 from app.db.models import Channel, KeywordsCache
 from app.services.llm.client import ask_llm
-from app.services.llm.prompt import build_analysis_prompt
+from app.services.llm.prompt import build_analysis_prompt, VALID_CATEGORIES
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
 
 morph = MorphAnalyzer()
+
+
+def normalize_category(raw_category: str) -> str:
+    """
+    Нормализует category к одной из 48 валидных тем.
+    """
+    if not raw_category:
+        return ""
+    
+    cleaned = raw_category.strip().lower()
+    
+    if not cleaned or cleaned in ("nan", "none", "null"):
+        return ""
+    
+    # Прямое совпадение
+    if cleaned in VALID_CATEGORIES:
+        return cleaned
+    
+    # Поиск по вхождению
+    for valid in VALID_CATEGORIES:
+        if cleaned in valid or valid in cleaned:
+            return valid
+    
+    return "другое"
+
+
+def tokenize_keywords(keywords: list) -> list:
+    """
+    Разбивает словосочетания на отдельные токены.
+    
+    "machine learning" → ["machine", "learning"]
+    "контент-маркетинг" → ["контент", "маркетинг"]
+    """
+    tokens = []
+    for kw in keywords:
+        if not kw:
+            continue
+        
+        kw_str = str(kw).strip()
+        
+        # Разбиваем по пробелам и дефисам
+        parts = re.split(r'[\s\-_]+', kw_str)
+        
+        for part in parts:
+            part = part.strip()
+            if len(part) >= 2:
+                tokens.append(part)
+    
+    # Убираем дубликаты, сохраняя порядок
+    seen = set()
+    unique = []
+    for t in tokens:
+        t_lower = t.lower()
+        if t_lower not in seen:
+            seen.add(t_lower)
+            unique.append(t)
+    
+    return unique
 
 
 def clean_text(text: str) -> str:
@@ -108,11 +166,10 @@ async def analyze_channel(channel: dict, posts: list, llm_retries: int = 2):
         kws = extract_keywords_from_text(title, limit=20)
         kws = normalize_russian_keywords(kws)
         
-        # Для ID-based каналов используем ID вместо username
-        fallback_identifier = channel.get("username") or f"id_{channel.get('id', 'unknown')}"
         return {
+            "category": "",  # Не можем определить без контента
             "audience": "Контента нет — анализ невозможен.",
-            "keywords": kws if kws else [fallback_identifier],
+            "keywords": kws if kws else [],
             "tone": ""
         }
 
@@ -122,13 +179,22 @@ async def analyze_channel(channel: dict, posts: list, llm_retries: int = 2):
     last_error = None
     for attempt in range(llm_retries + 1):
         try:
-            raw = await ask_llm(prompt, max_tokens=600)
+            raw = await ask_llm(prompt, max_tokens=800)
             res = try_parse_json(raw)
 
             if res and isinstance(res.get("keywords"), list):
+                # Обрабатываем keywords: токенизация + нормализация
                 kws = res.get("keywords") or []
+                kws = tokenize_keywords(kws)  # Разбиваем словосочетания
                 kws = normalize_russian_keywords(kws)
                 res["keywords"] = kws
+                
+                # Обрабатываем category
+                raw_category = res.get("category", "")
+                res["category"] = normalize_category(raw_category)
+                
+                logger.info("LLM analysis: category='%s', keywords=%d", 
+                           res["category"], len(res["keywords"]))
                 return res
             else:
                 last_error = f"Invalid JSON structure: {raw[:200]}"
@@ -144,6 +210,7 @@ async def analyze_channel(channel: dict, posts: list, llm_retries: int = 2):
     kws = normalize_russian_keywords(kws)
 
     return {
+        "category": "",  # Не можем определить без LLM
         "audience": "Не удалось получить анализ от LLM",
         "tone": "",
         "keywords": kws
@@ -176,6 +243,7 @@ async def analyze_text_content(text: str, title: str = "", description: str = ""
         kws = extract_keywords_from_text(title_clean, limit=20)
         kws = normalize_russian_keywords(kws)
         return {
+            "category": "",
             "audience": "Контента нет — анализ невозможен.",
             "keywords": kws if kws else [],
             "tone": ""
@@ -188,13 +256,18 @@ async def analyze_text_content(text: str, title: str = "", description: str = ""
     last_error = None
     for attempt in range(llm_retries + 1):
         try:
-            raw = await ask_llm(prompt, max_tokens=600)
+            raw = await ask_llm(prompt, max_tokens=800)
             res = try_parse_json(raw)
             
             if res and isinstance(res.get("keywords"), list):
                 kws = res.get("keywords") or []
+                kws = tokenize_keywords(kws)
                 kws = normalize_russian_keywords(kws)
                 res["keywords"] = kws
+                
+                raw_category = res.get("category", "")
+                res["category"] = normalize_category(raw_category)
+                
                 return res
             else:
                 last_error = f"Invalid JSON structure: {raw[:200]}"
@@ -210,6 +283,7 @@ async def analyze_text_content(text: str, title: str = "", description: str = ""
     kws = normalize_russian_keywords(kws)
     
     return {
+        "category": "",
         "audience": "Не удалось получить анализ от LLM",
         "tone": "",
         "keywords": kws
@@ -217,17 +291,31 @@ async def analyze_text_content(text: str, title: str = "", description: str = ""
 
 
 async def save_analysis(channel_id: int, result: dict):
+    """
+    Сохраняет результаты LLM-анализа.
+    
+    Сохраняет:
+    - category → channels.category (PRIMARY TOPIC)
+    - keywords → keywords_cache.keywords_json (SECONDARY)
+    - audience, tone → keywords_cache
+    """
     keywords = result.get("keywords") or []
     audience = result.get("audience", "")
     tone = result.get("tone", "")
+    category = result.get("category", "")
 
     async with async_session_maker() as session:
-        # Обновляем только last_update в channel (keywords хранятся в keywords_cache!)
+        # Обновляем channel: category + last_update
         channel = await session.get(Channel, channel_id)
         if channel:
             channel.last_update = datetime.utcnow()
+            # Обновляем category ТОЛЬКО если LLM определил его
+            # и текущий category пустой (не перезаписываем Excel-категорию)
+            if category and not channel.category:
+                channel.category = category
+                logger.info("Updated channel category: %s -> '%s'", channel_id, category)
 
-        # Keywords сохраняются ТОЛЬКО в keywords_cache (единственный источник правды)
+        # Keywords сохраняются в keywords_cache
         kc = await session.get(KeywordsCache, channel_id)
         if not kc:
             kc = KeywordsCache(
@@ -246,4 +334,5 @@ async def save_analysis(channel_id: int, result: dict):
 
         await session.commit()
 
-    logger.info("SAVE_ANALYSIS OK → channel_id=%s keywords=%s tone=%s", channel_id, keywords, tone)
+    logger.info("SAVE_ANALYSIS OK → channel_id=%s category='%s' keywords=%d", 
+               channel_id, category, len(keywords))

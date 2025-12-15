@@ -37,7 +37,7 @@ from sqlalchemy import select, update
 from app.core.logging import setup_logging, get_logger
 from app.db.database import async_session_maker
 from app.db.models import Channel, KeywordsCache
-from app.services.excel_importer import extract_keywords_v2  # Чистая версия без category в keywords!
+from app.services.excel_importer import extract_keywords  # Чистая версия без category в keywords!
 
 logger = get_logger(__name__)
 
@@ -159,7 +159,7 @@ async def update_database_from_excel(
             })
             
             # 2. Генерируем ЧИСТЫЕ keywords (только title + description!)
-            new_keywords = extract_keywords_v2(
+            new_keywords = extract_keywords(
                 excel_info["title"],
                 excel_info["description"],
                 limit=20

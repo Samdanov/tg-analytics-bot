@@ -3,7 +3,7 @@ from pathlib import Path
 from app.db.repo import save_channel, save_posts
 from app.services.telegram_parser.channel_info import get_channel_with_posts
 from app.services.llm.analyzer import analyze_channel, save_analysis
-from app.services.usecases.similarity_service import recalc_for_channel
+from app.services.use_cases.similarity_service import recalc_for_channel
 from app.services.xlsx_generator import generate_similar_channels_xlsx
 from app.core.logging import get_logger
 

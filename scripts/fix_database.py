@@ -1,3 +1,9 @@
+import sys
+from pathlib import Path
+ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 # app/services/fix_database.py
 
 """
@@ -14,7 +20,7 @@ from app.core.logging import setup_logging, get_logger
 from app.db.models import Channel, KeywordsCache, AnalyticsResults
 from app.services.excel_importer import extract_keywords
 from app.services.llm.analyzer import save_analysis
-from app.services.usecases.similarity_service import recalc_for_channel
+from app.services.use_cases.similarity_service import recalc_for_channel
 
 logger = get_logger(__name__)
 
@@ -46,7 +52,7 @@ async def fix_missing_keywords():
                 username = channel.username or ""
                 
                 full_text = f"{title} {description} {username}"
-                keywords = extract_keywords(full_text, limit=20)
+                keywords = extract_keywords(title, description, limit=20)
                 
                 if not keywords:
                     # Если не удалось извлечь, используем username

@@ -1,241 +1,260 @@
+# app/services/similarity_engine/engine_single.py
+"""
+Расчёт similarity для ОДНОГО канала.
+
+АРХИТЕКТУРА:
+- Берём category target-канала
+- Загружаем ТОЛЬКО каналы той же категории
+- TF-IDF + Cosine ВНУТРИ категории
+- Каналы разных категорий НИКОГДА не сравниваются
+"""
+
 import json
-from typing import List, Dict, Set
+from typing import List, Dict, Optional
 from math import log, sqrt
 
-from sqlalchemy import delete
+from sqlalchemy import select, delete
 
 from app.db.database import async_session_maker
-from app.db.models import AnalyticsResults
+from app.db.models import Channel, KeywordsCache, AnalyticsResults
 from app.core.logging import get_logger
-from app.services.similarity_engine.shared import (
-    is_noise_channel,
-    load_keywords_corpus,
-)
 
 logger = get_logger(__name__)
+
+
+async def get_channel_category(channel_id: int) -> Optional[str]:
+    """Получает category канала из БД."""
+    async with async_session_maker() as session:
+        result = await session.execute(
+            select(Channel.category).where(Channel.id == channel_id)
+        )
+        row = result.scalar_one_or_none()
+        if row:
+            return (row or "").strip().lower()
+        return None
+
+
+async def load_channels_by_category(category: str) -> Dict[int, List[str]]:
+    """
+    Загружает все каналы указанной категории с их keywords.
+    
+    Returns:
+        {channel_id: [token1, token2, ...]}
+    """
+    async with async_session_maker() as session:
+        # Нормализуем категорию для поиска
+        category_lower = category.strip().lower()
+        
+        q = (
+            select(
+                Channel.id,
+                Channel.category,
+                KeywordsCache.keywords_json,
+            )
+            .join(KeywordsCache, KeywordsCache.channel_id == Channel.id)
+        )
+        
+        rows = (await session.execute(q)).all()
+    
+    tokens_by_channel: Dict[int, List[str]] = {}
+    
+    for cid, ch_category, kw_json in rows:
+        # Фильтр по категории
+        ch_cat_lower = (ch_category or "").strip().lower()
+        if ch_cat_lower != category_lower:
+            continue
+        
+        if not kw_json:
+            continue
+        
+        try:
+            keywords = json.loads(kw_json)
+        except Exception:
+            continue
+        
+        if not isinstance(keywords, list) or len(keywords) < 2:
+            continue
+        
+        # Нормализация токенов
+        tokens = [str(kw).lower().strip() for kw in keywords if kw]
+        tokens = [t for t in tokens if len(t) >= 2]
+        
+        if tokens:
+            tokens_by_channel[cid] = tokens
+    
+    return tokens_by_channel
 
 
 async def calculate_similarity_for_channel(
     target_channel_id: int,
     top_n: int = 10,
-    max_df_ratio: float = 0.3,
-    min_keywords_per_channel: int = 4,
-    min_similarity_threshold: float = 0.0,  # Убран порог - возвращаем топ-N
+    min_keywords: int = 2,
 ) -> bool:
     """
-    Лёгкий по памяти расчёт похожих каналов для одного channel_id.
-    Использует полноценный TF-IDF + Cosine Similarity для точного расчёта схожести.
+    Расчёт похожих каналов для одного channel_id.
+    
+    ВАЖНО: Similarity считается ТОЛЬКО внутри category target-канала!
     
     Args:
         target_channel_id: ID целевого канала
-        top_n: Количество похожих каналов для возврата (возвращает TOP-N по score)
-        max_df_ratio: Фильтр частых слов (default 0.3 = слова встречающиеся в >30% каналов)
-        min_keywords_per_channel: Минимум ключевых слов на канал
-        min_similarity_threshold: Минимальный порог схожести (default 0.0 = без фильтра)
+        top_n: Количество похожих каналов
+        min_keywords: Минимум keywords для участия
     
     Returns:
-        True если расчёт успешен, False если нет данных
-    
-    Note:
-        Порог по умолчанию = 0 (отключён). Возвращается TOP-N каналов по score,
-        независимо от абсолютного значения схожести. Пользователь запрашивает
-        N каналов - он получает N лучших.
+        True если успешно, False если нет данных
     """
-    logger.info("ENGINE_SINGLE v2.2 run target=%s", target_channel_id)
-
-    raw_tokens_by_channel, meta_by_channel = await load_keywords_corpus()
-
-    if target_channel_id not in raw_tokens_by_channel:
-        async with async_session_maker() as session:
-            await session.execute(
-                delete(AnalyticsResults).where(AnalyticsResults.channel_id == target_channel_id)
-            )
-            session.add(
-                AnalyticsResults(
-                    channel_id=target_channel_id,
-                    similar_channels_json=json.dumps([]),
-                )
-            )
-            await session.commit()
+    logger.info("[SINGLE] target=%d", target_channel_id)
+    
+    # =========================================================
+    # 1. ПОЛУЧАЕМ CATEGORY TARGET-КАНАЛА
+    # =========================================================
+    target_category = await get_channel_category(target_channel_id)
+    
+    if not target_category:
+        logger.warning("[SINGLE] target=%d не найден или без category", target_channel_id)
+        await _save_empty_result(target_channel_id)
         return False
-
-    filtered_tokens_by_channel: Dict[int, List[str]] = {}
-    for cid, tokens in raw_tokens_by_channel.items():
-        meta = meta_by_channel.get(cid, {})
-        if cid != target_channel_id and is_noise_channel(meta.get("username"), meta.get("title"), tokens):
-            continue
-        filtered_tokens_by_channel[cid] = tokens
-
-    if target_channel_id not in filtered_tokens_by_channel:
-        async with async_session_maker() as session:
-            await session.execute(
-                delete(AnalyticsResults).where(AnalyticsResults.channel_id == target_channel_id)
-            )
-            session.add(
-                AnalyticsResults(
-                    channel_id=target_channel_id,
-                    similar_channels_json=json.dumps([]),
-                )
-            )
-            await session.commit()
+    
+    logger.info("[SINGLE] target=%d category='%s'", target_channel_id, target_category)
+    
+    # =========================================================
+    # 2. ЗАГРУЖАЕМ ТОЛЬКО КАНАЛЫ ЭТОЙ ЖЕ КАТЕГОРИИ
+    # =========================================================
+    tokens_by_channel = await load_channels_by_category(target_category)
+    
+    if target_channel_id not in tokens_by_channel:
+        logger.warning("[SINGLE] target=%d нет keywords", target_channel_id)
+        await _save_empty_result(target_channel_id)
         return False
-
+    
+    # Фильтруем по min_keywords
+    filtered: Dict[int, List[str]] = {
+        cid: tokens 
+        for cid, tokens in tokens_by_channel.items()
+        if len(tokens) >= min_keywords
+    }
+    
+    if target_channel_id not in filtered:
+        logger.warning("[SINGLE] target=%d мало keywords", target_channel_id)
+        await _save_empty_result(target_channel_id)
+        return False
+    
+    num_channels = len(filtered)
+    logger.info("[SINGLE] каналов в категории '%s': %d", target_category, num_channels)
+    
+    if num_channels < 2:
+        logger.warning("[SINGLE] мало каналов в категории")
+        await _save_empty_result(target_channel_id)
+        return False
+    
+    # =========================================================
+    # 3. TF-IDF ВНУТРИ КАТЕГОРИИ
+    # =========================================================
+    
+    # DF (Document Frequency) - только внутри этой категории!
     df: Dict[str, int] = {}
-    for tokens in filtered_tokens_by_channel.values():
+    for tokens in filtered.values():
         for t in set(tokens):
             df[t] = df.get(t, 0) + 1
-
-    num_docs = len(filtered_tokens_by_channel)
-    if num_docs < 2:
-        async with async_session_maker() as session:
-            await session.execute(
-                delete(AnalyticsResults).where(AnalyticsResults.channel_id == target_channel_id)
-            )
-            session.add(
-                AnalyticsResults(
-                    channel_id=target_channel_id,
-                    similar_channels_json=json.dumps([]),
-                )
-            )
-            await session.commit()
-        return False
-
-    frequent_tokens: Set[str] = set()
-    for t, count in df.items():
-        if count / num_docs > max_df_ratio:
-            frequent_tokens.add(t)
-
-    cleaned_by_channel: Dict[int, List[str]] = {}
-    for cid, tokens in filtered_tokens_by_channel.items():
-        cleaned = [t for t in tokens if t not in frequent_tokens]
-        if len(cleaned) < min_keywords_per_channel:
-            continue
-        cleaned_by_channel[cid] = cleaned
-
-    if target_channel_id not in cleaned_by_channel or len(cleaned_by_channel) < 2:
-        async with async_session_maker() as session:
-            await session.execute(
-                delete(AnalyticsResults).where(AnalyticsResults.channel_id == target_channel_id)
-            )
-            session.add(
-                AnalyticsResults(
-                    channel_id=target_channel_id,
-                    similar_channels_json=json.dumps([]),
-                )
-            )
-            await session.commit()
-        return False
-
-    # IDF weights
-    idf = {t: log(num_docs / (1 + df_val)) for t, df_val in df.items() if t not in frequent_tokens}
-
-    target_tokens = cleaned_by_channel[target_channel_id]
-    target_set = set(target_tokens)
     
-    # TF-IDF vector для целевого канала (только для токенов с IDF)
-    target_tf = {}
+    # IDF (внутри категории, без глобального фильтра!)
+    idf: Dict[str, float] = {}
+    for term, doc_freq in df.items():
+        idf[term] = log((num_channels + 1) / (doc_freq + 1)) + 1
+    
+    # TF-IDF вектор для target
+    target_tokens = filtered[target_channel_id]
+    target_tf: Dict[str, int] = {}
     for t in target_tokens:
-        if t in idf:  # Учитываем только токены с IDF
-            target_tf[t] = target_tf.get(t, 0) + 1
+        target_tf[t] = target_tf.get(t, 0) + 1
     
-    target_tfidf = {t: tf * idf[t] for t, tf in target_tf.items()}
-    target_norm = sqrt(sum(v**2 for v in target_tfidf.values())) or 1.0
-
-    pairs = []
-    all_scores = []  # Для логирования
-    filtered_by_threshold = 0
+    target_tfidf = {t: tf * idf.get(t, 0) for t, tf in target_tf.items()}
+    target_norm = sqrt(sum(v ** 2 for v in target_tfidf.values())) or 1.0
+    target_terms = set(target_tfidf.keys())
     
-    for cid, tokens in cleaned_by_channel.items():
+    # =========================================================
+    # 4. COSINE SIMILARITY С КАНДИДАТАМИ
+    # =========================================================
+    scores: List[tuple] = []
+    
+    for cid, tokens in filtered.items():
         if cid == target_channel_id:
             continue
         
-        common = target_set.intersection(tokens)
+        # TF-IDF вектор для кандидата
+        cand_tf: Dict[str, int] = {}
+        for t in tokens:
+            cand_tf[t] = cand_tf.get(t, 0) + 1
+        
+        cand_tfidf = {t: tf * idf.get(t, 0) for t, tf in cand_tf.items()}
+        cand_norm = sqrt(sum(v ** 2 for v in cand_tfidf.values())) or 1.0
+        
+        # Общие термины
+        common = target_terms & set(cand_tfidf.keys())
         if not common:
             continue
         
-        # TF-IDF vector для кандидата (только для токенов с IDF)
-        candidate_tf = {}
-        for t in tokens:
-            if t in idf:  # Учитываем только токены с IDF
-                candidate_tf[t] = candidate_tf.get(t, 0) + 1
+        # Cosine similarity
+        dot = sum(target_tfidf[t] * cand_tfidf[t] for t in common)
+        score = dot / (target_norm * cand_norm)
         
-        candidate_tfidf = {t: tf * idf[t] for t, tf in candidate_tf.items()}
-        candidate_norm = sqrt(sum(v**2 for v in candidate_tfidf.values())) or 1.0
-        
-        # Косинусное сходство (dot product / (norm_a * norm_b))
-        dot_product = sum(
-            target_tfidf.get(t, 0.0) * candidate_tfidf.get(t, 0.0) 
-            for t in common if t in idf
-        )
-        
-        score = dot_product / (target_norm * candidate_norm) if (target_norm * candidate_norm) > 0 else 0.0
-        all_scores.append(score)
-        
-        # Фильтруем по минимальному порогу схожести (по умолчанию 0 = без фильтра)
-        # Возвращаем TOP-N по score независимо от абсолютного значения
-        if min_similarity_threshold > 0 and score < min_similarity_threshold:
-            filtered_by_threshold += 1
-            continue
-            
-        pairs.append((cid, float(score)))
-
-    pairs.sort(key=lambda x: x[1], reverse=True)
+        if score > 0:
+            scores.append((cid, score))
     
-    # Детальное логирование
-    if all_scores:
-        all_scores_sorted = sorted(all_scores, reverse=True)
-        max_score_all = all_scores_sorted[0] if all_scores_sorted else 0.0
-        avg_score_all = sum(all_scores) / len(all_scores) if all_scores else 0.0
-        
+    # Сортируем и берём top_n
+    scores.sort(key=lambda x: x[1], reverse=True)
+    top_results = scores[:top_n]
+    
+    # =========================================================
+    # 5. ЛОГИРОВАНИЕ
+    # =========================================================
+    if scores:
         logger.info(
-            f"ENGINE_SINGLE stats: "
-            f"candidates={len(all_scores)}, "
-            f"passed_threshold={len(pairs)}, "
-            f"filtered={filtered_by_threshold}, "
-            f"max_score={max_score_all:.3f} ({max_score_all*100:.1f}%), "
-            f"avg_score={avg_score_all:.3f} ({avg_score_all*100:.1f}%), "
-            f"threshold={min_similarity_threshold:.2f} ({min_similarity_threshold*100:.0f}%)"
+            "[SINGLE] target=%d: найдено %d похожих, top score=%.3f",
+            target_channel_id, len(scores), scores[0][1] if scores else 0
         )
-        
-        # Если ничего не прошло порог, показываем топ-5 scores для отладки
-        if not pairs and all_scores_sorted:
-            top5 = all_scores_sorted[:5]
-            logger.warning(
-                f"ENGINE_SINGLE: NO results passed threshold! Top 5 scores: "
-                f"{', '.join(f'{s:.3f} ({s*100:.1f}%)' for s in top5)}"
-            )
     else:
-        logger.warning(f"ENGINE_SINGLE: No candidates with common keywords found!")
+        logger.info("[SINGLE] target=%d: нет похожих каналов", target_channel_id)
     
-    # Логируем статистику схожести прошедших каналов
-    if pairs:
-        min_score = pairs[-1][1] if pairs else 0.0
-        max_score_actual = pairs[0][1] if pairs else 0.0
-        avg_score = sum(s for _, s in pairs) / len(pairs) if pairs else 0.0
-        logger.info(
-            f"ENGINE_SINGLE results: found={len(pairs)}, "
-            f"min={min_score:.3f} ({min_score*100:.1f}%), "
-            f"max={max_score_actual:.3f} ({max_score_actual*100:.1f}%), "
-            f"avg={avg_score:.3f} ({avg_score*100:.1f}%)"
-        )
+    # =========================================================
+    # 6. СОХРАНЕНИЕ
+    # =========================================================
+    await _save_result(target_channel_id, top_results)
     
-    if top_n is not None and top_n > 0:
-        pairs = pairs[:top_n]
+    return True
 
+
+async def _save_empty_result(channel_id: int):
+    """Сохраняет пустой результат."""
     async with async_session_maker() as session:
         await session.execute(
-            delete(AnalyticsResults).where(AnalyticsResults.channel_id == target_channel_id)
-        )
-        payload = json.dumps(
-            [{"channel_id": cid, "score": score} for cid, score in pairs]
+            delete(AnalyticsResults).where(AnalyticsResults.channel_id == channel_id)
         )
         session.add(
             AnalyticsResults(
-                channel_id=target_channel_id,
-                similar_channels_json=payload,
+                channel_id=channel_id,
+                similar_channels_json=json.dumps([]),
             )
         )
         await session.commit()
 
-    logger.info("ENGINE_SINGLE finished target=%s results=%s", target_channel_id, len(pairs))
-    return True
+
+async def _save_result(channel_id: int, results: List[tuple]):
+    """Сохраняет результат similarity."""
+    async with async_session_maker() as session:
+        await session.execute(
+            delete(AnalyticsResults).where(AnalyticsResults.channel_id == channel_id)
+        )
+        
+        payload = json.dumps(
+            [{"channel_id": cid, "score": round(score, 4)} for cid, score in results],
+            ensure_ascii=False
+        )
+        
+        session.add(
+            AnalyticsResults(
+                channel_id=channel_id,
+                similar_channels_json=payload,
+            )
+        )
+        await session.commit()

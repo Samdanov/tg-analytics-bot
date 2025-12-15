@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Tuple
 import time
 
-from app.services.usecases.website_service import run_website_analysis_pipeline
+from app.services.use_cases.website_service import run_website_analysis_pipeline
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)

@@ -2,7 +2,7 @@ from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message
 
-from app.services.usecases.channel_service import analyze_usecase
+from app.services.use_cases.channel_service import analyze_usecase
 
 router = Router()
 
