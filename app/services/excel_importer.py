@@ -93,6 +93,109 @@ GARBAGE_LATIN = {
     "chat", "group", "channel", "official", "real", "original",
 }
 
+# =============================================================================
+# WHITELIST КОРОТКИХ IT-ТЕРМИНОВ (< 4 символов)
+# =============================================================================
+
+WHITELIST_SHORT_TERMS = {
+    # Языки программирования (3 символа)
+    "sql", "php", "css", "xml", "lua", "cpp",
+    # Технологии/системы (3 символа)
+    "crm", "erp", "api", "sdk", "cms", "cdn", "vpn", "dns",
+    "seo", "smm", "sap", "aws", "gcp", "nft",
+    # 2 символа (очень важные термины)
+    "ai", "ml", "bi", "it", "hr", "pr", "ip", "go",
+    # Финансы
+    "p2p", "b2b", "b2c",
+    # 1C (латиница и кириллица)
+    "1c", "1с",  # латинская c и русская с
+}
+
+
+# =============================================================================
+# НОРМАЛИЗАЦИЯ КАТЕГОРИЙ (48 тем из Excel)
+# =============================================================================
+
+VALID_CATEGORIES = {
+    "telegram",
+    "бизнес и стартапы",
+    "блоги",
+    "букмекерство",
+    "видео и фильмы",
+    "даркнет",
+    "дизайн",
+    "для взрослых",
+    "другое",
+    "еда и кулинария",
+    "здоровье и фитнес",
+    "игры",
+    "инстаграм",
+    "интерьер и строительство",
+    "искусство",
+    "картинки и фото",
+    "карьера",
+    "книги",
+    "криптовалюты",
+    "курсы и гайды",
+    "лингвистика",
+    "маркетинг, pr, реклама",
+    "медицина",
+    "мода и красота",
+    "музыка",
+    "новости и сми",
+    "образование",
+    "познавательное",
+    "политика",
+    "право",
+    "природа",
+    "продажи",
+    "психология",
+    "путешествия",
+    "религия",
+    "рукоделие",
+    "семья и дети",
+    "софт и приложения",
+    "спорт",
+    "технологии",
+    "транспорт",
+    "цитаты",
+    "шок-контент",
+    "эзотерика",
+    "экономика",
+    "эротика",
+    "юмор и развлечения",
+    "не указана",
+}
+
+
+def normalize_category(raw_category: str) -> str:
+    """
+    Нормализует категорию к одной из 48 валидных тем.
+    
+    Returns:
+        Нормализованная категория (lowercase) или "" если не найдена.
+    """
+    if not raw_category:
+        return ""
+    
+    cleaned = raw_category.strip().lower()
+    
+    if not cleaned or cleaned in ("nan", "none"):
+        return ""
+    
+    # Прямое совпадение
+    if cleaned in VALID_CATEGORIES:
+        return cleaned
+    
+    # Попытка найти похожую (на случай опечаток в Excel)
+    # Простой поиск по вхождению
+    for valid in VALID_CATEGORIES:
+        if cleaned in valid or valid in cleaned:
+            return valid
+    
+    # Не найдена - возвращаем пустую строку (или можно "другое")
+    return ""
+
 
 # =============================================================================
 # ФИЛЬТРАЦИЯ МУСОРА
@@ -117,11 +220,16 @@ def is_valid_token(token: str) -> bool:
     
     token = token.lower().strip()
     
+    # СНАЧАЛА проверяем whitelist (ai, ml, go, 1c, sql, crm, etc.)
+    # Это позволяет коротким IT-терминам пройти
+    if token in WHITELIST_SHORT_TERMS:
+        return True
+    
     # Стоп-слова
     if token in STOPWORDS:
         return False
     
-    # Слишком короткие/длинные
+    # Слишком короткие/длинные (whitelist уже проверен!)
     if len(token) < 3 or len(token) > 25:
         return False
     
@@ -137,7 +245,7 @@ def is_valid_token(token: str) -> bool:
     is_cyrillic = bool(re.fullmatch(r"[а-яё]+", token))
     is_latin = bool(re.fullmatch(r"[a-z]+", token))
     
-    # Смешанные - мусор
+    # Смешанные (кроме whitelist) - мусор
     if not is_cyrillic and not is_latin:
         # Содержит цифры, подчеркивания или смесь алфавитов
         return False
@@ -146,9 +254,8 @@ def is_valid_token(token: str) -> bool:
     if is_cyrillic and len(token) >= 3:
         return True
     
-    # Латиница: минимум 4 символа (отсекает sql, api, crm)
+    # Латиница: минимум 4 символа
     if is_latin and len(token) >= 4:
-        # Проверка на мусорные паттерны
         if token.endswith("bot"):
             return False
         if token in GARBAGE_LATIN:
@@ -187,10 +294,27 @@ def extract_keywords(title: str, description: str, limit: int = 15) -> List[str]
             return True
         return False
     
+    def extract_tokens(text: str) -> list:
+        """Извлекает токены: слова + IT-термины с цифрами (b2b, 1c, p2p)."""
+        # Основные слова (кириллица/латиница)
+        words = re.findall(r"[а-яёА-ЯЁa-zA-Z]+", text)
+        # IT-термины с цифрами (b2b, 1c, p2p, etc.) - латиница + цифры
+        tech_terms_latin = re.findall(r"[a-zA-Z0-9]+", text)
+        # Специально для "1С" (кириллица) - цифры + кириллица
+        tech_terms_cyrillic = re.findall(r"[0-9][а-яёА-ЯЁ]+|[а-яёА-ЯЁ]+[0-9]+", text)
+        # Объединяем, сохраняя порядок появления
+        result = []
+        seen_local = set()
+        for t in words + tech_terms_latin + tech_terms_cyrillic:
+            t_lower = t.lower()
+            if t_lower not in seen_local:
+                seen_local.add(t_lower)
+                result.append(t)
+        return result
+    
     # 1. TITLE (приоритет - название канала)
     if title and title.lower() not in ("nan", "none", ""):
-        # Извлекаем кириллические и латинские слова
-        tokens = re.findall(r"[а-яёА-ЯЁa-zA-Z]+", title)
+        tokens = extract_tokens(title)
         for token in tokens:
             if len(keywords) >= limit:
                 break
@@ -198,11 +322,10 @@ def extract_keywords(title: str, description: str, limit: int = 15) -> List[str]
     
     # 2. DESCRIPTION (дополнение, без частотной эвристики!)
     if description and description.lower() not in ("nan", "none", ""):
-        tokens = re.findall(r"[а-яёА-ЯЁa-zA-Z]+", description)
+        tokens = extract_tokens(description)
         for token in tokens:
             if len(keywords) >= limit:
                 break
-            # Просто добавляем уникальные токены, БЕЗ подсчёта частоты
             add_token(token)
     
     return keywords
@@ -261,8 +384,9 @@ async def import_channels_from_excel(
             title = ""
         if not description or description.lower() in ("nan", "none"):
             description = ""
-        if not category or category.lower() in ("nan", "none"):
-            category = ""
+        
+        # Нормализация category к одной из 48 валидных тем
+        category = normalize_category(category)
         
         # Subscribers
         try:
