@@ -27,21 +27,9 @@ def normalize_text(text: str) -> str:
     return text.strip()
 
 
-# Категории, которые НЕ участвуют в similarity (развлекательный контент)
-EXCLUDED_CATEGORIES = {
-    "блоги",
-    "цитаты", 
-    "картинки и фото",
-    "юмор и развлечения",
-    "для взрослых",
-    "эзотерика",
-    "даркнет",
-    "шок-контент",
-    "эротика",
-    "инстаграм",
-    "telegram",
-    "другое",
-}
+# Категории, которые НЕ участвуют в similarity
+# (пустой набор - все 48 категорий участвуют)
+EXCLUDED_CATEGORIES: set[str] = set()
 
 
 def should_exclude_category(category: str | None) -> bool:

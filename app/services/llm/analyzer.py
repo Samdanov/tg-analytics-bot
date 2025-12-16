@@ -17,24 +17,77 @@ morph = MorphAnalyzer()
 def normalize_category(raw_category: str) -> str:
     """
     Нормализует category к одной из 48 валидных тем.
+    
+    ВАЖНО: Всегда возвращает валидную категорию из списка.
+    Если не удаётся определить → "другое"
     """
     if not raw_category:
-        return ""
+        return "другое"
     
     cleaned = raw_category.strip().lower()
     
-    if not cleaned or cleaned in ("nan", "none", "null"):
-        return ""
+    if not cleaned or cleaned in ("nan", "none", "null", ""):
+        return "другое"
     
-    # Прямое совпадение
+    # Прямое совпадение (основной случай)
     if cleaned in VALID_CATEGORIES:
         return cleaned
     
-    # Поиск по вхождению
+    # Маппинг частых опечаток/вариаций LLM
+    aliases = {
+        "it": "технологии",
+        "tech": "технологии",
+        "программирование": "технологии",
+        "разработка": "технологии",
+        "финансы": "экономика",
+        "инвестиции": "экономика",
+        "маркетинг": "маркетинг, pr, реклама",
+        "реклама": "маркетинг, pr, реклама",
+        "pr": "маркетинг, pr, реклама",
+        "smm": "маркетинг, pr, реклама",
+        "крипта": "криптовалюты",
+        "crypto": "криптовалюты",
+        "bitcoin": "криптовалюты",
+        "авто": "транспорт",
+        "автомобили": "транспорт",
+        "юриспруденция": "право",
+        "закон": "право",
+        "здоровье": "здоровье и фитнес",
+        "фитнес": "здоровье и фитнес",
+        "спортзал": "здоровье и фитнес",
+        "кино": "видео и фильмы",
+        "фильмы": "видео и фильмы",
+        "сериалы": "видео и фильмы",
+        "косметика": "мода и красота",
+        "красота": "мода и красота",
+        "мода": "мода и красота",
+        "еда": "еда и кулинария",
+        "кулинария": "еда и кулинария",
+        "рецепты": "еда и кулинария",
+        "дети": "семья и дети",
+        "родители": "семья и дети",
+        "новости": "новости и сми",
+        "сми": "новости и сми",
+        "юмор": "юмор и развлечения",
+        "мемы": "юмор и развлечения",
+        "развлечения": "юмор и развлечения",
+        "ставки": "букмекерство",
+        "беттинг": "букмекерство",
+        "gaming": "игры",
+        "гейминг": "игры",
+        "travel": "путешествия",
+        "туризм": "путешествия",
+    }
+    
+    if cleaned in aliases:
+        return aliases[cleaned]
+    
+    # Поиск по вхождению (менее строгий)
     for valid in VALID_CATEGORIES:
         if cleaned in valid or valid in cleaned:
             return valid
     
+    # Ничего не подошло → "другое"
     return "другое"
 
 
@@ -167,7 +220,7 @@ async def analyze_channel(channel: dict, posts: list, llm_retries: int = 2):
         kws = normalize_russian_keywords(kws)
         
         return {
-            "category": "",  # Не можем определить без контента
+            "category": "другое",  # Нет контента для определения темы
             "audience": "Контента нет — анализ невозможен.",
             "keywords": kws if kws else [],
             "tone": ""
@@ -210,7 +263,7 @@ async def analyze_channel(channel: dict, posts: list, llm_retries: int = 2):
     kws = normalize_russian_keywords(kws)
 
     return {
-        "category": "",  # Не можем определить без LLM
+        "category": "другое",  # LLM не смог — назначаем "другое"
         "audience": "Не удалось получить анализ от LLM",
         "tone": "",
         "keywords": kws
@@ -243,7 +296,7 @@ async def analyze_text_content(text: str, title: str = "", description: str = ""
         kws = extract_keywords_from_text(title_clean, limit=20)
         kws = normalize_russian_keywords(kws)
         return {
-            "category": "",
+            "category": "другое",  # Нет контента для определения темы
             "audience": "Контента нет — анализ невозможен.",
             "keywords": kws if kws else [],
             "tone": ""
@@ -283,7 +336,7 @@ async def analyze_text_content(text: str, title: str = "", description: str = ""
     kws = normalize_russian_keywords(kws)
     
     return {
-        "category": "",
+        "category": "другое",  # LLM не смог — назначаем "другое"
         "audience": "Не удалось получить анализ от LLM",
         "tone": "",
         "keywords": kws
