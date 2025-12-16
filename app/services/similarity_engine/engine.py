@@ -98,11 +98,21 @@ class SimilarityEngine:
         all_results: List[tuple] = []
         processed_categories = 0
         skipped_small = 0
+        total_categories = len(channels_by_category)
         
-        for category, channel_ids in channels_by_category.items():
+        # Сортируем категории по размеру (большие первыми) для лучшей оценки прогресса
+        sorted_categories = sorted(
+            channels_by_category.items(), 
+            key=lambda x: len(x[1]), 
+            reverse=True
+        )
+        
+        for idx, (category, channel_ids) in enumerate(sorted_categories, 1):
             # Пропускаем слишком маленькие категории
             if len(channel_ids) < self.min_channels_in_category:
                 skipped_small += 1
+                logger.debug("[ENGINE] [%d/%d] пропуск '%s' (мало каналов: %d)", 
+                           idx, total_categories, category, len(channel_ids))
                 continue
             
             # Собираем данные для этой категории
@@ -116,16 +126,22 @@ class SimilarityEngine:
                 skipped_small += 1
                 continue
             
+            logger.info("[ENGINE] [%d/%d] '%s': %d каналов → расчёт...", 
+                       idx, total_categories, category, len(category_tokens))
+            
             # TF-IDF + Similarity ВНУТРИ категории
             category_results = self._calculate_within_category(category_tokens)
             all_results.extend(category_results)
             processed_categories += 1
+            
+            logger.info("[ENGINE] [%d/%d] '%s': готово (%d результатов)", 
+                       idx, total_categories, category, len(category_results))
         
         logger.info("[ENGINE] обработано категорий: %d, пропущено (мало каналов): %d",
                    processed_categories, skipped_small)
         
         # =====================================================
-        # СОХРАНЕНИЕ РЕЗУЛЬТАТОВ
+        # СОХРАНЕНИЕ РЕЗУЛЬТАТОВ (батчами по 5000)
         # =====================================================
         if not all_results:
             logger.warning("[ENGINE] нет результатов для сохранения")
@@ -133,30 +149,39 @@ class SimilarityEngine:
         
         logger.info("[ENGINE] сохраняю результаты для %d каналов...", len(all_results))
         
-        async with async_session_maker() as session:
-            # Удаляем старые результаты для обработанных каналов
-            processed_ids = [cid for cid, _ in all_results]
-            await session.execute(
-                delete(AnalyticsResults).where(AnalyticsResults.channel_id.in_(processed_ids))
-            )
-            
-            # Сохраняем новые
-            for cid, similar in all_results:
-                payload = json.dumps(
-                    [{"channel_id": ch, "score": round(sc, 4)} for ch, sc in similar],
-                    ensure_ascii=False
-                )
-                session.add(
-                    AnalyticsResults(
-                        channel_id=cid,
-                        similar_channels_json=payload,
-                        created_at=datetime.utcnow()
-                    )
-                )
-            
-            await session.commit()
+        BATCH_SIZE = 5000
+        total_saved = 0
         
-        logger.info("[ENGINE] готово")
+        for batch_start in range(0, len(all_results), BATCH_SIZE):
+            batch = all_results[batch_start:batch_start + BATCH_SIZE]
+            batch_ids = [cid for cid, _ in batch]
+            
+            async with async_session_maker() as session:
+                # Удаляем старые результаты для этого батча
+                await session.execute(
+                    delete(AnalyticsResults).where(AnalyticsResults.channel_id.in_(batch_ids))
+                )
+                
+                # Сохраняем новые
+                for cid, similar in batch:
+                    payload = json.dumps(
+                        [{"channel_id": ch, "score": round(sc, 4)} for ch, sc in similar],
+                        ensure_ascii=False
+                    )
+                    session.add(
+                        AnalyticsResults(
+                            channel_id=cid,
+                            similar_channels_json=payload,
+                            created_at=datetime.utcnow()
+                        )
+                    )
+                
+                await session.commit()
+            
+            total_saved += len(batch)
+            logger.info("[ENGINE] сохранено %d/%d результатов...", total_saved, len(all_results))
+        
+        logger.info("[ENGINE] готово, всего сохранено: %d", total_saved)
     
     def _calculate_within_category(
         self,
