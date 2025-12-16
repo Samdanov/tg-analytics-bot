@@ -7,10 +7,12 @@
 - keywords (SECONDARY) → keywords_cache.keywords_json (для TF-IDF similarity)
 
 Keywords извлекаются ТОЛЬКО из title + description.
+Лемматизация: слова приводятся к нормальной форме (единственное число, именительный падеж).
 """
 
 import re
 import pandas as pd
+import pymorphy2
 from typing import List, Optional, Set
 
 from app.db.repo import save_channel
@@ -18,6 +20,41 @@ from app.services.llm.analyzer import save_analysis
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
+
+# =============================================================================
+# МОРФОЛОГИЧЕСКИЙ АНАЛИЗАТОР (лемматизация)
+# =============================================================================
+_morph = None
+
+def get_morph():
+    """Lazy initialization морфологического анализатора."""
+    global _morph
+    if _morph is None:
+        _morph = pymorphy2.MorphAnalyzer()
+    return _morph
+
+
+def lemmatize(word: str) -> str:
+    """
+    Приводит слово к нормальной форме (лемме).
+    
+    Примеры:
+        продуктов → продукт
+        рецепты → рецепт
+        книги → книга
+        культуры → культура
+    """
+    if not word:
+        return word
+    
+    # Латиница - не лемматизируем (IT-термины, бренды)
+    if re.fullmatch(r"[a-zA-Z0-9]+", word):
+        return word.lower()
+    
+    # Кириллица - лемматизируем
+    morph = get_morph()
+    parsed = morph.parse(word)[0]
+    return parsed.normal_form
 
 
 # =============================================================================
@@ -269,7 +306,7 @@ def is_valid_token(token: str) -> bool:
 # ИЗВЛЕЧЕНИЕ KEYWORDS
 # =============================================================================
 
-def extract_keywords(title: str, description: str, limit: int = 15) -> List[str]:
+def extract_keywords(title: str, description: str, limit: int = 15, use_lemma: bool = True) -> List[str]:
     """
     Извлекает ЧИСТЫЕ keywords из title + description.
     
@@ -278,21 +315,44 @@ def extract_keywords(title: str, description: str, limit: int = 15) -> List[str]
     2. Кириллица ≥ 3, латиница ≥ 4 символов
     3. Без частотной эвристики (одно слово = одно добавление)
     4. Username НЕ используется как fallback
+    5. ЛЕММАТИЗАЦИЯ: слова приводятся к нормальной форме
+       (единственное число, именительный падеж)
+    
+    Args:
+        title: Название канала
+        description: Описание канала
+        limit: Максимум keywords
+        use_lemma: Использовать лемматизацию (по умолчанию True)
     
     Returns:
-        Список уникальных смысловых keywords
+        Список уникальных смысловых keywords в нормальной форме
     """
     seen: Set[str] = set()
     keywords: List[str] = []
     
     def add_token(token: str) -> bool:
-        """Добавляет токен если валидный и уникальный."""
+        """Добавляет токен если валидный и уникальный (с лемматизацией)."""
         t = token.lower().strip()
-        if t not in seen and is_valid_token(t):
-            seen.add(t)
-            keywords.append(t)
-            return True
-        return False
+        
+        # Сначала проверяем валидность оригинального токена
+        if not is_valid_token(t):
+            return False
+        
+        # Лемматизация (только для кириллицы)
+        if use_lemma:
+            t = lemmatize(t)
+        
+        # Проверяем уникальность леммы
+        if t in seen:
+            return False
+        
+        # Дополнительная проверка после лемматизации (лемма может оказаться стоп-словом)
+        if t in STOPWORDS:
+            return False
+        
+        seen.add(t)
+        keywords.append(t)
+        return True
     
     def extract_tokens(text: str) -> list:
         """Извлекает токены: слова + IT-термины с цифрами (b2b, 1c, p2p)."""
