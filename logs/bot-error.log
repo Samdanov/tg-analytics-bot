@@ -1025,3 +1025,347 @@ AttributeError: 'ChannelIdentifier' object has no attribute 'username'
 2025-12-17 15:27:34,764 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
 2025-12-17 15:42:34,806 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
 2025-12-17 15:57:34,848 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 16:05:46,387 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-17 16:05:46,389 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-17 16:05:46,389 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-17 16:05:46,641 [INFO] __main__ - Shutting down...
+2025-12-17 16:05:46,641 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-17 16:05:46,642 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+2025-12-17 16:05:53,800 [INFO] __main__ - Starting ORBITA bot with DI architecture...
+2025-12-17 16:05:53,902 [INFO] __main__ - Using DI handlers (workflow_di.py)
+2025-12-17 16:05:53,907 [INFO] __main__ - Initializing Telegram client...
+2025-12-17 16:05:53,908 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-17 16:05:53,914 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-17 16:05:54,017 [INFO] __main__ - Starting bot polling...
+2025-12-17 16:05:54,018 [INFO] aiogram.dispatcher - Start polling
+2025-12-17 16:05:54,086 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-17 16:06:11,870 [INFO] aiogram.event - Update id=999071420 is handled. Duration 11 ms by bot id=8570381804
+2025-12-17 16:06:11,871 [INFO] aiogram.event - Update id=999071421 is handled. Duration 10 ms by bot id=8570381804
+2025-12-17 16:06:12,026 [INFO] aiogram.event - Update id=999071419 is handled. Duration 169 ms by bot id=8570381804
+2025-12-17 16:06:14,284 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1558644782, username=klimzhukoff, title=Клим Жуков
+2025-12-17 16:06:14,629 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 1: Fetching channel data for @klimzhukoff
+2025-12-17 16:06:14,731 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1558644782, username=klimzhukoff, title=Клим Жуков
+2025-12-17 16:06:15,230 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 2: Saving channel to DB
+2025-12-17 16:06:15,416 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Channel saved: id=348720
+2025-12-17 16:06:15,469 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Posts saved: count=61
+2025-12-17 16:06:15,470 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 3: LLM analysis
+2025-12-17 16:06:15,470 [INFO] app.services.llm.analyzer - LLM analysis started: posts=61
+2025-12-17 16:06:20,439 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-17 16:06:20,476 [INFO] app.services.llm.analyzer - LLM analysis: category='познавательное', keywords=15
+2025-12-17 16:06:20,542 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Category updated: 'познавательное'
+2025-12-17 16:06:20,542 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Analysis saved: keywords=15, category='познавательное'
+2025-12-17 16:06:20,542 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 4: Checking similarity in DB
+2025-12-17 16:06:20,779 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Similarity EXISTS in DB — using cached data (fast path)
+2025-12-17 16:06:20,779 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 5: Generating XLSX report
+2025-12-17 16:06:21,022 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] DONE: channel_id=348720, posts=61, keywords=15, top_n=500, elapsed=6.39s, report=/home/alex/apps/tg-analytics-bot/reports/Похожие_каналы_Клим_Жуков_2025-12-17.xlsx
+2025-12-17 16:06:21,325 [INFO] aiogram.event - Update id=999071422 is handled. Duration 7141 ms by bot id=8570381804
+2025-12-17 16:12:41,800 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-17 16:12:41,802 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-17 16:12:41,802 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-17 16:12:42,054 [INFO] __main__ - Shutting down...
+2025-12-17 16:12:42,054 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-17 16:12:42,055 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+2025-12-17 16:12:59,204 [INFO] __main__ - Starting ORBITA bot with DI architecture...
+2025-12-17 16:12:59,291 [INFO] __main__ - Using DI handlers (workflow_di.py)
+2025-12-17 16:12:59,296 [INFO] __main__ - Initializing Telegram client...
+2025-12-17 16:12:59,296 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-17 16:12:59,321 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/alex/apps/tg-analytics-bot/app/main_di.py", line 129, in <module>
+    asyncio.run(main())
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/alex/apps/tg-analytics-bot/app/main_di.py", line 117, in main
+    await init_telegram()
+  File "/home/alex/apps/tg-analytics-bot/app/services/telegram_parser/__init__.py", line 5, in init_telegram
+    await start_client()
+  File "/home/alex/apps/tg-analytics-bot/app/services/telegram_parser/client.py", line 19, in start_client
+    await client.start()
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/client/auth.py", line 135, in _start
+    await self.connect()
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/client/telegrambaseclient.py", line 563, in connect
+    self.session.auth_key = self._sender.auth_key
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/sessions/sqlite.py", line 180, in auth_key
+    self._update_session_table()
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/sessions/sqlite.py", line 194, in _update_session_table
+    c.execute('delete from sessions')
+sqlite3.OperationalError: database is locked
+2025-12-17 16:13:20,608 [INFO] __main__ - Starting ORBITA bot with DI architecture...
+2025-12-17 16:13:20,697 [INFO] __main__ - Using DI handlers (workflow_di.py)
+2025-12-17 16:13:20,703 [INFO] __main__ - Initializing Telegram client...
+2025-12-17 16:13:20,703 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-17 16:13:21,720 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/alex/apps/tg-analytics-bot/app/main_di.py", line 129, in <module>
+    asyncio.run(main())
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/alex/apps/tg-analytics-bot/app/main_di.py", line 117, in main
+    await init_telegram()
+  File "/home/alex/apps/tg-analytics-bot/app/services/telegram_parser/__init__.py", line 5, in init_telegram
+    await start_client()
+  File "/home/alex/apps/tg-analytics-bot/app/services/telegram_parser/client.py", line 19, in start_client
+    await client.start()
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/client/auth.py", line 135, in _start
+    await self.connect()
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/client/telegrambaseclient.py", line 563, in connect
+    self.session.auth_key = self._sender.auth_key
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/sessions/sqlite.py", line 180, in auth_key
+    self._update_session_table()
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/sessions/sqlite.py", line 194, in _update_session_table
+    c.execute('delete from sessions')
+sqlite3.OperationalError: database is locked
+2025-12-17 16:13:43,340 [INFO] __main__ - Starting ORBITA bot with DI architecture...
+2025-12-17 16:13:43,436 [INFO] __main__ - Using DI handlers (workflow_di.py)
+2025-12-17 16:13:43,441 [INFO] __main__ - Initializing Telegram client...
+2025-12-17 16:13:43,442 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-17 16:13:43,445 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/alex/apps/tg-analytics-bot/app/main_di.py", line 129, in <module>
+    asyncio.run(main())
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/alex/apps/tg-analytics-bot/app/main_di.py", line 117, in main
+    await init_telegram()
+  File "/home/alex/apps/tg-analytics-bot/app/services/telegram_parser/__init__.py", line 5, in init_telegram
+    await start_client()
+  File "/home/alex/apps/tg-analytics-bot/app/services/telegram_parser/client.py", line 19, in start_client
+    await client.start()
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/client/auth.py", line 135, in _start
+    await self.connect()
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/client/telegrambaseclient.py", line 563, in connect
+    self.session.auth_key = self._sender.auth_key
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/sessions/sqlite.py", line 180, in auth_key
+    self._update_session_table()
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/sessions/sqlite.py", line 194, in _update_session_table
+    c.execute('delete from sessions')
+sqlite3.OperationalError: database is locked
+2025-12-17 16:14:05,287 [INFO] __main__ - Starting ORBITA bot with DI architecture...
+2025-12-17 16:14:05,394 [INFO] __main__ - Using DI handlers (workflow_di.py)
+2025-12-17 16:14:05,398 [INFO] __main__ - Initializing Telegram client...
+2025-12-17 16:14:05,399 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-17 16:14:05,402 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-17 16:14:05,487 [INFO] __main__ - Starting bot polling...
+2025-12-17 16:14:05,488 [INFO] aiogram.dispatcher - Start polling
+2025-12-17 16:14:05,554 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-17 16:14:09,596 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:14:09,596 [WARNING] aiogram.dispatcher - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8570381804)
+2025-12-17 16:14:14,998 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:14:14,998 [WARNING] aiogram.dispatcher - Sleep for 1.312481 seconds and try again... (tryings = 1, bot id = 8570381804)
+2025-12-17 16:14:21,200 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:14:21,200 [WARNING] aiogram.dispatcher - Sleep for 1.693324 seconds and try again... (tryings = 2, bot id = 8570381804)
+2025-12-17 16:14:28,195 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:14:28,196 [WARNING] aiogram.dispatcher - Sleep for 2.287365 seconds and try again... (tryings = 3, bot id = 8570381804)
+2025-12-17 16:14:33,645 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:14:33,645 [WARNING] aiogram.dispatcher - Sleep for 3.023725 seconds and try again... (tryings = 4, bot id = 8570381804)
+2025-12-17 16:14:40,819 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:14:40,819 [WARNING] aiogram.dispatcher - Sleep for 3.906872 seconds and try again... (tryings = 5, bot id = 8570381804)
+2025-12-17 16:14:47,781 [INFO] aiogram.dispatcher - Connection established (tryings = 6, bot id = 8570381804)
+2025-12-17 16:14:47,903 [INFO] aiogram.event - Update id=999071423 is handled. Duration 117 ms by bot id=8570381804
+2025-12-17 16:14:49,855 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:14:49,856 [WARNING] aiogram.dispatcher - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8570381804)
+2025-12-17 16:14:50,865 [INFO] aiogram.dispatcher - Connection established (tryings = 1, bot id = 8570381804)
+2025-12-17 16:14:51,054 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1117110957, username=klerkonline, title=Бухучет и налоги Клерк
+2025-12-17 16:14:51,539 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 1: Fetching channel data for @klerkonline
+2025-12-17 16:14:51,586 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1117110957, username=klerkonline, title=Бухучет и налоги Клерк
+2025-12-17 16:14:52,058 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 2: Saving channel to DB
+2025-12-17 16:14:52,244 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Channel saved: id=348640
+2025-12-17 16:14:52,300 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Posts saved: count=100
+2025-12-17 16:14:52,300 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 3: LLM analysis
+2025-12-17 16:14:52,300 [INFO] app.services.llm.analyzer - LLM analysis started: posts=100
+2025-12-17 16:14:54,948 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:14:54,949 [WARNING] aiogram.dispatcher - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8570381804)
+2025-12-17 16:14:56,533 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-17 16:14:56,816 [INFO] app.services.llm.analyzer - LLM analysis: category='экономика', keywords=14
+2025-12-17 16:14:56,860 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Category updated: 'экономика'
+2025-12-17 16:14:56,861 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Analysis saved: keywords=14, category='экономика'
+2025-12-17 16:14:56,861 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 4: Checking similarity in DB
+2025-12-17 16:14:57,027 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Similarity EXISTS in DB — using cached data (fast path)
+2025-12-17 16:14:57,027 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 5: Generating XLSX report
+2025-12-17 16:14:57,329 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] DONE: channel_id=348640, posts=100, keywords=14, top_n=500, elapsed=5.79s, report=/home/alex/apps/tg-analytics-bot/reports/Похожие_каналы_Бухучет_и_налоги_Клерк_2025-12-17.xlsx
+2025-12-17 16:14:57,899 [INFO] aiogram.event - Update id=999071424 is handled. Duration 7032 ms by bot id=8570381804
+2025-12-17 16:15:05,314 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:15:05,315 [WARNING] aiogram.dispatcher - Sleep for 1.188946 seconds and try again... (tryings = 1, bot id = 8570381804)
+2025-12-17 16:15:10,807 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:15:10,807 [WARNING] aiogram.dispatcher - Sleep for 1.449283 seconds and try again... (tryings = 2, bot id = 8570381804)
+2025-12-17 16:15:16,914 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:15:16,914 [WARNING] aiogram.dispatcher - Sleep for 1.850530 seconds and try again... (tryings = 3, bot id = 8570381804)
+2025-12-17 16:15:23,968 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:15:23,968 [WARNING] aiogram.dispatcher - Sleep for 2.444571 seconds and try again... (tryings = 4, bot id = 8570381804)
+2025-12-17 16:15:32,430 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:15:32,430 [WARNING] aiogram.dispatcher - Sleep for 3.172660 seconds and try again... (tryings = 5, bot id = 8570381804)
+2025-12-17 16:15:39,498 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:15:39,498 [WARNING] aiogram.dispatcher - Sleep for 4.142171 seconds and try again... (tryings = 6, bot id = 8570381804)
+2025-12-17 16:15:48,660 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:15:48,660 [WARNING] aiogram.dispatcher - Sleep for 5.029572 seconds and try again... (tryings = 7, bot id = 8570381804)
+2025-12-17 16:15:58,858 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:15:58,859 [WARNING] aiogram.dispatcher - Sleep for 5.038069 seconds and try again... (tryings = 8, bot id = 8570381804)
+2025-12-17 16:16:07,922 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:16:07,923 [WARNING] aiogram.dispatcher - Sleep for 4.994636 seconds and try again... (tryings = 9, bot id = 8570381804)
+2025-12-17 16:16:17,582 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:16:17,583 [WARNING] aiogram.dispatcher - Sleep for 5.021859 seconds and try again... (tryings = 10, bot id = 8570381804)
+2025-12-17 16:16:27,865 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:16:27,866 [WARNING] aiogram.dispatcher - Sleep for 5.082279 seconds and try again... (tryings = 11, bot id = 8570381804)
+2025-12-17 16:16:35,967 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:16:35,968 [WARNING] aiogram.dispatcher - Sleep for 4.916805 seconds and try again... (tryings = 12, bot id = 8570381804)
+2025-12-17 16:16:44,766 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:16:44,766 [WARNING] aiogram.dispatcher - Sleep for 4.822464 seconds and try again... (tryings = 13, bot id = 8570381804)
+2025-12-17 16:16:54,665 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:16:54,665 [WARNING] aiogram.dispatcher - Sleep for 5.012615 seconds and try again... (tryings = 14, bot id = 8570381804)
+2025-12-17 16:17:04,582 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:17:04,582 [WARNING] aiogram.dispatcher - Sleep for 5.026030 seconds and try again... (tryings = 15, bot id = 8570381804)
+2025-12-17 16:17:14,627 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:17:14,627 [WARNING] aiogram.dispatcher - Sleep for 5.059904 seconds and try again... (tryings = 16, bot id = 8570381804)
+2025-12-17 16:17:24,681 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:17:24,681 [WARNING] aiogram.dispatcher - Sleep for 4.926918 seconds and try again... (tryings = 17, bot id = 8570381804)
+2025-12-17 16:17:34,564 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:17:34,564 [WARNING] aiogram.dispatcher - Sleep for 5.087404 seconds and try again... (tryings = 18, bot id = 8570381804)
+2025-12-17 16:17:35,870 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-17 16:17:35,870 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-17 16:17:35,871 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-17 16:17:36,123 [INFO] __main__ - Shutting down...
+2025-12-17 16:17:36,124 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-17 16:17:36,125 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+2025-12-17 16:17:52,560 [INFO] __main__ - Starting ORBITA bot with DI architecture...
+2025-12-17 16:17:52,647 [INFO] __main__ - Using DI handlers (workflow_di.py)
+2025-12-17 16:17:52,651 [INFO] __main__ - Initializing Telegram client...
+2025-12-17 16:17:52,651 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-17 16:17:52,654 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/alex/apps/tg-analytics-bot/app/main_di.py", line 129, in <module>
+    asyncio.run(main())
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/alex/apps/tg-analytics-bot/app/main_di.py", line 117, in main
+    await init_telegram()
+  File "/home/alex/apps/tg-analytics-bot/app/services/telegram_parser/__init__.py", line 5, in init_telegram
+    await start_client()
+  File "/home/alex/apps/tg-analytics-bot/app/services/telegram_parser/client.py", line 19, in start_client
+    await client.start()
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/client/auth.py", line 135, in _start
+    await self.connect()
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/client/telegrambaseclient.py", line 563, in connect
+    self.session.auth_key = self._sender.auth_key
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/sessions/sqlite.py", line 180, in auth_key
+    self._update_session_table()
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/sessions/sqlite.py", line 194, in _update_session_table
+    c.execute('delete from sessions')
+sqlite3.OperationalError: database is locked
+2025-12-17 16:18:14,026 [INFO] __main__ - Starting ORBITA bot with DI architecture...
+2025-12-17 16:18:14,127 [INFO] __main__ - Using DI handlers (workflow_di.py)
+2025-12-17 16:18:14,132 [INFO] __main__ - Initializing Telegram client...
+2025-12-17 16:18:14,133 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-17 16:18:14,136 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/alex/apps/tg-analytics-bot/app/main_di.py", line 129, in <module>
+    asyncio.run(main())
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/alex/apps/tg-analytics-bot/app/main_di.py", line 117, in main
+    await init_telegram()
+  File "/home/alex/apps/tg-analytics-bot/app/services/telegram_parser/__init__.py", line 5, in init_telegram
+    await start_client()
+  File "/home/alex/apps/tg-analytics-bot/app/services/telegram_parser/client.py", line 19, in start_client
+    await client.start()
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/client/auth.py", line 135, in _start
+    await self.connect()
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/client/telegrambaseclient.py", line 563, in connect
+    self.session.auth_key = self._sender.auth_key
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/sessions/sqlite.py", line 180, in auth_key
+    self._update_session_table()
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/sessions/sqlite.py", line 194, in _update_session_table
+    c.execute('delete from sessions')
+sqlite3.OperationalError: database is locked
+2025-12-17 16:18:35,567 [INFO] __main__ - Starting ORBITA bot with DI architecture...
+2025-12-17 16:18:35,655 [INFO] __main__ - Using DI handlers (workflow_di.py)
+2025-12-17 16:18:35,660 [INFO] __main__ - Initializing Telegram client...
+2025-12-17 16:18:35,661 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-17 16:18:35,664 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/alex/apps/tg-analytics-bot/app/main_di.py", line 129, in <module>
+    asyncio.run(main())
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/alex/apps/tg-analytics-bot/app/main_di.py", line 117, in main
+    await init_telegram()
+  File "/home/alex/apps/tg-analytics-bot/app/services/telegram_parser/__init__.py", line 5, in init_telegram
+    await start_client()
+  File "/home/alex/apps/tg-analytics-bot/app/services/telegram_parser/client.py", line 19, in start_client
+    await client.start()
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/client/auth.py", line 135, in _start
+    await self.connect()
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/client/telegrambaseclient.py", line 563, in connect
+    self.session.auth_key = self._sender.auth_key
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/sessions/sqlite.py", line 180, in auth_key
+    self._update_session_table()
+  File "/home/alex/apps/tg-analytics-bot/venv/lib/python3.10/site-packages/telethon/sessions/sqlite.py", line 194, in _update_session_table
+    c.execute('delete from sessions')
+sqlite3.OperationalError: database is locked
+2025-12-17 16:18:56,902 [INFO] __main__ - Starting ORBITA bot with DI architecture...
+2025-12-17 16:18:56,988 [INFO] __main__ - Using DI handlers (workflow_di.py)
+2025-12-17 16:18:56,992 [INFO] __main__ - Initializing Telegram client...
+2025-12-17 16:18:56,992 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-17 16:18:56,995 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-17 16:18:57,101 [INFO] __main__ - Starting bot polling...
+2025-12-17 16:18:57,102 [INFO] aiogram.dispatcher - Start polling
+2025-12-17 16:18:57,180 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-17 16:19:01,209 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:19:01,210 [WARNING] aiogram.dispatcher - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8570381804)
+2025-12-17 16:19:06,524 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:19:06,524 [WARNING] aiogram.dispatcher - Sleep for 1.310873 seconds and try again... (tryings = 1, bot id = 8570381804)
+2025-12-17 16:19:12,573 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:19:12,573 [WARNING] aiogram.dispatcher - Sleep for 1.731704 seconds and try again... (tryings = 2, bot id = 8570381804)
+2025-12-17 16:19:19,659 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:19:19,660 [WARNING] aiogram.dispatcher - Sleep for 2.458486 seconds and try again... (tryings = 3, bot id = 8570381804)
+2025-12-17 16:19:25,283 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:19:25,283 [WARNING] aiogram.dispatcher - Sleep for 3.223138 seconds and try again... (tryings = 4, bot id = 8570381804)
+2025-12-17 16:19:32,805 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:19:32,805 [WARNING] aiogram.dispatcher - Sleep for 4.217648 seconds and try again... (tryings = 5, bot id = 8570381804)
+2025-12-17 16:19:41,939 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:19:41,940 [WARNING] aiogram.dispatcher - Sleep for 5.046861 seconds and try again... (tryings = 6, bot id = 8570381804)
+2025-12-17 16:19:55,892 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:19:55,892 [WARNING] aiogram.dispatcher - Sleep for 4.930250 seconds and try again... (tryings = 7, bot id = 8570381804)
+2025-12-17 16:20:06,024 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:20:06,025 [WARNING] aiogram.dispatcher - Sleep for 5.121504 seconds and try again... (tryings = 8, bot id = 8570381804)
+2025-12-17 16:20:16,211 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:20:16,211 [WARNING] aiogram.dispatcher - Sleep for 5.068168 seconds and try again... (tryings = 9, bot id = 8570381804)
+2025-12-17 16:20:26,370 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:20:26,370 [WARNING] aiogram.dispatcher - Sleep for 5.136477 seconds and try again... (tryings = 10, bot id = 8570381804)
+2025-12-17 16:20:36,692 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:20:36,692 [WARNING] aiogram.dispatcher - Sleep for 4.839954 seconds and try again... (tryings = 11, bot id = 8570381804)

@@ -1,6 +1,7 @@
 # app/services/xlsx_generator.py
 
 import json
+import math
 from datetime import datetime
 from pathlib import Path
 from typing import Optional, List, Dict, Any
@@ -285,12 +286,16 @@ async def generate_similar_channels_xlsx(
             # Если subscribers не совпадают, но title совпадает - все равно пропускаем для безопасности
             continue
 
-        # ОТНОСИТЕЛЬНАЯ нормализация: топ-1 = 100%, остальные пропорционально
-        # Это даёт понятные проценты (100%, 95%, 87%...) вместо абсолютных (16%, 11%...)
-        if max_score > 0:
+        # ГИБРИДНАЯ нормализация:
+        # Если топ-канал имеет хороший score (>=0.5) → относительная (топ=100%)
+        # Если топ-канал имеет низкий score (<0.5) → абсолютная с усилением
+        if max_score >= 0.5:
+            # Хорошая схожесть - используем относительную нормализацию
             normalized_score = score / max_score
         else:
-            normalized_score = 0.0
+            # Низкая схожесть - показываем реальные проценты с корректировкой
+            # Используем sqrt для выравнивания (0.25 → 50%, 0.16 → 40%, 0.09 → 30%)
+            normalized_score = math.sqrt(score)
         
         relevance_percent = round(normalized_score * 100, 1)
         

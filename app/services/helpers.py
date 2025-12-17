@@ -88,6 +88,9 @@ async def build_channel_summary(username: str) -> str:
         else:
             channel_display = f"<b>@{ch.username}</b>"
 
+        # ---- Category ----
+        category = ch.category or "—"
+        
         # ---- Card style summary (стиль ОРБИТА) ----
         separator = get_separator(20)
         text = (
@@ -95,7 +98,8 @@ async def build_channel_summary(username: str) -> str:
             f"{Icons.ORBIT} {channel_display}\n"
             f"{separator}\n"
             f"{Icons.SUBSCRIBERS} <b>Подписчики:</b> {subs}\n"
-            f"{Icons.CHANNEL} <b>Название:</b> {ch.title}\n\n"
+            f"{Icons.CHANNEL} <b>Название:</b> {ch.title}\n"
+            f"📂 <b>Категория:</b> {category}\n\n"
             f"{Icons.TARGET} <b>Целевая аудитория:</b>\n{audience_fmt}\n\n"
             f"{Icons.KEYWORDS} <b>Ключевые слова:</b>\n{keywords}\n"
         )
@@ -129,6 +133,9 @@ def build_website_summary(url: str, analysis_result: dict) -> str:
     keywords_list = analysis_result.get("keywords", []) or []
     keywords = ", ".join(keywords_list) if keywords_list else "—"
 
+    # ---- Category ----
+    category = analysis_result.get("category", "") or "—"
+
     # ---- Tone (опционально) ----
     tone = analysis_result.get("tone", "") or "—"
 
@@ -139,6 +146,7 @@ def build_website_summary(url: str, analysis_result: dict) -> str:
         f"{Icons.SATELLITE} <b>Веб-сайт</b>\n"
         f"{Icons.DATA} <code>{url}</code>\n"
         f"{separator}\n"
+        f"📂 <b>Категория:</b> {category}\n\n"
         f"{Icons.TARGET} <b>Целевая аудитория:</b>\n{audience_fmt}\n\n"
         f"{Icons.KEYWORDS} <b>Ключевые слова:</b>\n{keywords}\n"
     )

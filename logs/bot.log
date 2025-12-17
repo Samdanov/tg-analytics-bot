@@ -1,1 +1,51 @@
-Please enter your phone (or bot token): Please enter your phone (or bot token): Please enter your phone (or bot token): Please enter your phone (or bot token): Please enter your phone (or bot token): Please enter your phone (or bot token): Please enter your phone (or bot token): Please enter your phone (or bot token): Please enter your phone (or bot token): Please enter your phone (or bot token): Please enter your phone (or bot token): 
+2025-12-17 16:17:49,662 [INFO] __main__ - Starting ORBITA bot with DI architecture...
+2025-12-17 16:17:49,751 [INFO] __main__ - Using DI handlers (workflow_di.py)
+2025-12-17 16:17:49,757 [INFO] __main__ - Initializing Telegram client...
+2025-12-17 16:17:49,757 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-17 16:17:50,776 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-17 16:17:50,865 [INFO] __main__ - Starting bot polling...
+2025-12-17 16:17:50,868 [INFO] aiogram.dispatcher - Start polling
+2025-12-17 16:17:50,931 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-17 16:18:15,353 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1117110957, username=klerkonline, title=Бухучет и налоги Клерк
+2025-12-17 16:18:15,779 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 1: Fetching channel data for @klerkonline
+2025-12-17 16:18:15,809 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1117110957, username=klerkonline, title=Бухучет и налоги Клерк
+2025-12-17 16:18:16,210 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 2: Saving channel to DB
+2025-12-17 16:18:16,367 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Channel saved: id=348640
+2025-12-17 16:18:16,412 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Posts saved: count=100
+2025-12-17 16:18:16,413 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 3: LLM analysis
+2025-12-17 16:18:16,413 [INFO] app.services.llm.analyzer - LLM analysis started: posts=100
+2025-12-17 16:18:20,777 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-17 16:18:20,808 [INFO] app.services.llm.analyzer - LLM analysis: category='экономика', keywords=14
+2025-12-17 16:18:21,084 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Category updated: 'экономика'
+2025-12-17 16:18:21,084 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Analysis saved: keywords=14, category='экономика'
+2025-12-17 16:18:21,084 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 4: Checking similarity in DB
+2025-12-17 16:18:21,245 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Similarity EXISTS in DB — using cached data (fast path)
+2025-12-17 16:18:21,246 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 5: Generating XLSX report
+2025-12-17 16:18:21,525 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] DONE: channel_id=348640, posts=100, keywords=14, top_n=25, elapsed=5.75s, report=/home/alex/apps/tg-analytics-bot/reports/Похожие_каналы_Бухучет_и_налоги_Клерк_2025-12-17.xlsx
+2025-12-17 16:18:21,685 [INFO] aiogram.event - Update id=999071426 is handled. Duration 6515 ms by bot id=8570381804
+2025-12-17 16:18:57,185 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:18:57,185 [WARNING] aiogram.dispatcher - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8570381804)
+2025-12-17 16:19:02,216 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:19:02,216 [WARNING] aiogram.dispatcher - Sleep for 1.300870 seconds and try again... (tryings = 1, bot id = 8570381804)
+2025-12-17 16:19:07,842 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:19:07,842 [WARNING] aiogram.dispatcher - Sleep for 1.720728 seconds and try again... (tryings = 2, bot id = 8570381804)
+2025-12-17 16:19:14,313 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:19:14,313 [WARNING] aiogram.dispatcher - Sleep for 2.336813 seconds and try again... (tryings = 3, bot id = 8570381804)
+2025-12-17 16:19:22,127 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:19:22,127 [WARNING] aiogram.dispatcher - Sleep for 3.146307 seconds and try again... (tryings = 4, bot id = 8570381804)
+2025-12-17 16:19:28,514 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:19:28,514 [WARNING] aiogram.dispatcher - Sleep for 4.275802 seconds and try again... (tryings = 5, bot id = 8570381804)
+2025-12-17 16:19:37,036 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:19:37,036 [WARNING] aiogram.dispatcher - Sleep for 4.890935 seconds and try again... (tryings = 6, bot id = 8570381804)
+2025-12-17 16:19:47,002 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:19:47,002 [WARNING] aiogram.dispatcher - Sleep for 4.987045 seconds and try again... (tryings = 7, bot id = 8570381804)
+2025-12-17 16:20:00,831 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:20:00,831 [WARNING] aiogram.dispatcher - Sleep for 5.180545 seconds and try again... (tryings = 8, bot id = 8570381804)
+2025-12-17 16:20:11,158 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:20:11,159 [WARNING] aiogram.dispatcher - Sleep for 5.032862 seconds and try again... (tryings = 9, bot id = 8570381804)
+2025-12-17 16:20:21,295 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:20:21,296 [WARNING] aiogram.dispatcher - Sleep for 5.063424 seconds and try again... (tryings = 10, bot id = 8570381804)
+2025-12-17 16:20:31,519 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:20:31,520 [WARNING] aiogram.dispatcher - Sleep for 5.160528 seconds and try again... (tryings = 11, bot id = 8570381804)
+2025-12-17 16:20:41,538 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-12-17 16:20:41,538 [WARNING] aiogram.dispatcher - Sleep for 5.005114 seconds and try again... (tryings = 12, bot id = 8570381804)
