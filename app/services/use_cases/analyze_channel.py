@@ -2,6 +2,10 @@
 Analyze Channel Use Case
 
 Use case для полного анализа канала (Telethon → LLM → Similarity → Report).
+
+Логика similarity:
+- Если есть в БД → используем (быстро)
+- Если нет → считаем on-the-fly (только для новых каналов)
 """
 
 from pathlib import Path
@@ -111,23 +115,39 @@ class AnalyzeChannelUseCase:
         
         await self.repo.keywords.upsert_analysis(channel.id, analysis)
         
-        # Также обновляем keywords в самом канале
+        # Обновляем keywords в канале
         await self.repo.channels.update_keywords(channel.id, analysis.keywords)
         
-        logger.info(f"[AnalyzeChannel] Analysis saved: keywords={len(analysis.keywords)}")
+        # ВАЖНО: Обновляем category в канале (нужно для similarity!)
+        category = llm_result.get("category", "")
+        if category:
+            await self.repo.channels.update_category(channel.id, category)
+            logger.info(f"[AnalyzeChannel] Category updated: '{category}'")
         
-        # Шаг 4: Similarity calculation
-        logger.info(f"[AnalyzeChannel] Step 4: Calculating similarity (top_n={top_n})")
+        logger.info(f"[AnalyzeChannel] Analysis saved: keywords={len(analysis.keywords)}, category='{category}'")
         
-        similarity_success = await calculate_similarity_for_channel(
-            channel.id,
-            top_n=top_n
-        )
+        # Шаг 4: Similarity — сначала проверяем БД, потом fallback
+        logger.info(f"[AnalyzeChannel] Step 4: Checking similarity in DB")
         
-        if not similarity_success:
-            logger.warning(f"[AnalyzeChannel] Similarity calculation returned False")
+        has_similarity = await self.repo.analytics.has_results(channel.id)
+        
+        if has_similarity:
+            # Данные есть — используем их (быстрый путь)
+            logger.info(f"[AnalyzeChannel] Similarity EXISTS in DB — using cached data (fast path)")
         else:
-            logger.info(f"[AnalyzeChannel] Similarity calculated successfully")
+            # Данных нет — считаем on-the-fly для нового канала
+            # Это работает ТОЛЬКО внутри категории канала (не глобально!)
+            logger.info(f"[AnalyzeChannel] Similarity NOT in DB — calculating on-the-fly (new channel)")
+            
+            similarity_success = await calculate_similarity_for_channel(
+                channel.id,
+                top_n=top_n
+            )
+            
+            if similarity_success:
+                logger.info(f"[AnalyzeChannel] Similarity calculated and saved")
+            else:
+                logger.warning(f"[AnalyzeChannel] Similarity calculation failed (no data or small category)")
         
         # Шаг 5: Генерация XLSX
         logger.info(f"[AnalyzeChannel] Step 5: Generating XLSX report")

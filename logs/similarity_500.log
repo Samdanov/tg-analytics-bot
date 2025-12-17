@@ -1,0 +1,8 @@
+nohup: ignoring input
+2025-12-16 16:16:28,876 [INFO] __main__ - ============================================================
+2025-12-16 16:16:28,877 [INFO] __main__ - BATCH SIMILARITY (по категориям)
+2025-12-16 16:16:28,877 [INFO] __main__ - top_n=500
+2025-12-16 16:16:28,877 [INFO] __main__ - ============================================================
+2025-12-16 16:16:28,877 [INFO] app.services.similarity_engine.engine - [ENGINE] загрузка данных...
+2025-12-16 16:16:36,662 [INFO] app.services.similarity_engine.engine - [ENGINE] категорий: 49, каналов: 198790
+2025-12-16 16:16:36,678 [INFO] app.services.similarity_engine.engine - [ENGINE] [1/49] 'блоги': 18840 каналов → расчёт...

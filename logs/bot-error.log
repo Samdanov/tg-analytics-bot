@@ -750,3 +750,272 @@ AttributeError: 'ChannelIdentifier' object has no attribute 'username'
 2025-12-15 14:54:55,686 [INFO] __main__ - Shutting down...
 2025-12-15 14:54:55,687 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
 2025-12-15 14:54:55,689 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+2025-12-16 18:47:05,590 [INFO] __main__ - Starting ORBITA bot with DI architecture...
+2025-12-16 18:47:05,671 [INFO] __main__ - Using DI handlers (workflow_di.py)
+2025-12-16 18:47:05,677 [INFO] __main__ - Initializing Telegram client...
+2025-12-16 18:47:05,678 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-16 18:47:05,685 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-16 18:47:05,775 [INFO] __main__ - Starting bot polling...
+2025-12-16 18:47:05,776 [INFO] aiogram.dispatcher - Start polling
+2025-12-16 18:47:05,845 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-16 21:08:02,727 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
+2025-12-16 21:08:02,780 [WARNING] aiogram.dispatcher - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8570381804)
+2025-12-16 21:08:02,782 [WARNING] telethon.network.mtprotostate - Server sent a very old message with ID 7584544817080598573, ignoring (see FAQ for details)
+2025-12-16 21:08:02,924 [WARNING] telethon.network.mtprotostate - Server sent a very old message with ID 7584544817080598581, ignoring (see FAQ for details)
+2025-12-16 21:08:02,926 [INFO] telethon.network.connection.connection - The server closed the connection while sending
+2025-12-16 21:08:02,927 [WARNING] telethon.network.mtprotostate - Server sent a very old message with ID 7584544817080598621, ignoring (see FAQ for details)
+2025-12-16 21:08:02,927 [INFO] telethon.network.mtprotosender - Connection closed while receiving data: Not connected
+2025-12-16 21:08:02,929 [INFO] telethon.network.mtprotosender - Closing current connection to begin reconnect...
+2025-12-16 21:08:02,929 [INFO] telethon.network.connection.connection - <class 'BrokenPipeError'> during disconnect: [Errno 32] Broken pipe
+2025-12-16 21:08:02,929 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-16 21:08:02,932 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-16 21:08:02,935 [WARNING] telethon.network.mtprotosender - Security error while unpacking a received message: Server replied with a wrong session ID (see FAQ for details)
+2025-12-16 21:08:02,937 [WARNING] telethon.network.mtprotostate - Server resent the older message 7584565566450074625, ignoring
+2025-12-16 21:08:02,999 [INFO] telethon.client.updates - Got difference for channel 2307062628 updates
+2025-12-16 21:08:03,045 [INFO] telethon.client.updates - Got difference for channel 1279926928 updates
+2025-12-16 21:08:13,702 [INFO] aiogram.dispatcher - Connection established (tryings = 1, bot id = 8570381804)
+2025-12-16 21:23:03,092 [INFO] telethon.client.updates - Got difference for channel 2127378473 updates
+2025-12-17 01:14:29,655 [INFO] telethon.client.updates - Got difference for channel 2270611076 updates
+2025-12-17 02:30:03,520 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
+2025-12-17 02:33:21,584 [WARNING] aiogram.dispatcher - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8570381804)
+2025-12-17 03:05:09,916 [WARNING] telethon.network.mtprotostate - Server sent a very old message with ID 7584640818214856709, ignoring (see FAQ for details)
+2025-12-17 03:05:10,503 [WARNING] telethon.network.mtprotostate - Server sent a very old message with ID 7584640818214856705, ignoring (see FAQ for details)
+2025-12-17 03:05:10,677 [INFO] telethon.network.mtprotosender - Closing current connection to begin reconnect...
+2025-12-17 03:05:10,678 [WARNING] telethon.network.mtprotostate - Server sent a very old message with ID 7584640823996256257, ignoring (see FAQ for details)
+2025-12-17 03:05:10,679 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-17 03:05:10,682 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-17 03:05:10,684 [WARNING] telethon.network.mtprotosender - Security error while unpacking a received message: Server replied with a wrong session ID (see FAQ for details)
+2025-12-17 03:05:10,837 [INFO] telethon.client.updates - Got difference for channel 2270611076 updates
+2025-12-17 03:05:10,919 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-17 03:05:10,949 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-17 03:05:20,799 [INFO] aiogram.dispatcher - Connection established (tryings = 1, bot id = 8570381804)
+2025-12-17 03:20:10,959 [INFO] telethon.client.updates - Got difference for channel 2408159395 updates
+2025-12-17 03:20:10,994 [INFO] telethon.client.updates - Got difference for channel 2013448016 updates
+2025-12-17 03:20:11,012 [INFO] telethon.client.updates - Got difference for channel 2028914005 updates
+2025-12-17 03:20:11,043 [INFO] telethon.client.updates - Got difference for channel 2415443159 updates
+2025-12-17 03:25:11,489 [INFO] telethon.client.updates - Got difference for channel 2270611076 updates
+2025-12-17 03:33:11,557 [INFO] telethon.client.updates - Got difference for channel 2270611076 updates
+2025-12-17 03:35:11,134 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-17 03:42:11,697 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-17 04:03:11,585 [INFO] telethon.client.updates - Got difference for channel 2270611076 updates
+2025-12-17 04:39:12,492 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-17 04:48:03,258 [INFO] telethon.client.updates - Got difference for channel 2270611076 updates
+2025-12-17 04:54:12,676 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-17 04:54:12,705 [INFO] telethon.client.updates - Got difference for channel 2270611076 updates
+2025-12-17 05:05:11,287 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-17 05:09:12,903 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-17 05:26:19,914 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 05:35:11,420 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 05:39:12,989 [INFO] telethon.client.updates - Got difference for channel 2270611076 updates
+2025-12-17 05:50:11,457 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 05:59:50,223 [INFO] telethon.client.updates - Got difference for channel 2028914005 updates
+2025-12-17 06:03:08,450 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-17 06:04:13,683 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 06:05:11,520 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 06:20:11,542 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 06:32:56,550 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-17 06:35:11,563 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 06:37:22,486 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 06:39:13,084 [INFO] telethon.client.updates - Got difference for channel 2270611076 updates
+2025-12-17 06:50:04,821 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 06:50:58,271 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1279926928, username=bezposhady, title=Беспощадный Банкстер
+2025-12-17 06:50:58,453 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 1: Fetching channel data for @bezposhady
+2025-12-17 06:50:58,481 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1279926928, username=bezposhady, title=Беспощадный Банкстер
+2025-12-17 06:50:58,711 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 2: Saving channel to DB
+2025-12-17 06:50:58,960 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Channel saved: id=285370
+2025-12-17 06:50:59,004 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Posts saved: count=94
+2025-12-17 06:50:59,004 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 3: LLM analysis
+2025-12-17 06:50:59,004 [INFO] app.services.llm.analyzer - LLM analysis started: posts=94
+2025-12-17 06:51:02,870 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-17 06:51:02,905 [INFO] app.services.llm.analyzer - LLM analysis: category='экономика', keywords=14
+2025-12-17 06:51:02,959 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Category updated: 'экономика'
+2025-12-17 06:51:02,959 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Analysis saved: keywords=14, category='экономика'
+2025-12-17 06:51:02,959 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 4: Checking similarity in DB
+2025-12-17 06:51:03,547 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Similarity EXISTS in DB — using cached data (fast path)
+2025-12-17 06:51:03,548 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 5: Generating XLSX report
+2025-12-17 06:51:03,667 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] DONE: channel_id=285370, posts=94, keywords=14, top_n=10, elapsed=5.21s, report=/home/alex/apps/tg-analytics-bot/reports/Похожие_каналы_Беспощадный_Банкстер_2025-12-17.xlsx
+2025-12-17 06:51:03,820 [INFO] aiogram.event - Update id=999071415 is handled. Duration 5741 ms by bot id=8570381804
+2025-12-17 06:51:30,723 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1279926928, username=bezposhady, title=Беспощадный Банкстер
+2025-12-17 06:51:30,876 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 1: Fetching channel data for @bezposhady
+2025-12-17 06:51:30,892 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1279926928, username=bezposhady, title=Беспощадный Банкстер
+2025-12-17 06:51:31,061 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 2: Saving channel to DB
+2025-12-17 06:51:31,078 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Channel saved: id=285370
+2025-12-17 06:51:31,101 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Posts saved: count=94
+2025-12-17 06:51:31,101 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 3: LLM analysis
+2025-12-17 06:51:31,101 [INFO] app.services.llm.analyzer - LLM analysis started: posts=94
+2025-12-17 06:51:32,986 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-17 06:51:32,998 [INFO] app.services.llm.analyzer - LLM analysis: category='экономика', keywords=15
+2025-12-17 06:51:33,023 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Category updated: 'экономика'
+2025-12-17 06:51:33,023 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Analysis saved: keywords=15, category='экономика'
+2025-12-17 06:51:33,023 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 4: Checking similarity in DB
+2025-12-17 06:51:33,132 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Similarity EXISTS in DB — using cached data (fast path)
+2025-12-17 06:51:33,132 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 5: Generating XLSX report
+2025-12-17 06:51:33,222 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] DONE: channel_id=285370, posts=94, keywords=15, top_n=500, elapsed=2.35s, report=/home/alex/apps/tg-analytics-bot/reports/Похожие_каналы_Беспощадный_Банкстер_2025-12-17.xlsx
+2025-12-17 06:51:33,680 [INFO] aiogram.event - Update id=999071416 is handled. Duration 3073 ms by bot id=8570381804
+2025-12-17 06:52:22,518 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 06:54:13,623 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 07:02:56,694 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-17 07:05:04,870 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 07:09:13,647 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 07:19:03,989 [INFO] telethon.client.updates - Got difference for channel 1617167662 updates
+2025-12-17 07:19:12,622 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 07:20:04,932 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 07:34:12,655 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 07:35:05,037 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 07:49:12,689 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 07:50:05,084 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 07:59:07,076 [INFO] telethon.client.updates - Got difference for channel 2270611076 updates
+2025-12-17 07:59:55,515 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-17 08:04:04,366 [INFO] telethon.client.updates - Got difference for channel 1617167662 updates
+2025-12-17 08:04:12,722 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 08:05:05,164 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 08:05:11,636 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-17 08:05:14,843 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 08:08:48,191 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 08:14:55,560 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-17 08:20:03,375 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 08:20:11,677 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-17 08:20:14,865 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 08:31:32,367 [INFO] aiogram.event - Update id=999071417 is handled. Duration 144 ms by bot id=8570381804
+2025-12-17 08:31:36,586 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1555418015, username=vibecoding_tg, title=Вайб-кодинг
+2025-12-17 08:31:36,882 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 1: Fetching channel data for @vibecoding_tg
+2025-12-17 08:31:36,923 [INFO] app.services.telegram_parser.channel_info - Entity received: id=1555418015, username=vibecoding_tg, title=Вайб-кодинг
+2025-12-17 08:31:37,262 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 2: Saving channel to DB
+2025-12-17 08:31:37,313 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Channel saved: id=466815
+2025-12-17 08:31:37,354 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Posts saved: count=73
+2025-12-17 08:31:37,354 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 3: LLM analysis
+2025-12-17 08:31:37,354 [INFO] app.services.llm.analyzer - LLM analysis started: posts=73
+2025-12-17 08:31:40,324 [INFO] httpx - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-17 08:31:40,336 [INFO] app.services.llm.analyzer - LLM analysis: category='технологии', keywords=14
+2025-12-17 08:31:40,378 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Category updated: 'технологии'
+2025-12-17 08:31:40,379 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Analysis saved: keywords=14, category='технологии'
+2025-12-17 08:31:40,379 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 4: Checking similarity in DB
+2025-12-17 08:31:40,541 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Similarity NOT in DB — calculating on-the-fly (new channel)
+2025-12-17 08:31:40,542 [INFO] app.services.similarity_engine.engine_single - [SINGLE] target=466815
+2025-12-17 08:31:40,547 [INFO] app.services.similarity_engine.engine_single - [SINGLE] target=466815 category='технологии'
+2025-12-17 08:31:44,863 [INFO] app.services.similarity_engine.engine_single - [SINGLE] каналов в категории 'технологии': 4713
+2025-12-17 08:31:44,981 [INFO] app.services.similarity_engine.engine_single - [SINGLE] target=466815: найдено 578 похожих, top score=0.191
+2025-12-17 08:31:45,111 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Similarity calculated and saved
+2025-12-17 08:31:45,111 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] Step 5: Generating XLSX report
+2025-12-17 08:31:45,211 [INFO] app.services.use_cases.analyze_channel - [AnalyzeChannel] DONE: channel_id=466815, posts=73, keywords=14, top_n=10, elapsed=8.33s, report=/home/alex/apps/tg-analytics-bot/reports/Похожие_каналы_Вайб-кодинг_2025-12-17.xlsx
+2025-12-17 08:31:45,362 [INFO] aiogram.event - Update id=999071418 is handled. Duration 8842 ms by bot id=8570381804
+2025-12-17 08:33:49,689 [INFO] telethon.client.updates - Got difference for channel 1730154005 updates
+2025-12-17 08:35:03,485 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 08:35:14,890 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 08:44:55,679 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-17 08:50:03,508 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 08:50:14,960 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 08:53:49,439 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-17 08:59:50,630 [INFO] telethon.client.updates - Got difference for channel 2028914005 updates
+2025-12-17 09:05:03,536 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 09:05:04,064 [INFO] telethon.client.updates - Got difference for channel 2127378473 updates
+2025-12-17 09:05:11,764 [INFO] telethon.client.updates - Got difference for channel 2028914005 updates
+2025-12-17 09:05:15,037 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 09:20:03,593 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 09:20:15,124 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 09:23:49,492 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-17 09:28:51,109 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 09:35:15,156 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 09:38:49,644 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-17 09:43:51,163 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 09:50:15,176 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 09:51:22,984 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 09:53:49,693 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-17 10:03:16,469 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 10:05:12,247 [INFO] telethon.client.updates - Got difference for channel 2028914005 updates
+2025-12-17 10:05:15,200 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 10:07:03,609 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 10:07:31,441 [INFO] telethon.client.updates - Got difference for channel 2307062628 updates
+2025-12-17 10:08:49,757 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-17 10:09:14,524 [INFO] telethon.client.updates - Got difference for channel 2028914005 updates
+2025-12-17 10:20:15,228 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 10:22:03,679 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 10:24:14,568 [INFO] telethon.client.updates - Got difference for channel 2028914005 updates
+2025-12-17 10:27:16,622 [INFO] telethon.client.updates - Got difference for channel 2127378473 updates
+2025-12-17 10:29:07,360 [INFO] telethon.client.updates - Got difference for channel 2270611076 updates
+2025-12-17 10:35:15,262 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 10:37:03,706 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 10:38:49,817 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-17 10:47:46,376 [INFO] telethon.client.updates - Got difference for channel 2028914005 updates
+2025-12-17 10:49:48,761 [INFO] telethon.client.updates - Got difference for channel 1543204515 updates
+2025-12-17 10:50:15,354 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 10:51:10,666 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 10:53:49,871 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-17 11:00:58,708 [INFO] telethon.client.updates - Got difference for channel 2028914005 updates
+2025-12-17 11:05:15,384 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 11:06:10,919 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 11:20:15,447 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 11:21:10,966 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 11:22:32,152 [INFO] telethon.client.updates - Got difference for channel 2028914005 updates
+2025-12-17 11:23:49,932 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-17 11:26:55,329 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 11:35:12,129 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-17 11:35:15,476 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 11:35:21,441 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 11:38:19,891 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 11:38:49,961 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-17 11:42:03,434 [INFO] telethon.client.updates - Got difference for channel 2028914005 updates
+2025-12-17 11:43:22,004 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 11:49:48,910 [INFO] telethon.client.updates - Got difference for channel 1543204515 updates
+2025-12-17 11:50:15,528 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 11:51:17,888 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 11:52:17,908 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 11:53:49,989 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-17 13:18:18,628 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
+2025-12-17 13:18:18,707 [WARNING] aiogram.dispatcher - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8570381804)
+2025-12-17 13:18:18,761 [WARNING] telethon.network.mtprotostate - Server sent a very old message with ID 7584794491721947137, ignoring (see FAQ for details)
+2025-12-17 13:18:18,915 [WARNING] telethon.network.mtprotostate - Server sent a very old message with ID 7584794514063109121, ignoring (see FAQ for details)
+2025-12-17 13:18:18,919 [WARNING] telethon.network.mtprotostate - Server sent a very old message with ID 7584794550261994497, ignoring (see FAQ for details)
+2025-12-17 13:18:18,920 [WARNING] telethon.network.mtprotostate - Server sent a very old message with ID 7584794973638579201, ignoring (see FAQ for details)
+2025-12-17 13:18:18,921 [INFO] telethon.network.connection.connection - The server closed the connection while sending
+2025-12-17 13:18:18,936 [WARNING] telethon.network.mtprotostate - Server sent a very old message with ID 7584795023026029569, ignoring (see FAQ for details)
+2025-12-17 13:18:18,936 [INFO] telethon.network.mtprotosender - Connection closed while receiving data: Not connected
+2025-12-17 13:18:18,936 [INFO] telethon.network.mtprotosender - Closing current connection to begin reconnect...
+2025-12-17 13:18:18,936 [INFO] telethon.network.connection.connection - <class 'BrokenPipeError'> during disconnect: [Errno 32] Broken pipe
+2025-12-17 13:18:18,936 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-17 13:18:18,939 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-17 13:18:18,942 [WARNING] telethon.network.mtprotosender - Security error while unpacking a received message: Server replied with a wrong session ID (see FAQ for details)
+2025-12-17 13:18:19,159 [INFO] telethon.client.updates - Got difference for account updates
+2025-12-17 13:18:19,225 [INFO] telethon.client.updates - Got difference for channel 1285550465 updates
+2025-12-17 13:18:19,271 [INFO] telethon.client.updates - Got difference for channel 1748730883 updates
+2025-12-17 13:18:19,298 [INFO] telethon.client.updates - Got difference for channel 2270611076 updates
+2025-12-17 13:18:19,325 [INFO] telethon.client.updates - Got difference for channel 2912029707 updates
+2025-12-17 13:18:19,365 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 13:18:19,406 [INFO] telethon.client.updates - Got difference for channel 1279926928 updates
+2025-12-17 13:18:19,433 [INFO] telethon.client.updates - Got difference for channel 2013448016 updates
+2025-12-17 13:18:19,488 [INFO] telethon.client.updates - Got difference for channel 1718946515 updates
+2025-12-17 13:18:19,547 [INFO] telethon.client.updates - Got difference for channel 2028914005 updates
+2025-12-17 13:18:19,615 [INFO] telethon.client.updates - Got difference for channel 1555418015 updates
+2025-12-17 13:18:19,665 [INFO] telethon.client.updates - Got difference for channel 2408159395 updates
+2025-12-17 13:18:19,694 [INFO] telethon.client.updates - Got difference for channel 2307062628 updates
+2025-12-17 13:18:19,730 [INFO] telethon.client.updates - Got difference for channel 1441622629 updates
+2025-12-17 13:18:19,755 [INFO] telethon.client.updates - Got difference for channel 1923765411 updates
+2025-12-17 13:18:19,788 [INFO] telethon.client.updates - Got difference for channel 1543204515 updates
+2025-12-17 13:18:19,820 [INFO] telethon.client.updates - Got difference for channel 2127378473 updates
+2025-12-17 13:18:19,865 [INFO] telethon.client.updates - Got difference for channel 1957118315 updates
+2025-12-17 13:18:19,890 [INFO] telethon.client.updates - Got difference for channel 1617167662 updates
+2025-12-17 13:18:29,818 [INFO] aiogram.dispatcher - Connection established (tryings = 1, bot id = 8570381804)
+2025-12-17 13:22:32,691 [INFO] telethon.client.updates - Got difference for channel 2939980428 updates
+2025-12-17 13:26:14,241 [WARNING] aiogram.dispatcher - Received SIGTERM signal
+2025-12-17 13:26:14,243 [INFO] aiogram.dispatcher - Polling stopped for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-17 13:26:14,244 [INFO] aiogram.dispatcher - Polling stopped
+2025-12-17 13:26:14,496 [INFO] __main__ - Shutting down...
+2025-12-17 13:26:14,497 [INFO] telethon.network.mtprotosender - Disconnecting from 149.154.167.51:443/TcpFull...
+2025-12-17 13:26:14,498 [INFO] telethon.network.mtprotosender - Disconnection from 149.154.167.51:443/TcpFull complete!
+2025-12-17 13:26:22,863 [INFO] __main__ - Starting ORBITA bot with DI architecture...
+2025-12-17 13:26:22,961 [INFO] __main__ - Using DI handlers (workflow_di.py)
+2025-12-17 13:26:22,967 [INFO] __main__ - Initializing Telegram client...
+2025-12-17 13:26:22,968 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-17 13:26:22,970 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-17 13:26:23,227 [INFO] __main__ - Starting bot polling...
+2025-12-17 13:26:23,228 [INFO] aiogram.dispatcher - Start polling
+2025-12-17 13:26:23,304 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'
+2025-12-17 13:44:03,946 [INFO] telethon.client.updates - Got difference for channel 2307062628 updates
+2025-12-17 14:20:58,919 [INFO] __main__ - Starting ORBITA bot with DI architecture...
+2025-12-17 14:20:59,007 [INFO] __main__ - Using DI handlers (workflow_di.py)
+2025-12-17 14:20:59,016 [INFO] __main__ - Initializing Telegram client...
+2025-12-17 14:20:59,017 [INFO] telethon.network.mtprotosender - Connecting to 149.154.167.51:443/TcpFull...
+2025-12-17 14:20:59,024 [INFO] telethon.network.mtprotosender - Connection to 149.154.167.51:443/TcpFull complete!
+2025-12-17 14:20:59,106 [INFO] __main__ - Starting bot polling...
+2025-12-17 14:20:59,107 [INFO] aiogram.dispatcher - Start polling
+2025-12-17 14:20:59,171 [INFO] aiogram.dispatcher - Run polling for bot @Orbita_platform_bot id=8570381804 - 'ОРБИТА'

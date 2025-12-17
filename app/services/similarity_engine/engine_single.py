@@ -87,7 +87,7 @@ async def load_channels_by_category(category: str) -> Dict[int, List[str]]:
 
 async def calculate_similarity_for_channel(
     target_channel_id: int,
-    top_n: int = 10,
+    top_n: int = 500,  # Сохраняем максимум, чтобы поддерживать запросы до 500
     min_keywords: int = 2,
 ) -> bool:
     """

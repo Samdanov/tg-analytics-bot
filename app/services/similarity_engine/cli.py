@@ -22,7 +22,7 @@ from app.services.similarity_engine.engine_single import calculate_similarity_fo
 logger = get_logger(__name__)
 
 
-async def run_batch(top_n: int = 10):
+async def run_batch(top_n: int = 500):
     """
     Batch-расчёт similarity по всем категориям.
     
@@ -73,8 +73,8 @@ async def main():
 Использование: python -m app.services.similarity_engine.cli <mode> [options]
 
 Режимы:
-  batch [top_n]           - Batch-расчёт по всем категориям (default: top_n=10)
-  single <channel_id> [top_n] - Расчёт для одного канала
+  batch [top_n]           - Batch-расчёт по всем категориям (default: top_n=500)
+  single <channel_id> [top_n] - Расчёт для одного канала (default: top_n=500)
 
 Примеры:
   python -m app.services.similarity_engine.cli batch 10
@@ -90,7 +90,7 @@ async def main():
     mode = sys.argv[1]
     
     if mode == "batch":
-        top_n = int(sys.argv[2]) if len(sys.argv) >= 3 else 10
+        top_n = int(sys.argv[2]) if len(sys.argv) >= 3 else 500
         await run_batch(top_n=top_n)
     
     elif mode == "single":
@@ -100,7 +100,7 @@ async def main():
             return
         
         channel_id = int(sys.argv[2])
-        top_n = int(sys.argv[3]) if len(sys.argv) >= 4 else 10
+        top_n = int(sys.argv[3]) if len(sys.argv) >= 4 else 500
         await run_single(channel_id, top_n=top_n)
     
     else:

@@ -150,6 +150,27 @@ class ChannelRepository(BaseRepository[Channel]):
             last_update=datetime.utcnow()
         )
     
+    async def update_category(
+        self,
+        channel_id: int,
+        category: str
+    ) -> Optional[Channel]:
+        """
+        Обновить категорию канала.
+        
+        Args:
+            channel_id: ID канала
+            category: Категория канала
+        
+        Returns:
+            Обновленный Channel или None
+        """
+        return await self.update(
+            channel_id,
+            category=category,
+            last_update=datetime.utcnow()
+        )
+    
     async def get_with_keywords(
         self,
         limit: Optional[int] = None,

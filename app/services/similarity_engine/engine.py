@@ -14,6 +14,8 @@ Batch-расчёт similarity ПО КАТЕГОРИЯМ.
 """
 
 import json
+import time
+import asyncio
 from datetime import datetime
 from typing import List, Dict, Set
 from collections import defaultdict
@@ -42,13 +44,13 @@ class SimilarityEngine:
     
     def __init__(
         self,
-        top_n: int = 10,
+        top_n: int = 500,  # Сохраняем максимум, чтобы поддерживать запросы до 500
         min_keywords: int = 3,
         min_channels_in_category: int = 5,
     ):
         """
         Args:
-            top_n: Сколько похожих каналов возвращать
+            top_n: Сколько похожих каналов сохранять (500 = максимум для UI)
             min_keywords: Минимум keywords у канала для участия
             min_channels_in_category: Минимум каналов в категории для расчёта
         """
@@ -93,11 +95,11 @@ class SimilarityEngine:
                    len(channels_by_category), len(tokens_by_channel))
         
         # =====================================================
-        # РАСЧЁТ SIMILARITY ВНУТРИ КАЖДОЙ КАТЕГОРИИ
+        # РАСЧЁТ И СОХРАНЕНИЕ SIMILARITY ПО КАТЕГОРИЯМ
         # =====================================================
-        all_results: List[tuple] = []
         processed_categories = 0
         skipped_small = 0
+        total_saved = 0
         total_categories = len(channels_by_category)
         
         # Сортируем категории по размеру (большие первыми) для лучшей оценки прогресса
@@ -131,29 +133,37 @@ class SimilarityEngine:
             
             # TF-IDF + Similarity ВНУТРИ категории
             category_results = self._calculate_within_category(category_tokens)
-            all_results.extend(category_results)
             processed_categories += 1
             
-            logger.info("[ENGINE] [%d/%d] '%s': готово (%d результатов)", 
+            logger.info("[ENGINE] [%d/%d] '%s': готово (%d результатов), сохраняю...", 
                        idx, total_categories, category, len(category_results))
+            
+            # =====================================================
+            # СОХРАНЕНИЕ СРАЗУ ПОСЛЕ КАТЕГОРИИ (не накапливаем!)
+            # =====================================================
+            if category_results:
+                await self._save_results_batch(category_results)
+                total_saved += len(category_results)
+                logger.info("[ENGINE] [%d/%d] '%s': сохранено %d результатов", 
+                           idx, total_categories, category, len(category_results))
+            
+            # Throttling: пауза между категориями
+            await asyncio.sleep(2)
         
         logger.info("[ENGINE] обработано категорий: %d, пропущено (мало каналов): %d",
                    processed_categories, skipped_small)
+        logger.info("[ENGINE] готово, всего сохранено: %d", total_saved)
+    
+    async def _save_results_batch(self, results: List[tuple]):
+        """
+        Сохраняет результаты одной категории батчами.
         
-        # =====================================================
-        # СОХРАНЕНИЕ РЕЗУЛЬТАТОВ (батчами по 5000)
-        # =====================================================
-        if not all_results:
-            logger.warning("[ENGINE] нет результатов для сохранения")
-            return
-        
-        logger.info("[ENGINE] сохраняю результаты для %d каналов...", len(all_results))
-        
+        Важно: Не накапливаем в памяти, сразу пишем в БД.
+        """
         BATCH_SIZE = 5000
-        total_saved = 0
         
-        for batch_start in range(0, len(all_results), BATCH_SIZE):
-            batch = all_results[batch_start:batch_start + BATCH_SIZE]
+        for batch_start in range(0, len(results), BATCH_SIZE):
+            batch = results[batch_start:batch_start + BATCH_SIZE]
             batch_ids = [cid for cid, _ in batch]
             
             async with async_session_maker() as session:
@@ -177,11 +187,6 @@ class SimilarityEngine:
                     )
                 
                 await session.commit()
-            
-            total_saved += len(batch)
-            logger.info("[ENGINE] сохранено %d/%d результатов...", total_saved, len(all_results))
-        
-        logger.info("[ENGINE] готово, всего сохранено: %d", total_saved)
     
     def _calculate_within_category(
         self,
@@ -234,6 +239,9 @@ class SimilarityEngine:
         # Cosine Similarity (попарно, но только внутри категории)
         results: List[tuple] = []
         
+        # Throttling: для больших категорий делаем паузы
+        throttle_every = 1000  # Пауза каждые N каналов
+        
         for i, cid in enumerate(channel_ids):
             target_vec = tfidf_vectors[cid]
             target_norm = norms[cid]
@@ -262,5 +270,9 @@ class SimilarityEngine:
             # Сортируем и берём top_n
             scores.sort(key=lambda x: x[1], reverse=True)
             results.append((cid, scores[:self.top_n]))
+            
+            # Throttling: короткая пауза каждые N каналов
+            if (i + 1) % throttle_every == 0:
+                time.sleep(0.1)  # 100ms пауза
         
         return results
