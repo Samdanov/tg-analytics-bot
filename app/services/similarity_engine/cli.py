@@ -44,7 +44,7 @@ async def run_batch(top_n: int = 500):
     logger.info("=" * 60)
 
 
-async def run_single(channel_id: int, top_n: int = 10):
+async def run_single(channel_id: int, top_n: int = 500):
     """
     Расчёт similarity для одного канала.
     

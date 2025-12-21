@@ -69,12 +69,20 @@ def _apply_data_style(ws, start_row: int = 2):
     data_border = Border(left=border_side, right=border_side, top=border_side, bottom=border_side)
     
     alignments = {
-        1: Alignment(horizontal="center", vertical="center"),
-        2: Alignment(horizontal="center", vertical="center"),
-        3: Alignment(horizontal="left", vertical="center"),
-        4: Alignment(horizontal="right", vertical="center"),
-        5: Alignment(horizontal="left", vertical="top", wrap_text=True),
-        6: Alignment(horizontal="left", vertical="top", wrap_text=True),
+        1: Alignment(horizontal="center", vertical="center"),  # № (номер)
+        2: Alignment(horizontal="center", vertical="center"),  # Степень схожести
+        3: Alignment(horizontal="left", vertical="center"),    # Ссылка
+        4: Alignment(horizontal="right", vertical="center"),   # Подписчики
+        5: Alignment(horizontal="left", vertical="top", wrap_text=True),  # Название
+        6: Alignment(horizontal="left", vertical="top", wrap_text=True),  # Описание
+    }
+    
+    # Цветовая палитра для степени схожести
+    similarity_colors = {
+        "Очень высокая": PatternFill(start_color="00B050", end_color="00B050", fill_type="solid"),  # Зеленый
+        "Высокая": PatternFill(start_color="92D050", end_color="92D050", fill_type="solid"),        # Светло-зеленый
+        "Средняя": PatternFill(start_color="FFC000", end_color="FFC000", fill_type="solid"),        # Оранжевый
+        "Низкая": PatternFill(start_color="FF6B6B", end_color="FF6B6B", fill_type="solid"),         # Красный
     }
     
     for row in ws.iter_rows(min_row=start_row):
@@ -83,15 +91,12 @@ def _apply_data_style(ws, start_row: int = 2):
             if idx in alignments:
                 cell.alignment = alignments[idx]
             
-            if idx == 2 and isinstance(cell.value, (int, float)):
-                value = float(cell.value)
-                if value >= 80:
-                    cell.fill = PatternFill(start_color="C6EFCE", end_color="C6EFCE", fill_type="solid")
-                elif value >= 60:
-                    cell.fill = PatternFill(start_color="FFEB9C", end_color="FFEB9C", fill_type="solid")
-                elif value >= 40:
-                    cell.fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")
-                cell.number_format = "0.0"
+            # Форматирование для степени схожести (колонка 2)
+            if idx == 2 and isinstance(cell.value, str):
+                # Применяем цвет в зависимости от текста
+                if cell.value in similarity_colors:
+                    cell.fill = similarity_colors[cell.value]
+                    cell.font = Font(bold=True, color="FFFFFF", size=11)  # Белый жирный текст
             
             if idx == 4 and isinstance(cell.value, (int, float)):
                 cell.number_format = "#,##0"
@@ -105,7 +110,8 @@ async def generate_website_similar_channels_xlsx(
     url: str,
     similar_channels: list,
     keywords: list,
-    base_dir: Optional[Path] = None
+    base_dir: Optional[Path] = None,
+    top_n: int = 500
 ) -> Path:
     """
     Генерирует Excel файл с похожими каналами для сайта.
@@ -115,6 +121,7 @@ async def generate_website_similar_channels_xlsx(
         similar_channels: Список похожих каналов
         keywords: Ключевые слова из анализа
         base_dir: Базовая директория для сохранения
+        top_n: Максимальное количество похожих каналов в отчете (1-500)
     
     Returns:
         Путь к созданному файлу
@@ -132,8 +139,8 @@ async def generate_website_similar_channels_xlsx(
     
     # Заголовки таблицы
     headers = [
-        "Дата создания",
-        "Релевантность, %",
+        "№",
+        "Степень схожести",
         "Ссылка на канал",
         "Подписчики",
         "Название канала",
@@ -144,16 +151,15 @@ async def generate_website_similar_channels_xlsx(
     # Применяем стили к заголовкам
     _apply_header_style(ws, header_row=1)
     
-    created_str = datetime.utcnow().strftime("%d.%m.%Y")
-    
     # Находим максимальный score для нормализации
     max_score = 0.0
     if similar_channels:
         scores = [ch.get("score", 0.0) for ch in similar_channels]
         max_score = max(scores) if scores else 1.0
     
-    # Заполняем данные
-    for ch_data in similar_channels:
+    # Заполняем данные (ограничиваем согласно top_n)
+    row_number = 0  # Счетчик для нумерации
+    for ch_data in similar_channels[:top_n]:
         score = float(ch_data.get("score", 0.0))
         
         # Нормализуем score до 0-100%
@@ -164,15 +170,26 @@ async def generate_website_similar_channels_xlsx(
         
         relevance_percent = round(normalized_score * 100, 1)
         
+        # Преобразуем процент в текстовое описание степени схожести
+        if relevance_percent >= 80:
+            similarity_text = "Очень высокая"
+        elif relevance_percent >= 60:
+            similarity_text = "Высокая"
+        elif relevance_percent >= 40:
+            similarity_text = "Средняя"
+        else:
+            similarity_text = "Низкая"
+        
         username = ch_data.get("username", "")
         if username.startswith("id:"):
             link = ""
         else:
             link = f"https://t.me/{username}" if username else ""
         
+        row_number += 1
         ws.append([
-            created_str,
-            relevance_percent,
+            row_number,
+            similarity_text,
             link,
             ch_data.get("subscribers"),
             ch_data.get("title"),
@@ -269,7 +286,8 @@ async def run_website_analysis_pipeline(url: str, top_n: int = 10) -> tuple[Path
     report_path = await generate_website_similar_channels_xlsx(
         url=url,
         similar_channels=similar_channels,
-        keywords=keywords
+        keywords=keywords,
+        top_n=top_n
     )
     
     logger.info(f"[WEBSITE] Pipeline завершен. Отчет: {report_path}")

@@ -17,6 +17,7 @@ from app.core.container import get_container
 from app.core.logging import setup_logging
 from app.services.telegram_parser import init_telegram, shutdown_telegram
 from app.bot.middlewares.error_handler import IgnoreForbiddenMiddleware
+from app.bot.middlewares.subscription import SubscriptionMiddleware
 
 
 async def main():
@@ -59,6 +60,10 @@ async def main():
     dp.message.middleware(IgnoreForbiddenMiddleware())
     dp.callback_query.middleware(IgnoreForbiddenMiddleware())
     
+    # Subscription middleware (проверка лимитов)
+    dp.message.middleware(SubscriptionMiddleware())
+    dp.callback_query.middleware(SubscriptionMiddleware())
+    
     # Выбор версии handlers (через переменную окружения)
     use_di_handlers = os.getenv("USE_DI_HANDLERS", "true").lower() == "true"
     
@@ -69,6 +74,10 @@ async def main():
         logger.info("Using legacy handlers (workflow.py)")
         from app.bot.handlers.workflow import router as workflow_router
     
+    # Subscription commands router
+    from app.bot.handlers.subscription import router as subscription_router
+    
+    dp.include_router(subscription_router)
     dp.include_router(workflow_router)
     
     # Start command
@@ -76,6 +85,24 @@ async def main():
     async def start_handler(message: Message):
         """Обработчик команды /start."""
         try:
+            from app.services.user_service import UserService
+            
+            # Получаем/создаем пользователя
+            user_id = message.from_user.id
+            user = await UserService.get_or_create_user(
+                user_id=user_id,
+                username=message.from_user.username,
+                first_name=message.from_user.first_name
+            )
+            
+            # Определяем лимиты
+            if user.subscription_type == "free":
+                limit_text = f"🆓 <b>Бесплатный тариф:</b> {user.queries_used}/{user.queries_limit} запросов, до 100 каналов"
+            elif user.subscription_type in ("premium", "admin"):
+                limit_text = "💎 <b>Premium:</b> Безлимитные запросы, до 500 каналов"
+            else:
+                limit_text = ""
+            
             await message.answer(
                 "🤖 <b>ОРБИТА — Аналитик Telegram-каналов</b>\n\n"
                 "Просто отправь мне:\n"
@@ -83,7 +110,10 @@ async def main():
                 "• 🔗 <b>Ссылку на канал</b> (t.me/username или @username)\n"
                 "• 🌐 <b>Ссылку на сайт</b>\n\n"
                 "Я автоматически найду похожие каналы и отправлю отчёт!\n\n"
-                f"<i>Архитектура: {'DI (новая)' if use_di_handlers else 'Legacy (старая)'}</i>"
+                f"{limit_text}\n\n"
+                "📊 <b>Команды:</b>\n"
+                "• /stats - ваша статистика\n"
+                "• /health - состояние системы"
             )
         except TelegramForbiddenError:
             return

@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, Text, TIMESTAMP, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, TIMESTAMP, ForeignKey, Boolean
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import relationship
+from datetime import datetime
 from app.db.database import Base
 
 
@@ -65,3 +66,60 @@ class AnalyticsResults(Base):
     created_at = Column(TIMESTAMP)
 
     channel = relationship("Channel", back_populates="analytics_results")
+
+
+# -------------------------
+# USER (для подписок и лимитов)
+# -------------------------
+class User(Base):
+    __tablename__ = "users"
+
+    # Существующие колонки в БД
+    id = Column(Integer, primary_key=True, index=True)  # Внутренний ID
+    telegram_id = Column(Integer, nullable=True, index=True)  # Telegram user ID
+    created_at = Column(TIMESTAMP, default=datetime.utcnow)  # Дата регистрации
+    
+    # Новые колонки (будут добавлены позже, пока опциональные)
+    # Используем nullable=True и дефолты в коде, чтобы не падать если колонок нет
+    username = Column(Text, nullable=True)  # Telegram username (без @)
+    first_name = Column(Text, nullable=True)  # Имя пользователя
+    
+    # Подписка
+    subscription_type = Column(Text, nullable=True)  # "free", "premium", "admin"
+    subscription_expires_at = Column(TIMESTAMP, nullable=True)  # Дата окончания подписки
+    
+    # Лимиты запросов
+    queries_used = Column(Integer, nullable=True)  # Использовано запросов
+    queries_limit = Column(Integer, nullable=True)  # Лимит запросов (10 для free, -1 для безлимита)
+    queries_reset_at = Column(TIMESTAMP, nullable=True)  # Дата сброса лимита (если нужна периодика)
+    
+    # Статус
+    is_active = Column(Boolean, nullable=True)  # Активен ли пользователь
+    is_banned = Column(Boolean, nullable=True)  # Забанен ли
+    
+    # Метаданные
+    last_activity_at = Column(TIMESTAMP, nullable=True)  # Последняя активность
+    
+    # Примечания (для админов)
+    notes = Column(Text, nullable=True)  # Заметки об пользователе
+    
+    # Методы для получения значений с дефолтами
+    def get_subscription_type(self) -> str:
+        """Возвращает тип подписки с дефолтом 'free'."""
+        return self.subscription_type or "free"
+    
+    def get_queries_used(self) -> int:
+        """Возвращает использованные запросы с дефолтом 0."""
+        return self.queries_used if self.queries_used is not None else 0
+    
+    def get_queries_limit(self) -> int:
+        """Возвращает лимит запросов с дефолтом 10."""
+        return self.queries_limit if self.queries_limit is not None else 10
+    
+    def get_is_active(self) -> bool:
+        """Возвращает статус активности с дефолтом True."""
+        return self.is_active if self.is_active is not None else True
+    
+    def get_is_banned(self) -> bool:
+        """Возвращает статус бана с дефолтом False."""
+        return self.is_banned if self.is_banned is not None else False

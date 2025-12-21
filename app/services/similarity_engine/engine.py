@@ -25,7 +25,7 @@ from sqlalchemy import delete
 
 from app.db.database import async_session_maker
 from app.db.models import AnalyticsResults
-from app.services.similarity_engine.shared import load_keywords_corpus
+from app.services.similarity_engine.shared import load_keywords_corpus, calculate_position_weights
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -219,15 +219,20 @@ class SimilarityEngine:
             # Стандартная IDF формула
             idf[term] = log((num_docs + 1) / (doc_freq + 1)) + 1
         
-        # TF-IDF векторы для каждого канала
+        # TF-IDF векторы для каждого канала (с учетом весов по позиции)
         tfidf_vectors: Dict[int, Dict[str, float]] = {}
         norms: Dict[int, float] = {}
         
         for cid, tokens in tokens_by_channel.items():
-            # TF (Term Frequency)
-            tf: Dict[str, int] = {}
+            # Вычисляем веса на основе позиции ключевых слов
+            position_weights = calculate_position_weights(tokens)
+            
+            # Weighted TF (Term Frequency с учетом позиции)
+            # Первые ключевые слова получают больший вес
+            tf: Dict[str, float] = {}
             for t in tokens:
-                tf[t] = tf.get(t, 0) + 1
+                weight = position_weights.get(t, 1.0)
+                tf[t] = tf.get(t, 0.0) + weight
             
             # TF-IDF
             tfidf = {t: tf_val * idf.get(t, 0) for t, tf_val in tf.items()}

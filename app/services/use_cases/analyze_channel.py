@@ -158,7 +158,7 @@ class AnalyzeChannelUseCase:
         else:
             filename = identifier.username
         
-        report_path = await generate_similar_channels_xlsx(filename)
+        report_path = await generate_similar_channels_xlsx(filename, top_n=top_n)
         
         elapsed = time.time() - start_time
         logger.info(

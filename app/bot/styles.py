@@ -101,33 +101,13 @@ def create_orbita_button(text: str, callback_data: str, icon: str = None) -> Inl
 
 def create_analysis_buttons(identifier: str, is_id_based: bool = False) -> InlineKeyboardMarkup:
     """
-    Создает клавиатуру для выбора количества каналов для анализа.
-    Стилизована в стиле ОРБИТА.
+    DEPRECATED: Эта функция больше не используется.
+    Теперь количество каналов вводится пользователем текстом.
     
-    Args:
-        identifier: username или ID канала
-        is_id_based: True если это ID-based канал
-    
-    Returns:
-        InlineKeyboardMarkup
+    Оставлена для обратной совместимости.
     """
-    callback_prefix = f"id:{identifier}" if is_id_based else identifier
-    
-    buttons = [
-        [
-            create_orbita_button("10 каналов", f"analyze:{callback_prefix}:10", Icons.NUM_10),
-            create_orbita_button("25 каналов", f"analyze:{callback_prefix}:25", Icons.NUM_25),
-        ],
-        [
-            create_orbita_button("50 каналов", f"analyze:{callback_prefix}:50", Icons.NUM_50),
-            create_orbita_button("100 каналов", f"analyze:{callback_prefix}:100", Icons.NUM_100),
-        ],
-        [
-            create_orbita_button("500 каналов (макс)", f"analyze:{callback_prefix}:500", Icons.NUM_500),
-        ],
-    ]
-    
-    return InlineKeyboardMarkup(inline_keyboard=buttons)
+    # Возвращаем пустую клавиатуру
+    return InlineKeyboardMarkup(inline_keyboard=[])
 
 
 def create_channel_selection_buttons(channels: List[Tuple[str, int]], top_n: int, current_identifier: str = None, is_id_based: bool = False) -> InlineKeyboardMarkup:

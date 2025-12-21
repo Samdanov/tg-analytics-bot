@@ -15,6 +15,7 @@ from app.core.container import get_container
 from app.schemas import CallbackDataSchema
 from app.services.telegram_parser.channel_info import get_channel_with_posts
 from app.services.helpers import build_channel_summary, build_website_summary
+from app.services.user_service import UserService
 from app.bot.styles import (
     create_analysis_buttons,
     format_channel_info,
@@ -35,6 +36,11 @@ logger = container.logger(__name__)
 _media_group_cache = {}
 _CACHE_TTL = 60
 
+# Pending requests для хранения ожидающих анализа запросов
+# Структура: {user_id: {"type": "channel"|"website", "identifier": str, "is_id_based": bool, "title": str}}
+_pending_requests = {}
+_PENDING_TTL = 300  # 5 минут
+
 
 def _is_duplicate_media_group(media_group_id: str | None) -> bool:
     """Проверка дубликатов media группы."""
@@ -53,16 +59,97 @@ def _is_duplicate_media_group(media_group_id: str | None) -> bool:
     return False
 
 
+def _cleanup_pending_requests():
+    """Очистка устаревших pending requests."""
+    now = time.time()
+    expired = [k for k, v in _pending_requests.items() if now - v.get("timestamp", 0) > _PENDING_TTL]
+    for k in expired:
+        _pending_requests.pop(k, None)
+
+
+async def process_top_n_input(message: Message):
+    """
+    Обработка ввода количества каналов от пользователя.
+    """
+    user_id = message.from_user.id
+    
+    # Очистка устаревших запросов
+    _cleanup_pending_requests()
+    
+    if user_id not in _pending_requests:
+        return
+    
+    # Валидация ввода
+    try:
+        top_n = int(message.text)
+        if top_n < 1 or top_n > 500:
+            await message.answer(
+                f"{Icons.ERROR} <b>Ошибка:</b> Количество каналов должно быть от 1 до 500.\n"
+                f"Попробуйте еще раз."
+            )
+            return
+    except ValueError:
+        await message.answer(
+            f"{Icons.ERROR} <b>Ошибка:</b> Пожалуйста, введите число от 1 до 500."
+        )
+        return
+    
+    # Проверяем лимит для пользователя
+    max_channels = await UserService.get_max_channels_for_user(user_id)
+    
+    if top_n > max_channels:
+        subscription_type = "free"  # По умолчанию
+        stats = await UserService.get_user_stats(user_id)
+        if stats:
+            subscription_type = stats["subscription_type"]
+        
+        if subscription_type == "free":
+            await message.answer(
+                f"{Icons.WARNING} <b>Превышен лимит!</b>\n\n"
+                f"Вы запросили: {top_n} каналов\n"
+                f"Максимум для Free: {max_channels} каналов\n\n"
+                f"💎 <b>Получите Premium:</b>\n"
+                f"• До 500 каналов в отчете\n"
+                f"• Безлимитные запросы\n"
+                f"• Приоритетная поддержка\n\n"
+                f"Используем {max_channels} каналов..."
+            )
+            top_n = max_channels
+        else:
+            top_n = max_channels
+    
+    # Получаем данные запроса
+    request_data = _pending_requests.pop(user_id)
+    request_type = request_data["type"]
+    identifier = request_data["identifier"]
+    is_id_based = request_data.get("is_id_based", False)
+    
+    # Запускаем анализ в зависимости от типа
+    if request_type == "website":
+        await analyze_website_direct(message, identifier, top_n)
+    elif request_type == "channel":
+        await analyze_channel_direct(message, identifier, top_n, is_id_based)
+
+
 @router.message(F.text | F.forward_from_chat | F.photo | F.video)
 async def detect_content_handler(message: Message):
     """
-    Определение типа контента (канал/сайт) и отображение кнопок выбора.
+    Определение типа контента (канал/сайт) и запрос количества каналов.
     
     Использует DI для получения зависимостей.
     """
     # Игнорируем дубликаты media_group
     if _is_duplicate_media_group(message.media_group_id):
         return
+    
+    user_id = message.from_user.id
+    
+    # Проверяем, не является ли это ответом на запрос количества каналов
+    if message.text and message.text.isdigit():
+        if user_id in _pending_requests:
+            # Обрабатываем как ввод количества каналов
+            await process_top_n_input(message)
+            return
     
     # Получаем сервисы через DI
     message_parser = container.message_parser
@@ -77,33 +164,23 @@ async def detect_content_handler(message: Message):
     if content_type == "website":
         url = content_info.url
         
+        # Сохраняем запрос в pending
+        _pending_requests[user_id] = {
+            "type": "website",
+            "identifier": url,
+            "is_id_based": False,
+            "title": url,
+            "timestamp": time.time()
+        }
+        
         text = (
             f"{Icons.SATELLITE} <b>Найден веб-сайт:</b>\n"
             f"<b>{url}</b>\n\n"
-            f"{Icons.ANALYTICS} Выбери количество похожих каналов для анализа:"
+            f"{Icons.ANALYTICS} <b>Введите количество похожих каналов для анализа</b>\n"
+            f"<i>(от 1 до 500)</i>"
         )
         
-        # Используем CallbackDataSchema для создания callback_data
-        buttons_data = [
-            ("📊 10 каналов", CallbackDataSchema(action="analyze_website", identifier=url, top_n=10, is_id_based=False)),
-            ("📊 25 каналов", CallbackDataSchema(action="analyze_website", identifier=url, top_n=25, is_id_based=False)),
-            ("📊 50 каналов", CallbackDataSchema(action="analyze_website", identifier=url, top_n=50, is_id_based=False)),
-            ("📊 100 каналов", CallbackDataSchema(action="analyze_website", identifier=url, top_n=100, is_id_based=False)),
-            ("🚀 500 каналов (макс)", CallbackDataSchema(action="analyze_website", identifier=url, top_n=500, is_id_based=False)),
-        ]
-        
-        from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-        kb = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text=text, callback_data=schema.to_callback_string())]
-            for text, schema in buttons_data[:2]
-        ] + [
-            [InlineKeyboardButton(text=text, callback_data=schema.to_callback_string())]
-            for text, schema in buttons_data[2:4]
-        ] + [
-            [InlineKeyboardButton(text=buttons_data[4][0], callback_data=buttons_data[4][1].to_callback_string())]
-        ])
-        
-        await message.answer(text, reply_markup=kb)
+        await message.answer(text)
         return
     
     # Обработка канала
@@ -111,18 +188,25 @@ async def detect_content_handler(message: Message):
         identifier = content_info.identifier
         title = content_info.title
         
+        # Сохраняем запрос в pending
+        _pending_requests[user_id] = {
+            "type": "channel",
+            "identifier": identifier.to_db_format(),
+            "is_id_based": identifier.is_id_based,
+            "title": title or identifier.to_display_format(),
+            "timestamp": time.time()
+        }
+        
         text = format_channel_info(
             identifier.to_display_format(),
             title,
             identifier.is_id_based
         )
         
-        kb = create_analysis_buttons(
-            identifier.to_db_format(),
-            identifier.is_id_based
-        )
+        # Добавляем запрос количества каналов
+        text += f"\n\n{Icons.ANALYTICS} <b>Введите количество похожих каналов для анализа</b>\n<i>(от 1 до 500)</i>"
         
-        await message.answer(text, reply_markup=kb)
+        await message.answer(text)
 
 
 @router.callback_query(F.data.startswith("analyze:"))
@@ -279,6 +363,143 @@ async def analyze_website_callback(callback: CallbackQuery):
     await msg.edit_text(f"{Icons.SUCCESS} Анализ завершён!")
     
     await callback.message.answer_document(
+        document=doc,
+        caption=f"{Icons.ANALYTICS} Отчёт: {top_n} похожих для {url}",
+    )
+
+
+async def analyze_channel_direct(message: Message, identifier_raw: str, top_n: int, is_id_based: bool):
+    """
+    Прямой анализ канала (из текстового сообщения).
+    """
+    # Увеличиваем счетчик использованных запросов
+    user_id = message.from_user.id
+    await UserService.increment_query_usage(user_id)
+    
+    # Получаем use cases через DI
+    detect_proxy_uc = container.detect_proxy_uc
+    analyze_channel_uc = container.analyze_channel_uc
+    
+    # Отображение loading
+    msg = await message.answer(
+        format_loading_message(identifier_raw, is_id_based)
+    )
+    
+    try:
+        # Получаем данные для проверки на прокладку
+        channel_data, posts, error = await get_channel_with_posts(
+            raw_username=identifier_raw,
+            limit=50
+        )
+        
+        if error:
+            await msg.edit_text(format_error_message(f"Ошибка: {error}"))
+            return
+        
+        # Проверка на прокладку (только для username-based)
+        if posts and not is_id_based:
+            proxy_result = await detect_proxy_uc.execute(
+                posts=posts,
+                exclude_username=identifier_raw
+            )
+            
+            if proxy_result.is_proxy:
+                logger.info(
+                    f"Proxy detected: @{identifier_raw}, "
+                    f"channels={len(proxy_result.linked_channels)}"
+                )
+                
+                proxy_message = format_proxy_channel_message(
+                    proxy_result.linked_channels,
+                    top_n
+                )
+                kb = create_channel_selection_buttons(
+                    proxy_result.linked_channels,
+                    top_n,
+                    identifier_raw,
+                    is_id_based
+                )
+                
+                await message.answer(proxy_message, reply_markup=kb)
+                await msg.delete()
+                return
+        
+        # Обычный анализ
+        display = f"ID:{identifier_raw}" if is_id_based else f"@{identifier_raw}"
+        await msg.edit_text(
+            f"{Icons.START} <b>Запускаю анализ для</b> {display}...\n"
+            f"{Icons.ANALYTICS} Поиск {top_n} похожих каналов..."
+        )
+    
+    except Exception as e:
+        await msg.edit_text(format_error_message(f"Ошибка проверки: {e}"))
+        logger.exception("Error in channel check")
+        return
+    
+    # Запуск полного анализа
+    try:
+        from app.domain import ChannelIdentifier
+        identifier = ChannelIdentifier.from_raw(identifier_raw)
+        
+        report_path: Path = await analyze_channel_uc.execute(identifier, top_n=top_n)
+    
+    except ValueError as e:
+        await msg.edit_text(format_error_message(f"Не удалось: {e}"))
+        return
+    except Exception as e:
+        await msg.edit_text(format_error_message(f"Ошибка: {e}"))
+        logger.exception("Error in analysis")
+        return
+    
+    # Отправка результатов
+    summary = await build_channel_summary(identifier_raw)
+    await message.answer(summary)
+    
+    doc = FSInputFile(report_path)
+    await msg.edit_text(f"{Icons.SUCCESS} Анализ завершён!")
+    
+    display_name = f"ID:{identifier_raw}" if is_id_based else f"@{identifier_raw}"
+    await message.answer_document(
+        document=doc,
+        caption=f"{Icons.ANALYTICS} Отчёт: {top_n} похожих для {display_name}",
+    )
+
+
+async def analyze_website_direct(message: Message, url: str, top_n: int):
+    """
+    Прямой анализ веб-сайта (из текстового сообщения).
+    """
+    # Увеличиваем счетчик использованных запросов
+    user_id = message.from_user.id
+    await UserService.increment_query_usage(user_id)
+    
+    # Получаем use case через DI
+    analyze_website_uc = container.analyze_website_uc
+    
+    msg = await message.answer(
+        f"{Icons.SEARCH} {Icons.LOADING} Парсинг {url}...\n"
+        f"{Icons.ANALYTICS} Поиск {top_n} похожих каналов..."
+    )
+    
+    # Запуск анализа
+    try:
+        report_path, analysis_result = await analyze_website_uc.execute(url, top_n=top_n)
+    except ValueError as e:
+        await msg.edit_text(format_error_message(f"Не удалось: {e}"))
+        return
+    except Exception as e:
+        await msg.edit_text(format_error_message(f"Ошибка: {e}"))
+        logger.exception("Error in website analysis")
+        return
+    
+    # Отправка результатов
+    summary = build_website_summary(url, analysis_result)
+    await message.answer(summary)
+    
+    doc = FSInputFile(report_path)
+    await msg.edit_text(f"{Icons.SUCCESS} Анализ завершён!")
+    
+    await message.answer_document(
         document=doc,
         caption=f"{Icons.ANALYTICS} Отчёт: {top_n} похожих для {url}",
     )

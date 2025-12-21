@@ -17,6 +17,7 @@ from sqlalchemy import select, delete
 
 from app.db.database import async_session_maker
 from app.db.models import Channel, KeywordsCache, AnalyticsResults
+from app.services.similarity_engine.shared import calculate_position_weights
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -162,11 +163,15 @@ async def calculate_similarity_for_channel(
     for term, doc_freq in df.items():
         idf[term] = log((num_channels + 1) / (doc_freq + 1)) + 1
     
-    # TF-IDF вектор для target
+    # TF-IDF вектор для target (с учетом весов по позиции)
     target_tokens = filtered[target_channel_id]
-    target_tf: Dict[str, int] = {}
+    target_weights = calculate_position_weights(target_tokens)
+    
+    # Weighted TF для target канала
+    target_tf: Dict[str, float] = {}
     for t in target_tokens:
-        target_tf[t] = target_tf.get(t, 0) + 1
+        weight = target_weights.get(t, 1.0)
+        target_tf[t] = target_tf.get(t, 0.0) + weight
     
     target_tfidf = {t: tf * idf.get(t, 0) for t, tf in target_tf.items()}
     target_norm = sqrt(sum(v ** 2 for v in target_tfidf.values())) or 1.0
@@ -181,10 +186,14 @@ async def calculate_similarity_for_channel(
         if cid == target_channel_id:
             continue
         
-        # TF-IDF вектор для кандидата
-        cand_tf: Dict[str, int] = {}
+        # TF-IDF вектор для кандидата (с учетом весов по позиции)
+        cand_weights = calculate_position_weights(tokens)
+        
+        # Weighted TF для кандидата
+        cand_tf: Dict[str, float] = {}
         for t in tokens:
-            cand_tf[t] = cand_tf.get(t, 0) + 1
+            weight = cand_weights.get(t, 1.0)
+            cand_tf[t] = cand_tf.get(t, 0.0) + weight
         
         cand_tfidf = {t: tf * idf.get(t, 0) for t, tf in cand_tf.items()}
         cand_norm = sqrt(sum(v ** 2 for v in cand_tfidf.values())) or 1.0

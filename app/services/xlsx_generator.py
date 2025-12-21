@@ -73,12 +73,20 @@ def _apply_data_style(ws, start_row: int = 2):
     
     # Выравнивание для разных колонок
     alignments = {
-        1: Alignment(horizontal="center", vertical="top"),  # Дата
-        2: Alignment(horizontal="center", vertical="top"),  # Релевантность
+        1: Alignment(horizontal="center", vertical="center"),  # № (номер)
+        2: Alignment(horizontal="center", vertical="center"),  # Степень схожести
         3: Alignment(horizontal="left", vertical="top"),   # Ссылка
         4: Alignment(horizontal="center", vertical="top"),   # Подписчики
         5: Alignment(horizontal="left", vertical="top", wrap_text=True),  # Название
         6: Alignment(horizontal="left", vertical="top", wrap_text=True),  # Описание
+    }
+    
+    # Цветовая палитра для степени схожести
+    similarity_colors = {
+        "Очень высокая": PatternFill(start_color="00B050", end_color="00B050", fill_type="solid"),  # Зеленый
+        "Высокая": PatternFill(start_color="92D050", end_color="92D050", fill_type="solid"),        # Светло-зеленый
+        "Средняя": PatternFill(start_color="FFC000", end_color="FFC000", fill_type="solid"),        # Оранжевый
+        "Низкая": PatternFill(start_color="FF6B6B", end_color="FF6B6B", fill_type="solid"),         # Красный
     }
     
     for row in ws.iter_rows(min_row=start_row):
@@ -87,17 +95,12 @@ def _apply_data_style(ws, start_row: int = 2):
             if idx in alignments:
                 cell.alignment = alignments[idx]
             
-            # Форматирование для релевантности (колонка 2)
-            if idx == 2 and isinstance(cell.value, (int, float)):
-                # Условное форматирование цветом в зависимости от значения
-                value = float(cell.value)
-                if value >= 80:
-                    cell.fill = PatternFill(start_color="C6EFCE", end_color="C6EFCE", fill_type="solid")
-                elif value >= 60:
-                    cell.fill = PatternFill(start_color="FFEB9C", end_color="FFEB9C", fill_type="solid")
-                elif value >= 40:
-                    cell.fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")
-                cell.number_format = "0.0"
+            # Форматирование для степени схожести (колонка 2)
+            if idx == 2 and isinstance(cell.value, str):
+                # Применяем цвет в зависимости от текста
+                if cell.value in similarity_colors:
+                    cell.fill = similarity_colors[cell.value]
+                    cell.font = Font(bold=True, color="FFFFFF", size=11)  # Белый жирный текст
             
             # Форматирование для подписчиков (колонка 4)
             if idx == 4 and isinstance(cell.value, (int, float)):
@@ -165,10 +168,16 @@ async def _load_channels_by_ids(ids: List[int]) -> Dict[int, Channel]:
 async def generate_similar_channels_xlsx(
     source_username: str,
     base_dir: Optional[Path] = None,
+    top_n: int = 500,
 ) -> Path:
     """
     Генерирует XLSX-файл в формате skladtech_expo_*.
     Работает даже если похожих каналов нет.
+    
+    Args:
+        source_username: username канала (с @ или без)
+        base_dir: базовая директория для сохранения отчета
+        top_n: максимальное количество похожих каналов в отчете (1-500)
     """
 
     # 1) Находим исходный канал
@@ -205,8 +214,8 @@ async def generate_similar_channels_xlsx(
 
     # Заголовки таблицы
     headers = [
-        "Дата создания",
-        "Релевантность, %",
+        "№",
+        "Степень схожести",
         "Ссылка на канал",
         "Подписчики",
         "Название канала",
@@ -217,12 +226,9 @@ async def generate_similar_channels_xlsx(
     # Применяем стили к заголовкам
     _apply_header_style(ws, header_row=1)
 
-    created_at = last_result.created_at if last_result else None
-    created_str = (created_at or datetime.utcnow()).strftime("%d.%m.%Y")
-
 
     # 6) Заполняем строки (даже если список пустой — это нормально)
-    # Ограничиваем выдачу первыми 500 каналами, чтобы файл не разрастался
+    # Ограничиваем выдачу согласно top_n (максимум 500 каналов)
     
     # Сначала фильтруем список, исключая исходный канал по ID
     source_channel_id_int = int(source_channel.id)
@@ -244,12 +250,14 @@ async def generate_similar_channels_xlsx(
     
     rows_added = 0
     rows_skipped_no_channel = 0
+    row_number = 0  # Счетчик для нумерации
     
     # Получаем данные исходного канала для дополнительной проверки
     source_username = source_channel.username or ""
     source_title = getattr(source_channel, "title", "") or ""
     
-    for item in filtered_similar_list[:500]:
+    # Ограничиваем количество каналов согласно top_n
+    for item in filtered_similar_list[:top_n]:
         ch_id = item.get("channel_id")
         
         # Убеждаемся, что ch_id - это int
@@ -299,15 +307,26 @@ async def generate_similar_channels_xlsx(
         
         relevance_percent = round(normalized_score * 100, 1)
         
+        # Преобразуем процент в текстовое описание степени схожести
+        if relevance_percent >= 80:
+            similarity_text = "Очень высокая"
+        elif relevance_percent >= 60:
+            similarity_text = "Высокая"
+        elif relevance_percent >= 40:
+            similarity_text = "Средняя"
+        else:
+            similarity_text = "Низкая"
+        
         # Для ID-based каналов (username начинается с "id:") не создаём ссылку
         if ch.username and ch.username.startswith("id:"):
             link = ""  # Приватные каналы не имеют публичной ссылки
         else:
             link = f"https://t.me/{ch.username}" if ch.username else ""
 
+        row_number += 1
         ws.append([
-            created_str,
-            relevance_percent,
+            row_number,
+            similarity_text,
             link,
             getattr(ch, "subscribers", None),
             getattr(ch, "title", None),

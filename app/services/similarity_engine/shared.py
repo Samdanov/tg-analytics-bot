@@ -39,6 +39,40 @@ def should_exclude_category(category: str | None) -> bool:
     return category.strip().lower() in EXCLUDED_CATEGORIES
 
 
+def calculate_position_weights(tokens: List[str], min_weight: float = 0.3) -> Dict[str, float]:
+    """
+    Вычисляет веса ключевых слов на основе их позиции в списке.
+    
+    Первые ключевые слова (главная тема) получают вес 1.0,
+    последние (контекст) получают минимальный вес.
+    
+    Args:
+        tokens: Список ключевых слов (порядок важен!)
+        min_weight: Минимальный вес для последних ключей (default: 0.3)
+    
+    Returns:
+        {token: weight} - словарь весов
+        
+    Примеры:
+        ["собака", "дрессировка", "питомец", "команда", "воспитание"]
+        → {"собака": 1.0, "дрессировка": 0.83, "питомец": 0.65, 
+           "команда": 0.48, "воспитание": 0.3}
+    """
+    if not tokens:
+        return {}
+    
+    weights = {}
+    total = len(tokens)
+    weight_range = 1.0 - min_weight
+    
+    for position, token in enumerate(tokens):
+        # Линейное затухание: первый = 1.0, последний = min_weight
+        weight = 1.0 - (position / (total - 1 if total > 1 else 1)) * weight_range
+        weights[token] = weight
+    
+    return weights
+
+
 async def load_keywords_corpus(
     filter_noise: bool = True
 ) -> Tuple[Dict[int, List[str]], Dict[int, Dict[str, str | None]]]:
